@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="description" content="Interferometrul lui Michelson - proiect interactiv de fizica pentru clasa a XII-a, cu fotografii istorice si datele originale din 1887.">
+<meta name="description" content="Interferometrul lui Michelson - proiect interactiv de fizica pentru clasa a XII-a, cu fotografii istorice, filmari si datele originale din 1887.">
 <meta name="color-scheme" content="dark">
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 </head>
@@ -220,6 +220,12 @@
   }
   figure.fig .cr a{border-bottom:1px solid var(--line-2)}
   .figrow{display:grid;gap:9px;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));align-items:start}
+  figure.fig video{display:block;width:100%;height:auto;max-width:100%;background:#04060a}
+  .video-tag{
+    display:inline-block;font-family:"IBM Plex Mono",monospace;font-size:.575rem;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--cy);border:1px solid #1d3d4a;padding:2px 6px;margin-bottom:8px
+  }
+  .video-tag::before{content:"▶  ";letter-spacing:0}
   .fig-wide figcaption{max-width:74ch}
   .photo-tag{
     display:inline-block;font-family:"IBM Plex Mono",monospace;font-size:.575rem;letter-spacing:.14em;
@@ -717,6 +723,25 @@
         </figcaption>
       </figure>
 
+      <figure class="fig fig-wide" style="margin-top:9px">
+        <video controls preload="metadata" playsinline muted loop
+               aria-label="Filmare: valuri create pe apă în curgere, ca model pentru vântul de eter">
+          <source src="vid/vant-de-eter-apa.webm" type="video/webm">
+          Browserul tău nu poate reda acest videoclip.
+          <a href="vid/vant-de-eter-apa.webm">Descarcă filmarea</a>.
+        </video>
+        <figcaption>
+          <span class="video-tag">filmare reală · 5 min</span>
+          <b>Vântul de eter, cu apă în loc de lumină.</b> Cineva face valuri circulare cu mâna pe
+          suprafața unei ape care curge — <em>Strömung</em> înseamnă „curent" în germană. Valurile sunt
+          purtate de curent, exact cum s-ar fi comportat lumina într-un eter în mișcare. E același
+          model cu înotătorii din desenul de mai sus, dar făcut pe apă adevărată: se vede că
+          <b>mediul contează</b>. Concluzia experimentului din 1887 e că, pentru lumină, nu contează.
+          <span class="cr">Rhetos · CC BY-SA 4.0 ·
+            <a href="https://commons.wikimedia.org/wiki/File:%C3%84therwind_(Wasserwellen-Modell).webm">Wikimedia Commons</a></span>
+        </figcaption>
+      </figure>
+
       <blockquote class="q1887" style="margin-top:clamp(18px,2.6vw,26px)">
         „...probably less than one sixth the earth's orbital velocity.”
         <cite>Concluzia lucrării din 1887, despre viteza relativă față de eter</cite>
@@ -793,6 +818,44 @@
         </figure>
       </div>
 
+      <div class="figrow" style="margin-top:9px">
+        <figure class="fig">
+          <video controls preload="metadata" playsinline poster="vid/interferometru-animatie.jpg"
+                 aria-label="Animație: un interferometru gigant detectând o undă gravitațională">
+            <source src="vid/interferometru-animatie.webm" type="video/webm">
+            Browserul tău nu poate reda acest videoclip.
+            <a href="vid/interferometru-animatie.webm">Descarcă animația</a>.
+          </video>
+          <figcaption>
+            <span class="video-tag">animație · 20 s</span>
+            <b>Exact schema noastră, la scară de kilometri.</b> Detectorul Virgo: laser, lamă
+            separatoare, două brațe de 3 km cu oglinzi la capăt, fotodiodă. Când unda gravitațională
+            de la două găuri negre ajunge la aparat, oglinzile se mișcă, faza celor două fascicule se
+            schimbă (undele verde și albastră din mijloc), iar fotodioda „vede" semnalul reconstruit
+            jos. Deplasările sunt mult exagerate, ca să fie vizibile.
+            <span class="cr">Thuiop · CC BY-SA 4.0 ·
+              <a href="https://commons.wikimedia.org/wiki/File:Gravitational_wave_interferometer_animation.ogg">Wikimedia Commons</a></span>
+          </figcaption>
+        </figure>
+        <figure class="fig">
+          <video controls preload="metadata" playsinline poster="vid/unde-gravitationale-pamant.jpg"
+                 aria-label="Animație: efectul unei unde gravitaționale asupra Pământului, mult exagerat">
+            <source src="vid/unde-gravitationale-pamant.webm" type="video/webm">
+            Browserul tău nu poate reda acest videoclip.
+            <a href="vid/unde-gravitationale-pamant.webm">Descarcă animația</a>.
+          </video>
+          <figcaption>
+            <span class="video-tag">animație · LIGO</span>
+            <b>Ce face de fapt o undă gravitațională.</b> Întinde și strânge spațiul însuși — aici
+            efectul e exagerat vizual pe Pământ, ca să se vadă. În realitate deformarea măsurată de
+            LIGO e o miime de diametru de proton. Interferometrul o prinde pentru că un braț se
+            lungește exact când celălalt se scurtează.
+            <span class="cr">LIGO Lab Caltech/MIT, R. Hurt · CC BY 3.0 ·
+              <a href="https://commons.wikimedia.org/wiki/File:Exaggerated_Effects_of_Gravitational_Waves_on_Earth.webm">Wikimedia Commons</a></span>
+          </figcaption>
+        </figure>
+      </div>
+
       <figure class="fig fig-wide" style="margin-top:9px">
         <img src="img/gw150914.png" width="1280" height="1600" loading="lazy"
              alt="Graficele semnalului GW150914: unda gravitațională înregistrată de cele două detectoare LIGO">
@@ -858,7 +921,7 @@
         <li>Nagel et al. — <i>Direct terrestrial test of Lorentz symmetry in electrodynamics</i>, Nature Communications 6, 2015.</li>
         <li>BIPM — istoricul definițiilor metrului.</li>
       </ul>
-      <p class="tag" style="margin-top:22px">Fotografii și date originale</p>
+      <p class="tag" style="margin-top:22px">Fotografii, filmări și date originale</p>
       <ul>
         <li>Aparatul din 1887 — Case Western Reserve University, domeniu public.</li>
         <li>Portretul lui Michelson — domeniu public, via Smithsonian Institution.</li>
@@ -868,9 +931,13 @@
         <li>LIGO Hanford, vedere aeriană — Caltech/MIT/LIGO Laboratory, domeniu public.</li>
         <li>Semnalul GW150914 — Caltech/MIT/LIGO Laboratory, CC0.</li>
         <li>Placa comemorativă — <i>Alan Migdall</i>, CC BY-SA 3.0.</li>
+        <li>Filmare: vântul de eter, model cu valuri pe apă — <i>Rhetos</i>, CC BY-SA 4.0.</li>
+        <li>Animație: interferometrul Virgo detectând o undă gravitațională — <i>Thuiop</i>, CC BY-SA 4.0.</li>
+        <li>Animație: efectul undelor gravitaționale asupra Pământului — LIGO Lab Caltech/MIT, R. Hurt, CC BY 3.0.</li>
       </ul>
-      <p class="tag" style="margin-top:22px">Fotografiile sunt reale și creditate mai sus. Restul imaginilor —
-        franjele, bancul 3D, graficele — sunt calculate în pagină din formulele fizice.</p>
+      <p class="tag" style="margin-top:22px">Fotografiile și filmările sunt reale și creditate mai sus, găzduite
+        în proiect. Restul imaginilor — franjele, bancul 3D, graficele — sunt calculate în pagină din
+        formulele fizice.</p>
     </footer>
   </main>
 </div>
