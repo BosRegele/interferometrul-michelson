@@ -18,14 +18,15 @@ O singură pagină, fără dependențe în afară de fonturi. Vizualizările sun
 - măsurarea indicelui de refracție al unui gaz, cu tubul care se videază
 - experimentul Michelson–Morley 1887, cu aparatul în rotație și comparația prezis / observat
 - fotografii istorice, figura originală cu datele din 1887 și semnalul GW150914
+- trei filmări: modelul cu valuri pe apă pentru vântul de eter, interferometrul Virgo în funcțiune, efectul undelor gravitaționale
 - generator de probleme cu numere aleatoare și rezolvare pas cu pas
 - test de verificare cu explicații
 
 Stilul de tipărire (Ctrl+P) transformă pagina într-un document alb-negru.
 
-## Fotografii și date originale
+## Fotografii, filmări și date originale
 
-Toate provin de pe Wikimedia Commons și sunt păstrate local, în `img/`.
+Toate provin de pe Wikimedia Commons și sunt păstrate local, în `img/` și `vid/`.
 
 | Imagine | Autor | Licență |
 |---|---|---|
@@ -37,6 +38,9 @@ Toate provin de pe Wikimedia Commons și sunt păstrate local, în `img/`.
 | LIGO Hanford, vedere aeriană | Caltech/MIT/LIGO Laboratory | domeniu public |
 | Semnalul GW150914 | Caltech/MIT/LIGO Laboratory | CC0 |
 | Placa comemorativă | Alan Migdall | CC BY-SA 3.0 |
+| Filmare: vântul de eter, model cu valuri | Rhetos | CC BY-SA 4.0 |
+| Animație: interferometrul Virgo | Thuiop | CC BY-SA 4.0 |
+| Animație: unde gravitaționale pe Pământ | LIGO Lab Caltech/MIT, R. Hurt | CC BY 3.0 |
 
 ## Surse bibliografice
 
