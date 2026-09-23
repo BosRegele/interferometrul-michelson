@@ -258,6 +258,12 @@ details.xp[open] summary::after{content:"−"}
 
 .ch-opt.picked{color:var(--fg);border-color:var(--b);box-shadow:inset 2px 0 0 var(--b)}
 
+/* schema redesenata a recombinarii */
+svg.schema{display:block;width:100%;height:auto}
+svg.schema .sl{font-family:"Archivo",sans-serif;font-size:26px;fill:#f0f3f5}
+svg.schema .sm{font-family:var(--mono);font-size:27px;fill:#96a3ad}
+svg.schema .sb{font-family:var(--mono);font-size:29px;font-weight:500}
+
 /* puncte de pas in build mode */
 .bdot{width:20px;height:3px;background:var(--line2);display:inline-block;cursor:pointer;transition:background .25s}
 .bdot.on{background:var(--b)}
