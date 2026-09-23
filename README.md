@@ -32,11 +32,11 @@ build.js       împachetează modulele într-un singur index.html
 ```
 
 ```bash
-npm test         # 24 de teste
+npm test         # 26 de teste
 npm run build    # produce site/index.html
 ```
 
-Testele acoperă fizica (ΔL = 2Δx, faza la λ/2, maxime și minime, numărul de franje, drumul optic prin gaz, coerența, modelul din 1887) și verifică static că orice culoare folosită în desene există în paletă — canvasul ignoră în tăcere o culoare nedefinită.
+Testele acoperă fizica (ΔL = 2Δx, faza la λ/2, maxime și minime, numărul de franje, drumul optic prin gaz, coerența, modelul din 1887, direcția curentului în analogia râului) și verifică static că orice culoare folosită în desene există în paletă — canvasul ignoră în tăcere o culoare nedefinită.
 
 ## Fotografii, filmări și date originale
 
@@ -51,7 +51,6 @@ Toate provin de pe Wikimedia Commons și sunt păstrate local, în `img/` și `v
 | Inele Newton, laser 650 nm | Robert D. Anderson | CC BY-SA 3.0 |
 | LIGO Hanford, vedere aeriană | Caltech/MIT/LIGO Laboratory | domeniu public |
 | Semnalul GW150914 | Caltech/MIT/LIGO Laboratory | CC0 |
-| Placa comemorativă | Alan Migdall | CC BY-SA 3.0 |
 | Filmare: vântul de eter, model cu valuri | Rhetos | CC BY-SA 4.0 |
 | Animație: interferometrul Virgo | Thuiop | CC BY-SA 4.0 |
 | Animație: unde gravitaționale pe Pământ | LIGO Lab Caltech/MIT, R. Hurt | CC BY 3.0 |
