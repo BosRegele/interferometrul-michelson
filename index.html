@@ -9,332 +9,407 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;1,6..96,400&family=Archivo:wght@300;400;500&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
-/* Dark Optical Laboratory */
+/* ═══ Interferometrul lui Michelson · expoziție, nu magazin ═══════════
+   Un singur fundal adânc. Vizualizările plutesc pe el, fără chenare.
+   Ritmul vine din tipografie și din spațiu, nu din cutii. */
 :root{
-  --void:#07090d; --panel:#0e1218; --panel2:#121821;
-  --line:#1a232c; --line2:#27343e;
-  --fg:#f0f3f5; --fg2:#96a3ad; --fg3:#5f6d79;
-  --a:#7fd4ee;          /* fasciculul A */
-  --b:#ffb04a;          /* fasciculul B */
-  --res:#ffffff;        /* rezultanta */
+  --void:#07090d;
+  --lift:rgba(255,255,255,.035);
+  --lift2:rgba(255,255,255,.06);
+  --hair:rgba(255,255,255,.08);
+  --hair2:rgba(255,255,255,.14);
+  --fg:#eef1f3; --fg2:#9ba7b0; --fg3:#5f6c77;
+  --a:#7fd4ee;           /* raza A */
+  --b:#ffb04a;           /* raza B, lumina de sodiu */
+  --warm:#f3cb91;        /* italicul din titluri */
   --ok:#57d6a2; --warn:#e0705c;
+  --serif:"Bodoni Moda","Didot",Georgia,serif;
+  --sans:"Archivo",system-ui,-apple-system,"Segoe UI",sans-serif;
   --mono:"IBM Plex Mono",ui-monospace,monospace;
+  --gut:clamp(20px,5vw,64px);
 }
 *{box-sizing:border-box}
 [hidden]{display:none!important}
-html,body{background:var(--void)}
+html{scroll-behavior:smooth;background:var(--void)}
 body{
-  margin:0;color:var(--fg);
-  font-family:"Archivo",system-ui,-apple-system,"Segoe UI",sans-serif;
-  font-weight:300;font-size:16.5px;line-height:1.62;
+  margin:0;background:var(--void);color:var(--fg);
+  font-family:var(--sans);font-weight:300;font-size:17.5px;line-height:1.7;
   -webkit-font-smoothing:antialiased;overflow-x:hidden;
 }
+::selection{background:rgba(255,176,74,.85);color:#111}
+a{color:inherit;text-decoration:none}
+:focus-visible{outline:1.5px solid var(--b);outline-offset:3px;border-radius:4px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .grain{
   position:fixed;inset:-50px;pointer-events:none;z-index:60;opacity:.035;mix-blend-mode:overlay;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E");
 }
-#prog{position:fixed;top:0;left:0;height:2px;width:0;background:var(--b);z-index:61;opacity:.9;pointer-events:none}
+#prog{position:fixed;top:0;left:0;height:1.5px;width:0;background:var(--b);z-index:61;pointer-events:none}
 
-/* tipografie */
-.display{font-family:"Bodoni Moda","Didot",Georgia,serif;font-weight:400;letter-spacing:-.012em;text-wrap:balance}
-h1{margin:0;font-size:clamp(2.6rem,7.4vw,5.4rem);line-height:.94}
-h2{margin:0 0 .35em;font-size:clamp(1.75rem,4vw,2.7rem);line-height:1.05}
-h3{margin:0 0 .25em;font-family:"Archivo",sans-serif;font-weight:500;font-size:1rem;line-height:1.3}
-p{margin:0 0 .85em}
-.say{max-width:58ch;color:var(--fg2);font-size:.96rem;line-height:1.6}
-.say strong{color:var(--fg);font-weight:500}
-.say em{font-style:normal;font-weight:500;color:var(--b)}
-.mono,.num{font-family:var(--mono);font-variant-numeric:tabular-nums}
-.tag{font-family:var(--mono);font-size:.63rem;letter-spacing:.2em;text-transform:uppercase;color:var(--fg3);margin:0}
-a{color:inherit;text-decoration:none;border-bottom:1px solid var(--line2)}
-a:hover{border-color:var(--b)}
-:focus-visible{outline:1px solid var(--b);outline-offset:3px}
+/* ─── bara de sus ─────────────────────────────────────────────── */
+.topbar{position:fixed;top:0;left:0;right:0;z-index:50;transition:background .4s,border-color .4s,backdrop-filter .4s;border-bottom:1px solid transparent}
+.topbar.scrolled{background:rgba(7,9,13,.72);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom-color:var(--hair)}
+.topbar-in{max-width:1320px;margin:0 auto;padding:14px var(--gut);display:flex;align-items:center;gap:clamp(12px,3vw,40px)}
+.brand{font-family:var(--serif);font-style:italic;font-size:1.25rem;letter-spacing:-.01em;color:var(--fg);white-space:nowrap}
+.brand span{color:var(--fg3);font-style:normal;font-size:.9rem}
+.chapters{display:flex;gap:clamp(4px,1.6vw,26px);margin:0 auto}
+.chapters a{position:relative;font-size:.84rem;font-weight:400;color:var(--fg3);padding:6px 2px;transition:color .25s;white-space:nowrap}
+.chapters a i{font-family:var(--serif);font-style:italic;margin-right:7px;color:var(--fg3);transition:color .25s}
+.chapters a:hover{color:var(--fg2)}
+.chapters a[aria-current=true]{color:var(--fg)}
+.chapters a[aria-current=true] i{color:var(--b)}
+.chapters a[aria-current=true]::after{content:"";position:absolute;left:50%;bottom:-4px;width:4px;height:4px;border-radius:50%;background:var(--b);transform:translateX(-50%)}
+.tools{display:flex;gap:4px}
+.tool{
+  font:400 .8rem/1 var(--sans);color:var(--fg2);background:transparent;border:0;
+  padding:8px 11px;border-radius:999px;cursor:pointer;transition:color .2s,background .2s
+}
+.tool:hover{color:var(--fg);background:var(--lift2)}
+.tool[aria-pressed=true],.tool[aria-expanded=true]{color:var(--b);background:rgba(255,176,74,.1)}
+@media (max-width:960px){.brand span{display:none}}
+@media (max-width:760px){
+  .brand{display:none}
+  .chapters{margin:0;gap:10px}
+  .chapters a{font-size:.78rem}
+  .chapters a i{display:none}
+  .tools{margin-left:auto}
+  .tool{padding:7px 8px;font-size:.74rem}
+}
 
-/* bara de sus */
-.topbar{
-  position:sticky;top:0;z-index:50;background:rgba(7,9,13,.88);backdrop-filter:blur(8px);
-  border-bottom:1px solid var(--line);
+/* ─── hero ────────────────────────────────────────────────────── */
+.hero{position:relative;min-height:min(820px,94svh);display:flex;align-items:center;overflow:hidden;isolation:isolate}
+#heroField{position:absolute;inset:0;width:100%;height:100%;z-index:-2;display:block}
+.hero::after{
+  content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
+  background:
+    linear-gradient(90deg,var(--void) 0%,rgba(7,9,13,.88) 34%,rgba(7,9,13,.25) 62%,rgba(7,9,13,.4) 100%),
+    linear-gradient(180deg,rgba(7,9,13,.6) 0%,transparent 24%,transparent 70%,var(--void) 100%);
 }
-.topbar-in{
-  max-width:1200px;margin:0 auto;padding:9px clamp(14px,3vw,28px);
-  display:flex;align-items:center;gap:clamp(8px,2vw,22px);flex-wrap:wrap;
+.hero-in{width:100%;max-width:1320px;margin:0 auto;padding:120px var(--gut) 110px}
+.eyebrow{font-family:var(--mono);font-size:.66rem;letter-spacing:.2em;text-transform:uppercase;color:var(--fg3);margin:0}
+.eyebrow span{color:var(--b);margin:0 6px}
+.triad{margin:34px 0 0;font-family:var(--serif);font-weight:400;font-size:clamp(2.7rem,6.8vw,5.8rem);line-height:1.02;letter-spacing:-.02em}
+.triad span{display:block}
+.triad .t1,.triad .t2{color:rgba(238,241,243,.42)}
+.triad .t3{color:var(--fg)}
+.triad em{font-style:italic;color:var(--b)}
+.lede{margin:34px 0 0;max-width:44ch;font-size:clamp(1.02rem,1.5vw,1.18rem);color:var(--fg2);line-height:1.65}
+.scroll-cue{position:absolute;left:var(--gut);bottom:34px;display:flex;align-items:center;gap:14px;font-size:.78rem;color:var(--fg3)}
+.scroll-cue i{display:block;width:56px;height:1px;background:var(--hair2);position:relative;overflow:hidden}
+.scroll-cue i::after{content:"";position:absolute;inset:0;background:var(--b);transform:translateX(-100%);animation:cue 2.6s cubic-bezier(.6,0,.2,1) infinite}
+@keyframes cue{60%,100%{transform:translateX(100%)}}
+@media (max-width:760px){
+  .hero::after{background:linear-gradient(180deg,var(--void) 0%,rgba(7,9,13,.85) 45%,rgba(7,9,13,.2) 75%,var(--void) 100%)}
+  .hero-in{padding-top:96px}
 }
-.brand{font-family:var(--mono);font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;color:var(--fg3);margin-right:auto}
-.chapters{display:flex;gap:2px}
-.chapters a{
-  border:0;font-family:var(--mono);font-size:.63rem;letter-spacing:.13em;text-transform:uppercase;
-  color:var(--fg3);padding:6px 10px;transition:color .2s,background .2s
-}
-.chapters a:hover{color:var(--fg2);background:var(--panel)}
-.chapters a[aria-current=true]{color:var(--b);background:var(--panel)}
-.topbtn{
-  font-family:var(--mono);font-size:.62rem;letter-spacing:.13em;text-transform:uppercase;
-  color:var(--fg2);background:transparent;border:1px solid var(--line2);padding:6px 10px;cursor:pointer
-}
-.topbtn:hover{color:var(--fg);border-color:var(--fg3)}
-/* bara de sus pe un singur rand si pe ecrane inguste */
-@media (max-width:920px){.brand{display:none}.chapters{margin-right:auto}}
-@media (max-width:620px){
-  .topbar-in{gap:6px;padding-inline:10px}
-  .chapters a{padding:6px 6px;letter-spacing:.06em}
-  .topbtn{padding:6px 7px;letter-spacing:.06em}
-}
-.topbtn[aria-pressed=true],.topbtn[aria-expanded=true]{color:var(--b);border-color:var(--b)}
 
-/* structura */
-.wrap{max-width:1200px;margin:0 auto;padding-inline:clamp(16px,3.4vw,28px)}
-section{padding-block:clamp(44px,7vw,92px);border-top:1px solid var(--line)}
-.hero-sec{border-top:0;padding-block:clamp(34px,5vw,64px) clamp(40px,6vw,80px)}
-.shead{display:flex;gap:13px;align-items:flex-start;margin-bottom:clamp(14px,2.2vw,24px)}
-.shead .sym{font-family:"Bodoni Moda",serif;font-style:italic;font-size:1.4rem;color:var(--b);line-height:1;padding-top:.3em;min-width:2.1ch}
-.duo{display:grid;grid-template-columns:1fr 1fr;gap:clamp(16px,2.6vw,34px);align-items:start}
-.duo.wide-left{grid-template-columns:1.35fr 1fr}
-@media (max-width:860px){.duo,.duo.wide-left{grid-template-columns:1fr}}
-
-/* hero */
-.hero-grid{display:grid;grid-template-columns:1fr 1.05fr;gap:clamp(18px,3vw,44px);align-items:center}
-@media (max-width:900px){.hero-grid{grid-template-columns:1fr}}
-h1 .stress{font-style:italic;color:var(--b)}
-.hero-lead{font-size:clamp(1rem,1.9vw,1.2rem);color:var(--fg2);max-width:42ch;margin-top:16px}
-.verdict{
-  font-family:var(--mono);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;
-  color:var(--fg2);padding:5px 9px;border:1px solid var(--line2);display:inline-block
+/* ─── deschiderile de capitol ─────────────────────────────────── */
+.opener{
+  position:relative;padding-block:clamp(130px,19vw,240px);overflow:hidden;
+  background:
+    radial-gradient(55% 60% at 78% 50%,rgba(255,176,74,.075),transparent 70%),
+    radial-gradient(40% 50% at 15% 40%,rgba(127,212,238,.04),transparent 70%);
 }
-.verdict.bright{color:var(--b);border-color:var(--b)}
-.verdict.dark{color:var(--a);border-color:var(--a)}
-.cta{
-  display:inline-flex;align-items:center;gap:9px;margin-top:20px;border:0;
-  font-family:var(--mono);font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;
-  color:var(--void);background:var(--b);padding:11px 16px;cursor:pointer
+.opener::before,.opener::after{content:"";position:absolute;left:var(--gut);right:var(--gut);height:1px;background:var(--hair)}
+.opener::before{top:0}.opener::after{bottom:0}
+.opener-in{max-width:1320px;margin:0 auto;padding-inline:var(--gut)}
+.roman{display:block;font-family:var(--serif);font-style:italic;font-size:clamp(1.3rem,2.2vw,1.9rem);color:var(--b)}
+.giant{margin:6px 0 0;font-family:var(--serif);font-weight:400;font-size:clamp(4rem,13vw,10.5rem);line-height:.9;letter-spacing:-.035em}
+.kicker{margin:30px 0 0;max-width:40ch;font-size:clamp(1.05rem,1.7vw,1.3rem);color:var(--fg2)}
+
+/* ─── scheletul secțiunilor ───────────────────────────────────── */
+.wrap{display:block;max-width:1320px;margin:0 auto;padding-inline:var(--gut)}
+.sec{padding-block:clamp(90px,12vw,160px)}
+.sec + .sec{padding-top:clamp(40px,6vw,80px)}
+.sec-head{margin-bottom:clamp(26px,3.4vw,44px)}
+.num{display:inline-flex;align-items:center;gap:12px;font-family:var(--mono);font-size:.7rem;letter-spacing:.2em;color:var(--b)}
+.num::after{content:"";width:34px;height:1px;background:currentColor;opacity:.55}
+h2{margin:14px 0 0;font-family:var(--serif);font-weight:400;font-size:clamp(2.3rem,5vw,4.2rem);line-height:1.03;letter-spacing:-.018em;text-wrap:balance}
+h2 em,.statement em,.pull em{font-style:italic;color:var(--warm)}
+h3{margin:0;font-family:var(--serif);font-weight:400;font-size:1.55rem;line-height:1.15}
+.prose p{margin:0 0 1.05em;max-width:58ch;color:var(--fg2)}
+.prose strong,.intro strong{color:var(--fg);font-weight:500}
+.pull{font-family:var(--serif);font-style:italic;font-size:clamp(1.55rem,2.6vw,2.1rem);line-height:1.22;color:var(--fg)!important;max-width:24ch!important;margin-bottom:.8em!important}
+.intro{max-width:60ch;margin:0 0 clamp(30px,4vw,52px);font-size:1.1rem;color:var(--fg2)}
+.a{color:var(--a)}.b{color:var(--b)}
+
+.split{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:clamp(28px,4.5vw,72px);align-items:start}
+.split.tight{margin-top:clamp(36px,4vw,56px);align-items:center}
+.col-5{grid-column:span 5}.col-6{grid-column:span 6}.col-7{grid-column:span 7}
+.split.rev > :first-child{order:2}
+@media (max-width:900px){
+  .split{grid-template-columns:minmax(0,1fr)}
+  .col-5,.col-6,.col-7{grid-column:1/-1}
+  .split.rev > :first-child{order:0}
 }
-.cta:hover{background:#ffc470}
 
-/* panouri */
-.inst{background:var(--panel);border:1px solid var(--line)}
-.inst-head{
-  display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;
-  padding:9px 12px;border-bottom:1px solid var(--line);
-  font-family:var(--mono);font-size:.6rem;letter-spacing:.16em;text-transform:uppercase;color:var(--fg3)
+/* ─── scena: vizualizarea, fără chenar ────────────────────────── */
+.stage{margin:0;position:relative}
+.stage canvas{display:block;width:100%}
+.stage + .stage{margin-top:clamp(24px,3vw,40px)}
+.stage-foot{display:flex;flex-wrap:wrap;align-items:center;gap:14px 20px;margin-top:22px;padding-top:22px;border-top:1px solid var(--hair)}
+.stage-foot.free{margin-top:26px}
+.cap{margin:0;font-family:var(--serif);font-style:italic;font-size:1.02rem;color:var(--fg2)}
+.stage-foot .cap{flex:1 1 260px}
+
+/* ─── comenzi ─────────────────────────────────────────────────── */
+button{font-family:var(--sans)}
+.btn{
+  font:500 .86rem/1 var(--sans);color:var(--fg);background:var(--lift);
+  border:1px solid var(--hair);border-radius:999px;padding:12px 18px;cursor:pointer;
+  transition:background .25s,border-color .25s,color .25s,transform .25s
 }
-.inst-head b{color:var(--fg2);font-weight:400}
-.inst canvas{display:block;width:100%}
-.pad{padding:13px 14px 15px}
-.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.btn:hover:not(:disabled){background:var(--lift2);border-color:var(--hair2)}
+.btn:active:not(:disabled){transform:translateY(1px)}
+.btn.strong{color:#ffd29a;background:rgba(255,176,74,.12);border-color:rgba(255,176,74,.34)}
+.btn.strong:hover:not(:disabled){background:rgba(255,176,74,.2)}
+.btn:disabled{opacity:.35;cursor:default}
+.btn[aria-pressed=true]{color:var(--b);border-color:rgba(255,176,74,.45)}
+.tabs{display:inline-flex;gap:2px;padding:4px;border-radius:999px;background:var(--lift);border:1px solid var(--hair)}
+.tabs button{font:500 .82rem/1 var(--sans);color:var(--fg2);background:transparent;border:0;border-radius:999px;padding:9px 15px;cursor:pointer;transition:background .25s,color .25s}
+.tabs button:hover{color:var(--fg)}
+.tabs button[aria-pressed=true]{background:rgba(255,255,255,.1);color:var(--fg)}
+.ctl{display:grid;gap:10px;min-width:0}
+.ctl.grow{flex:1 1 280px}
+.ctl.off{opacity:.3;pointer-events:none}
+.ctl-top{display:flex;justify-content:space-between;align-items:baseline;gap:12px;font-size:.84rem;color:var(--fg3)}
+.ctl-top .v{font-family:var(--mono);font-size:.8rem;color:var(--fg);font-variant-numeric:tabular-nums}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:20px;background:transparent;margin:0;cursor:ew-resize}
+input[type=range]::-webkit-slider-runnable-track{height:2px;background:var(--hair2);border-radius:2px}
+input[type=range]::-moz-range-track{height:2px;background:var(--hair2);border-radius:2px}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--fg);margin-top:-7px;border:0;box-shadow:0 0 0 5px rgba(255,176,74,.18)}
+input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:var(--fg);border:0;box-shadow:0 0 0 5px rgba(255,176,74,.18)}
+.verdict{font-family:var(--mono);font-size:.74rem;letter-spacing:.12em;text-transform:uppercase;color:var(--fg2);padding:7px 12px;border-radius:999px;background:var(--lift);display:inline-block}
+.verdict.bright{color:var(--b);background:rgba(255,176,74,.1)}
+.verdict.dark{color:var(--a);background:rgba(127,212,238,.08)}
+.verdict-line{margin:0}
 
-/* comenzi */
-.ctl{display:grid;gap:4px;min-width:0}
-.ctl.off{opacity:.32;pointer-events:none}
-.ctl-top{display:flex;justify-content:space-between;align-items:baseline;gap:8px;
-  font-family:var(--mono);font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--fg3)}
-.ctl-top .v{color:var(--fg);font-size:.74rem;letter-spacing:.02em;font-variant-numeric:tabular-nums}
-input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:16px;background:transparent;margin:0;cursor:ew-resize}
-input[type=range]::-webkit-slider-runnable-track{height:1px;background:var(--line2)}
-input[type=range]::-moz-range-track{height:1px;background:var(--line2)}
-input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:11px;height:11px;border-radius:50%;background:var(--fg);margin-top:-5px;border:0}
-input[type=range]::-moz-range-thumb{width:11px;height:11px;border-radius:50%;background:var(--fg);border:0}
-button{
-  font-family:var(--mono);font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;
-  color:var(--fg2);background:transparent;border:1px solid var(--line2);padding:8px 10px;cursor:pointer;
-  transition:color .2s,border-color .2s
-}
-button:hover:not(:disabled){color:var(--fg);border-color:var(--fg3)}
-button:disabled{opacity:.35;cursor:default}
-button[aria-pressed=true]{color:var(--b);border-color:var(--b)}
-.seg{display:flex;border:1px solid var(--line2)}
-.seg button{border:0;flex:1}
-.seg button+button{border-left:1px solid var(--line2)}
-
-/* lantul cauzal */
-.chain{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;align-items:start}
-@media (max-width:880px){.chain{grid-template-columns:repeat(2,1fr)}}
-@media (max-width:520px){.chain{grid-template-columns:1fr}}
-.link{background:var(--panel);border:1px solid var(--line);position:relative;padding:9px 9px 11px;min-width:0}
-.link canvas{display:block;width:100%}
-.link .k{font-family:var(--mono);font-size:.57rem;letter-spacing:.14em;text-transform:uppercase;color:var(--fg3)}
-.link .val{font-family:var(--mono);font-size:.84rem;color:var(--fg);margin-top:3px;font-variant-numeric:tabular-nums;word-break:break-word}
-.link::after{
-  content:"›";position:absolute;right:-11px;top:50%;transform:translateY(-50%);
-  font-size:20px;color:var(--line2);z-index:2
-}
-.link:last-child::after{content:none}
-@media (max-width:880px){.link::after{content:none}}
-.chain-verdict{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:12px}
-
-/* laborator */
-.lab{display:grid;grid-template-columns:minmax(0,1fr) 250px}
-@media (max-width:900px){.lab{grid-template-columns:minmax(0,1fr)}}
-.lab-view{background:#04060a;min-width:0}
-.lab-ctl{border-left:1px solid var(--line);padding:13px 13px 15px;display:flex;flex-direction:column;gap:12px}
-@media (max-width:900px){.lab-ctl{border-left:0;border-top:1px solid var(--line)}}
-.kv{display:flex;justify-content:space-between;gap:10px;font-family:var(--mono);
-  font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--fg3);
-  padding-top:9px;border-top:1px solid var(--line)}
-.kv b{color:var(--fg2);font-weight:400;text-transform:none;letter-spacing:.02em;font-variant-numeric:tabular-nums}
-
-/* contorul mare */
-.counter{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
-.counter .big{font-family:var(--mono);font-size:clamp(2.6rem,9vw,5rem);line-height:.9;color:var(--b);font-variant-numeric:tabular-nums}
-.counter .lbl{font-family:var(--mono);font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;color:var(--fg3)}
-
-/* fise de formula */
-.chips{display:flex;flex-wrap:wrap;gap:7px;margin:0}
-.chip{display:flex;flex-direction:column;gap:2px;border:1px solid var(--line2);padding:8px 12px;background:var(--panel)}
-.chip b{font-family:var(--mono);font-size:.9rem;color:var(--b);font-weight:500;white-space:nowrap}
-.chip i{font-style:normal;font-size:.7rem;color:var(--fg3)}
-
-/* sertarul de formule */
-.drawer{
-  position:fixed;right:0;top:0;bottom:0;width:min(420px,92vw);z-index:70;
-  background:var(--panel);border-left:1px solid var(--line2);
-  transform:translateX(101%);transition:transform .32s cubic-bezier(.2,.8,.2,1);
-  display:flex;flex-direction:column;box-shadow:-20px 0 60px rgba(0,0,0,.5)
-}
-.drawer.open{transform:none}
-.drawer-head{display:flex;justify-content:space-between;align-items:center;padding:14px;border-bottom:1px solid var(--line)}
-.drawer-body{overflow-y:auto;padding:6px 14px 20px}
-.frow{padding:13px 0;border-bottom:1px solid var(--line)}
-.frow .ff{display:block;font-family:var(--mono);font-size:1rem;color:var(--b)}
-.frow .fs{display:block;font-family:var(--mono);font-size:.78rem;color:var(--fg);margin-top:6px;word-break:break-word}
-.frow .fc{display:block;font-size:.76rem;color:var(--fg3);margin-top:4px}
-
-/* Presenter Mode */
-#presentBar{
-  position:fixed;left:0;right:0;bottom:0;z-index:65;background:rgba(7,9,13,.95);
-  border-top:1px solid var(--line2);padding:12px clamp(14px,3vw,28px);
-  display:flex;gap:14px;align-items:center;flex-wrap:wrap
-}
-#presentBar .pt{font-family:var(--mono);font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;color:var(--b)}
-#presentBar .pl{color:var(--fg);font-size:1.02rem;flex:1;min-width:200px}
-#presentCount{font-family:var(--mono);font-size:.68rem;color:var(--fg3)}
-body.presenting{font-size:19px}
-body.presenting .topbar,body.presenting .grain,body.presenting footer{display:none}
-body.presenting .say{font-size:1.1rem;max-width:62ch}
-body.presenting section{padding-block:34px}
-body.presenting main{padding-bottom:120px}
-
-/* challenge */
-.ch{padding:16px 0;border-top:1px solid var(--line)}
-.ch:first-child{border-top:0}
-.ch-q{margin:0 0 10px;max-width:56ch;font-size:.95rem}
-.ch-q i{font-family:var(--mono);font-style:normal;font-size:.68rem;color:var(--fg3);letter-spacing:.1em;margin-right:9px}
-.ch-opts{display:grid;gap:5px;max-width:52ch}
-.ch-opt{text-align:left;text-transform:none;letter-spacing:0;font-family:"Archivo",sans-serif;
-  font-weight:300;font-size:.9rem;color:var(--fg2);border:1px solid var(--line);padding:8px 11px;line-height:1.4}
-.ch-opt:hover:not(:disabled){color:var(--fg);border-color:var(--line2)}
-.ch-opt.ok{color:var(--fg);border-color:var(--ok);box-shadow:inset 2px 0 0 var(--ok)}
-.ch-opt.no{color:var(--fg2);border-color:#5a2a24;box-shadow:inset 2px 0 0 var(--warn)}
-.ch-why{margin:10px 0 0;font-size:.86rem;color:var(--fg2);max-width:56ch}
-.ch-show{margin-top:10px}
-
-/* „Stai putin..." — raspunsuri exact unde apare confuzia */
-details.wait{
-  margin-top:14px;border:1px solid var(--line2);border-left:2px solid var(--a);
-  background:var(--panel);max-width:64ch
-}
-details.wait summary{
-  cursor:pointer;list-style:none;padding:11px 14px;display:flex;gap:10px;align-items:baseline;
-  font-size:.95rem;color:var(--fg)
-}
+/* ─── „Stai puțin" ca notă pe margine ─────────────────────────── */
+details.wait{margin-top:30px;max-width:56ch;padding-left:20px;border-left:1px solid rgba(127,212,238,.4)}
+details.wait summary{cursor:pointer;list-style:none;font-family:var(--serif);font-style:italic;font-size:1.2rem;line-height:1.3;color:var(--fg)}
 details.wait summary::-webkit-details-marker{display:none}
-details.wait summary::before{
-  content:"STAI PUȚIN…";flex:none;font-family:var(--mono);font-size:.58rem;letter-spacing:.15em;color:var(--a)
-}
-details.wait summary::after{content:"+";margin-left:auto;font-family:var(--mono);color:var(--fg3)}
-details.wait[open] summary::after{content:"−"}
-details.wait p{margin:0;padding:0 14px 13px;font-size:.9rem;line-height:1.6;color:var(--fg2)}
+details.wait summary::before{content:"Stai puțin";display:block;margin-bottom:6px;font-family:var(--mono);font-style:normal;font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;color:var(--a)}
+details.wait summary::after{content:" +";font-family:var(--sans);font-style:normal;color:var(--fg3)}
+details.wait[open] summary::after{content:" −"}
+details.wait p{margin:12px 0 0;color:var(--fg2);font-size:.98rem}
 details.wait p strong{color:var(--fg);font-weight:500}
+details.wait.center{margin:44px auto 0;text-align:left}
+.notes-row{display:grid;grid-template-columns:1fr 1fr;gap:clamp(24px,4vw,56px);margin-top:12px}
+@media (max-width:760px){.notes-row{grid-template-columns:1fr}}
 
-/* Explore more — acordeoane */
-details.xp{border-top:1px solid var(--line)}
-details.xp:last-of-type{border-bottom:1px solid var(--line)}
-details.xp summary{
-  cursor:pointer;list-style:none;padding:16px 0;display:flex;gap:14px;align-items:baseline;flex-wrap:wrap
-}
-details.xp summary::-webkit-details-marker{display:none}
-details.xp summary b{font-family:"Bodoni Moda",serif;font-weight:400;font-size:1.35rem;color:var(--fg)}
-details.xp summary span{font-family:var(--mono);font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--fg3)}
-details.xp summary::after{content:"+";margin-left:auto;font-family:var(--mono);font-size:1.1rem;color:var(--b)}
-details.xp[open] summary::after{content:"−"}
-.xp-body{padding-bottom:22px}
+/* ─── cifre mari ──────────────────────────────────────────────── */
+.figures{display:grid;gap:0}
+.fig-num{display:grid;gap:6px;padding:26px 0;border-top:1px solid var(--hair)}
+.fig-num:first-child{border-top:0;padding-top:4px}
+.fig-num .v{font-family:var(--serif);font-size:clamp(2.8rem,6vw,5rem);line-height:1;letter-spacing:-.02em;color:var(--fg)}
+.fig-num .v small{font-family:var(--mono);font-size:.9rem;letter-spacing:0;color:var(--fg3)}
+.fig-num .v sup{font-size:.45em}
+.fig-num .k{color:var(--fg2);font-size:.95rem;max-width:36ch}
+.fig-num.accent .v{color:var(--b);font-style:italic}
+.fig-num.solo{border:0;padding:0 0 34px}
 
-/* faza: trei stari */
-.phase3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-@media (max-width:700px){.phase3{grid-template-columns:1fr}}
-.p3{border:1px solid var(--line);background:var(--panel);min-width:0}
-.p3 canvas{display:block;width:100%}
-.p3-cap{padding:9px 11px 11px;display:grid;gap:2px;border-top:1px solid var(--line)}
-.p3-cap b{font-family:var(--mono);font-size:1rem;color:var(--fg);font-weight:500}
-.p3-cap i{font-style:normal;font-family:var(--mono);font-size:.62rem;letter-spacing:.13em;text-transform:uppercase;color:var(--b)}
-.p3-cap span{font-size:.84rem;color:var(--fg2)}
+/* ─── declarații tipografice ──────────────────────────────────── */
+.statement-sec .num{margin-bottom:26px}
+.statement{margin:0;font-family:var(--serif);font-size:clamp(2.1rem,5vw,4.3rem);line-height:1.08;letter-spacing:-.018em;max-width:19ch;text-wrap:balance}
+.statement.small{margin:clamp(60px,8vw,100px) auto 0;text-align:center;font-size:clamp(1.8rem,3.8vw,3.1rem);max-width:22ch}
+.mono-accent{font-family:var(--mono);font-size:.78em;color:var(--b)}
+.mono-accent sup{font-size:.6em}
 
-/* registrul dus / intors */
-.ledger{margin-top:14px;border:1px solid var(--line2);background:var(--panel);max-width:320px}
-.ledger .lr{display:flex;justify-content:space-between;padding:9px 14px;font-family:var(--mono);font-size:.92rem;color:var(--fg2)}
-.ledger .lr b{color:var(--a);font-weight:500}
-.ledger .lr.total{border-top:1px solid var(--line2);color:var(--fg)}
-.ledger .lr.total b{color:var(--b)}
+/* ─── pași ai construcției ────────────────────────────────────── */
+.stepper{display:flex;flex-wrap:wrap;gap:6px 22px;margin-bottom:28px}
+.bdot{position:relative;font-size:.86rem;color:var(--fg3);cursor:pointer;padding:6px 0;transition:color .25s}
+.bdot::before{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:var(--hair)}
+.bdot.on{color:var(--fg)}
+.bdot.on::before{background:var(--b)}
+.bdot:hover{color:var(--fg2)}
+.step-copy{flex:1 1 380px;display:grid;gap:6px}
+.step-count{font-family:var(--mono);font-size:.7rem;letter-spacing:.14em;color:var(--b)}
+.step-copy p{margin:0;color:var(--fg2);max-width:62ch;min-height:3.4em}
+.step-nav{display:flex;gap:8px}
 
-.ch-opt.picked{color:var(--fg);border-color:var(--b);box-shadow:inset 2px 0 0 var(--b)}
-
-/* schema redesenata a recombinarii */
+/* ─── schema redesenată ───────────────────────────────────────── */
+.schema-wrap{margin:0}
 svg.schema{display:block;width:100%;height:auto}
-svg.schema .sl{font-family:"Archivo",sans-serif;font-size:26px;fill:#f0f3f5}
+svg.schema .sl{font-family:var(--sans);font-size:26px;fill:#e7ebee}
 svg.schema .sm{font-family:var(--mono);font-size:27px;fill:#96a3ad}
 svg.schema .sb{font-family:var(--mono);font-size:29px;font-weight:500}
+.schema-wrap .cap{margin-top:14px;font-size:.9rem;color:var(--fg3)}
 
-/* puncte de pas in build mode */
-.bdot{width:20px;height:3px;background:var(--line2);display:inline-block;cursor:pointer;transition:background .25s}
-.bdot.on{background:var(--b)}
-.bdot:focus-visible{outline:1px solid var(--b);outline-offset:2px}
+/* ─── trei stări de fază ──────────────────────────────────────── */
+.triptych{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(12px,1.6vw,22px)}
+.triptych figure{margin:0;padding:16px 16px 18px;border-radius:18px;background:linear-gradient(180deg,var(--lift2),rgba(255,255,255,.012));min-width:0}
+.triptych canvas{display:block;width:100%}
+.triptych figcaption{display:grid;gap:2px;margin-top:12px}
+.triptych b{font-family:var(--serif);font-weight:400;font-size:2rem;line-height:1}
+.triptych span{font-size:.86rem;color:var(--fg2)}
+.triptych i{font-family:var(--serif);font-size:1.02rem;color:var(--b)}
+@media (max-width:760px){.triptych{grid-template-columns:1fr}}
+.stage.feature{margin-top:clamp(40px,5vw,70px)}
 
-/* adnotari peste figura din 1887 */
-.fnote{
-  position:absolute;max-width:40%;font-family:var(--mono);font-size:.58rem;line-height:1.35;
-  letter-spacing:.02em;color:#101418;background:rgba(255,176,74,.92);padding:3px 6px
+/* ─── lanțul cauzal ───────────────────────────────────────────── */
+.chain{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:18px}
+.link{position:relative;margin:0;padding:14px 14px 16px;border-radius:18px;background:linear-gradient(180deg,var(--lift2),rgba(255,255,255,.012));min-width:0}
+.link canvas{display:block;width:100%}
+.link figcaption{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-top:10px}
+.link .k{font-size:.8rem;color:var(--fg3)}
+.link .val{font-family:var(--mono);font-size:.82rem;color:var(--fg);font-variant-numeric:tabular-nums;text-align:right}
+.link:not(:last-child)::after{content:"→";position:absolute;right:-15px;top:42%;font-size:14px;color:var(--fg3);z-index:2}
+@media (max-width:1000px){.chain{grid-template-columns:repeat(2,minmax(0,1fr))}.link::after{content:none!important}}
+@media (max-width:520px){.chain{grid-template-columns:minmax(0,1fr)}}
+
+/* ─── registrul dus + întors ──────────────────────────────────── */
+.ledger{margin-top:10px;max-width:420px}
+.ledger .lr{display:flex;justify-content:space-between;align-items:baseline;padding:14px 0;border-bottom:1px solid var(--hair)}
+.ledger .lr span{font-family:var(--serif);font-style:italic;font-size:1.15rem;color:var(--fg2)}
+.ledger .lr b{font-family:var(--serif);font-weight:400;font-size:clamp(2.2rem,4.4vw,3.3rem);line-height:1;color:var(--a)}
+.ledger .lr.total{border-bottom:0;border-top:1px solid var(--hair2);margin-top:6px}
+.ledger .lr.total b{color:var(--b);font-style:italic;font-size:clamp(2.8rem,5.6vw,4.3rem)}
+
+/* ─── laboratorul de franje ───────────────────────────────────── */
+.lab{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,4fr);gap:clamp(28px,4vw,64px);align-items:start}
+.lab-screen canvas{display:block;width:100%}
+#fringeCv{border-radius:22px;box-shadow:0 0 0 1px var(--hair),0 30px 90px -30px rgba(255,176,74,.22)}
+#profileCv{margin-top:14px;border-radius:12px}
+.lab-ctl{display:flex;flex-direction:column;gap:26px;padding-top:6px}
+@media (max-width:900px){.lab{grid-template-columns:minmax(0,1fr)}}
+
+/* ─── fotografii ──────────────────────────────────────────────── */
+.plate{margin:0;min-width:0}
+.plate img,.plate video{display:block;width:100%;height:auto;border-radius:6px;background:#0c1015}
+.plate figcaption{margin-top:14px;font-size:.9rem;line-height:1.6;color:var(--fg2);max-width:60ch}
+.plate .kind{display:block;margin-bottom:4px;font-family:var(--mono);font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:var(--ok)}
+.plate .credit{display:block;margin-top:8px;font-family:var(--mono);font-size:.6rem;letter-spacing:.04em;color:var(--fg3)}
+.plate .credit a{border-bottom:1px solid var(--hair2)}
+.pair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(28px,4vw,56px);margin-top:clamp(56px,7vw,96px);align-items:start}
+.pair .plate img{aspect-ratio:3/2;object-fit:cover}
+.pair .plate.portrait img{object-position:50% 18%}
+.pair img[src$="gw150914.png"]{object-fit:contain;background:#fff;padding:6px}
+@media (max-width:760px){.pair{grid-template-columns:minmax(0,1fr)}}
+
+/* ─── arhiva: figura originală ────────────────────────────────── */
+.archive{margin-top:clamp(60px,8vw,110px);align-items:center}
+.paper-in{position:relative;background:#f1eee6;padding:16px;border-radius:4px;box-shadow:0 30px 80px -40px rgba(0,0,0,.9)}
+.paper-in img{border-radius:0;background:transparent}
+.notes-layer{position:absolute;inset:16px;pointer-events:none}
+.fnote{position:absolute;max-width:42%;font-family:var(--mono);font-size:.62rem;line-height:1.35;color:#101418;background:rgba(255,176,74,.95);padding:4px 7px;border-radius:3px}
+.archive .tabs{margin-bottom:22px}
+
+/* ─── predicția ───────────────────────────────────────────────── */
+.question{margin:0 0 24px;font-family:var(--serif);font-size:clamp(1.9rem,3.6vw,3rem);line-height:1.1}
+.choices{display:grid;gap:10px}
+.ch-opt{
+  text-align:left;font:300 1rem/1.45 var(--sans);color:var(--fg2);
+  background:var(--lift);border:1px solid var(--hair);border-radius:16px;padding:17px 20px;cursor:pointer;
+  transition:background .25s,border-color .25s,color .25s
 }
+.ch-opt:hover:not(:disabled){background:var(--lift2);color:var(--fg)}
+.ch-opt.picked{color:var(--fg);border-color:rgba(255,176,74,.55);background:rgba(255,176,74,.07)}
+.ch-opt.ok{color:var(--fg);border-color:rgba(87,214,162,.6);background:rgba(87,214,162,.07)}
+.ch-opt.no{border-color:rgba(224,112,92,.5)}
+.ch-opt:disabled{cursor:default}
+.ack{margin:20px 0 0;font-family:var(--serif);font-style:italic;font-size:1.25rem;color:var(--fg)}
 
-/* media */
-figure.fig{margin:0;border:1px solid var(--line);background:var(--panel);display:flex;flex-direction:column}
-figure.fig img,figure.fig video{display:block;width:100%;height:auto;max-width:100%;background:#04060a}
-figure.fig figcaption{padding:10px 12px 11px;font-size:.83rem;line-height:1.48;color:var(--fg2)}
-figure.fig figcaption b{color:var(--fg);font-weight:500}
-figure.fig .cr{display:block;margin-top:6px;font-family:var(--mono);font-size:.56rem;
-  letter-spacing:.09em;text-transform:uppercase;color:var(--fg3);line-height:1.5}
-.figrow{display:grid;gap:8px;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));align-items:start}
-.ptag{display:inline-block;font-family:var(--mono);font-size:.56rem;letter-spacing:.13em;
-  text-transform:uppercase;color:var(--ok);border:1px solid #1f4a3a;padding:2px 6px;margin-bottom:7px}
-.vtag{color:var(--a);border-color:#1d3d4a}
-.vtag::before{content:"▶  ";letter-spacing:0}
+/* ─── rezultatul, pe tot ecranul ──────────────────────────────── */
+.verdict-screen{
+  position:relative;padding-block:clamp(140px,22vw,280px);text-align:center;overflow:hidden;
+  background:
+    radial-gradient(40% 45% at 50% 50%,rgba(255,176,74,.07),transparent 70%),
+    repeating-radial-gradient(circle at 50% 50%,rgba(255,255,255,.03) 0 1px,transparent 1px 42px);
+}
+.verdict-in{max-width:1320px;margin:0 auto;padding-inline:var(--gut)}
+.giant-statement{margin:0;font-family:var(--serif);font-size:clamp(3rem,9vw,7.6rem);line-height:.96;letter-spacing:-.03em}
+.giant-statement em{font-style:italic;color:var(--b)}
+.verdict-body{max-width:58ch;margin:40px auto 0;font-size:1.1rem;color:var(--fg2)}
 
-/* diverse */
-ol.time{list-style:none;margin:0;padding:0}
-ol.time li{display:grid;grid-template-columns:4.4rem minmax(0,1fr);gap:clamp(10px,2vw,22px);padding:12px 0;border-top:1px solid var(--line)}
-ol.time li:first-child{border-top:0}
-ol.time .yr{font-family:var(--mono);font-size:.74rem;color:var(--b);font-variant-numeric:tabular-nums;padding-top:.2em}
-ol.time p{margin:0;font-size:.85rem;color:var(--fg2);max-width:56ch}
-.qbox{margin:0;padding:0 0 0 16px;border-left:1px solid var(--b);
-  font-family:"Bodoni Moda",serif;font-size:1.15rem;line-height:1.38;font-style:italic;color:var(--fg)}
-.qbox cite{display:block;margin-top:8px;font-family:var(--mono);font-size:.58rem;
-  letter-spacing:.13em;text-transform:uppercase;color:var(--fg3);font-style:normal}
-.triad{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
-@media (max-width:640px){.triad{grid-template-columns:1fr}}
-.tri{border:1px solid var(--line);background:var(--panel);padding:13px}
-.tri .w{font-family:var(--mono);font-size:.74rem;letter-spacing:.1em;text-transform:uppercase;color:var(--fg2)}
-.tri .m{font-family:var(--mono);font-size:1.05rem;color:var(--b);margin-top:5px}
-.tri.unknown .m{color:var(--warn)}
-footer{border-top:1px solid var(--line);padding-block:30px 46px}
-footer ul{list-style:none;margin:8px 0 0;padding:0;display:grid;gap:4px;max-width:74ch}
-footer li{font-size:.78rem;color:var(--fg3);line-height:1.5}
-footer li i{font-style:italic;color:var(--fg2)}
+/* ─── cronologia ──────────────────────────────────────────────── */
+.timeline{list-style:none;margin:0;padding:0;max-width:880px}
+.timeline li{display:grid;grid-template-columns:8rem minmax(0,1fr);gap:clamp(18px,3vw,40px);padding:26px 0;border-top:1px solid var(--hair)}
+.timeline .yr{font-family:var(--serif);font-size:clamp(1.8rem,3vw,2.4rem);line-height:1;color:var(--fg3)}
+.timeline h3{font-family:var(--sans);font-weight:500;font-size:1.05rem;margin-bottom:4px}
+.timeline p{margin:0;color:var(--fg2)}
+.timeline li.key .yr{color:var(--b);font-style:italic}
+@media (max-width:560px){.timeline li{grid-template-columns:minmax(0,1fr);gap:6px}}
 
+/* ─── mai departe ─────────────────────────────────────────────── */
+.explore{padding-top:clamp(60px,8vw,100px)}
+details.xp{border-top:1px solid var(--hair)}
+details.xp:last-of-type{border-bottom:1px solid var(--hair)}
+details.xp summary{cursor:pointer;list-style:none;display:flex;align-items:baseline;gap:clamp(14px,2.4vw,30px);flex-wrap:wrap;padding:clamp(24px,3vw,36px) 0}
+details.xp summary::-webkit-details-marker{display:none}
+.xp-n{font-family:var(--serif);font-style:italic;font-size:1.1rem;color:var(--fg3);min-width:1.6em}
+details.xp summary b{font-family:var(--serif);font-weight:400;font-size:clamp(1.8rem,3.6vw,2.8rem);line-height:1.05;letter-spacing:-.015em}
+.xp-k{font-size:.9rem;color:var(--fg3)}
+details.xp summary::after{content:"+";margin-left:auto;font-family:var(--sans);font-weight:300;font-size:1.8rem;line-height:1;color:var(--b);transition:transform .3s}
+details.xp[open] summary::after{transform:rotate(45deg)}
+.xp-body{padding-bottom:clamp(40px,5vw,70px)}
+.score{font-family:var(--serif);font-style:italic;font-size:1.5rem;color:var(--fg);margin:0 0 12px}
+
+/* provocările generate din JS */
+.ch{padding:22px 0;border-top:1px solid var(--hair)}
+.ch:first-child{border-top:0;padding-top:0}
+.ch-q{margin:0 0 14px;font-size:1.02rem;color:var(--fg)}
+.ch-q i{font-family:var(--serif);font-style:italic;color:var(--b);margin-right:12px}
+.ch-opts{display:grid;gap:8px}
+.ch-opts .ch-opt{padding:13px 16px;font-size:.95rem;border-radius:12px}
+.ch-why{margin:14px 0 0;color:var(--fg2);font-size:.95rem}
+.ch-show{margin-top:12px;font:500 .84rem/1 var(--sans);color:var(--b);background:transparent;border:0;padding:6px 0;cursor:pointer}
+.ch-show::after{content:" →"}
+
+/* ─── final ───────────────────────────────────────────────────── */
+.closing{padding-block:clamp(120px,16vw,200px) 60px;border-top:1px solid var(--hair);background:radial-gradient(60% 50% at 50% 0%,rgba(255,176,74,.05),transparent 70%)}
+.closing-text{margin:22px 0 0;max-width:34ch;font-family:var(--serif);font-size:clamp(1.6rem,3.2vw,2.5rem);line-height:1.28;letter-spacing:-.01em}
+.closing-text em{font-style:italic;color:var(--b)}
+.sources{display:grid;grid-template-columns:1fr 1fr;gap:clamp(28px,5vw,80px);margin-top:clamp(70px,9vw,120px)}
+.sources ul{list-style:none;margin:14px 0 0;padding:0;display:grid;gap:7px}
+.sources li{font-size:.85rem;color:var(--fg3);line-height:1.55}
+.sources li i{color:var(--fg2)}
+.fine{margin-top:50px;font-family:var(--mono);font-size:.64rem;letter-spacing:.06em;color:var(--fg3)}
+@media (max-width:760px){.sources{grid-template-columns:1fr}}
+
+/* ─── sertarul de formule ─────────────────────────────────────── */
+.drawer{
+  position:fixed;right:0;top:0;bottom:0;width:min(440px,94vw);z-index:70;
+  background:rgba(11,14,19,.9);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+  border-left:1px solid var(--hair);transform:translateX(101%);transition:transform .45s cubic-bezier(.2,.8,.2,1);
+  display:flex;flex-direction:column;box-shadow:-30px 0 80px rgba(0,0,0,.5)
+}
+.drawer.open{transform:none}
+.drawer-head{display:flex;justify-content:space-between;align-items:center;padding:20px 22px;border-bottom:1px solid var(--hair)}
+.drawer-body{overflow-y:auto;padding:4px 22px 30px}
+.frow{padding:18px 0;border-bottom:1px solid var(--hair)}
+.frow .ff{display:block;font-family:var(--serif);font-style:italic;font-size:1.35rem;color:var(--b)}
+.frow .fs{display:block;font-family:var(--mono);font-size:.8rem;color:var(--fg);margin-top:8px;word-break:break-word;line-height:1.55}
+.frow .fc{display:block;font-size:.82rem;color:var(--fg3);margin-top:4px}
+
+/* ─── modul de prezentare ─────────────────────────────────────── */
+#presentBar{
+  position:fixed;left:50%;bottom:18px;transform:translateX(-50%);z-index:65;width:min(940px,calc(100vw - 24px));
+  background:rgba(11,14,19,.86);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  border:1px solid var(--hair2);border-radius:18px;padding:12px 14px 12px 20px;
+  display:flex;gap:14px;align-items:center;flex-wrap:wrap;box-shadow:0 20px 60px rgba(0,0,0,.5)
+}
+#presentBar .pt{font-family:var(--serif);font-style:italic;font-size:1.05rem;color:var(--b)}
+#presentBar .pl{flex:1;min-width:200px;color:var(--fg)}
+#presentCount{font-family:var(--mono);font-size:.72rem;color:var(--fg3)}
+body.presenting{font-size:19.5px}
+body.presenting .topbar,body.presenting .grain{display:none}
+body.presenting main,body.presenting .closing{padding-bottom:110px}
+
+/* ─── tipărire ────────────────────────────────────────────────── */
 @media print{
-  .topbar,.grain,#prog,.drawer,#presentBar,button,input,.chain::after{display:none!important}
+  :root{--void:#fff;--fg:#000;--fg2:#333;--fg3:#666;--hair:#ccc;--hair2:#aaa;--b:#8a5600;--warm:#8a5600;--a:#1f4f63}
   html,body{background:#fff!important;color:#000!important}
-  :root{--panel:#fff;--line:#c9c9c9;--line2:#aaa;--fg:#000;--fg2:#333;--fg3:#666;--b:#8a5600}
-  section{break-inside:avoid;padding-block:16px}
-  .inst,.link,figure.fig{break-inside:avoid}
+  .topbar,.grain,#prog,.drawer,#presentBar,button,input,.tabs,.stepper,.scroll-cue,#heroField{display:none!important}
+  .hero{min-height:0}.hero::after{display:none}
+  .opener,.verdict-screen,.closing{background:none;padding-block:30px}
+  .sec{padding-block:24px;break-inside:avoid}
+  canvas{filter:invert(1) hue-rotate(180deg)}
+  #fringeCv,#profileCv{filter:none}
 }
-@media (prefers-reduced-motion:reduce){*{transition-duration:.01ms!important;animation:none!important}}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *{transition-duration:.01ms!important;animation:none!important}
+}
 </style>
 </head>
 <body>
@@ -343,790 +418,776 @@ footer li i{font-style:italic;color:var(--fg2)}
 
 <header class="topbar">
   <div class="topbar-in">
-    <span class="brand">Interferometrul Michelson</span>
+    <a class="brand" href="#ch-story">Michelson<span>, 1887</span></a>
     <nav class="chapters" aria-label="Capitole">
-      <a href="#ch-story" data-chapter="ch-story">Povestea</a>
-      <a href="#ch-apparatus" data-chapter="ch-apparatus">Aparatul</a>
-      <a href="#ch-1887" data-chapter="ch-1887">1887</a>
-      <a href="#ch-explore" data-chapter="ch-explore">Explore</a>
+      <a href="#ch-story" data-chapter="ch-story"><i>I</i>Povestea</a>
+      <a href="#ch-apparatus" data-chapter="ch-apparatus"><i>II</i>Aparatul</a>
+      <a href="#ch-1887" data-chapter="ch-1887"><i>III</i>1887</a>
+      <a href="#ch-explore" data-chapter="ch-explore"><i>IV</i>Mai departe</a>
     </nav>
-    <button class="topbtn" id="drawerBtn" aria-expanded="false">ƒ Formule</button>
-    <button class="topbtn" id="presentBtn" aria-pressed="false">Prezentare</button>
-    <button class="topbtn" id="resetBtn">Reset</button>
+    <div class="tools">
+      <button class="tool" id="drawerBtn" aria-expanded="false">Formule</button>
+      <button class="tool" id="presentBtn" aria-pressed="false">Prezentare</button>
+      <button class="tool" id="resetBtn">Reset</button>
+    </div>
   </div>
 </header>
 
+<!-- ══════════════════ I · POVESTEA ══════════════════ -->
+<section class="hero" id="ch-story">
+  <canvas id="heroField" aria-hidden="true"></canvas>
+  <div class="hero-in">
+    <p class="eyebrow">Interferometrul lui Michelson <span>·</span> un proiect de fizică, clasa a XII-a</p>
+    <h1 class="triad">
+      <span class="t1">Valurile au apa.</span>
+      <span class="t2">Sunetul are aerul.</span>
+      <span class="t3">Lumina are <em>ce</em>?</span>
+    </h1>
+    <p class="lede">
+      În anii 1800 știam deja că lumina e o undă. Dar orice undă cunoscută avea ceva prin care se
+      propaga. Atunci cum traversează lumina spațiul gol dintre Soare și noi?
+    </p>
+  </div>
+  <a class="scroll-cue" href="#s-ether-idea" aria-label="Derulează la poveste"><span>Derulează</span><i></i></a>
+</section>
+
 <main class="wrap">
 
-  <!-- ══ 00 · HERO ════════════════════════════════════════════════ -->
-  <section class="hero-sec" id="ch-story">
-    <p class="tag">Optică ondulatorie · clasa a XII-a</p>
-    <div class="triad" style="margin:22px 0 26px;max-width:720px">
-      <div class="tri"><span class="w">valurile</span><span class="m">→ apa</span></div>
-      <div class="tri"><span class="w">sunetul</span><span class="m">→ aerul</span></div>
-      <div class="tri unknown"><span class="w">lumina</span><span class="m">→ ???</span></div>
+  <!-- 01 · Eterul -->
+  <section class="sec" id="s-ether-idea">
+    <div class="split">
+      <header class="sec-head col-5">
+        <span class="num">01</span>
+        <h2>Ideea lor: <em>eterul</em></h2>
+      </header>
+      <div class="col-7 prose">
+        <p class="pull">Un mediu invizibil, care umple tot spațiul.</p>
+        <p>
+          Fizicienii au presupus că întreg universul e scufundat în <strong>eterul luminifer</strong>.
+          Nu era aer și nu era doar „în spațiu". În modelul lor, eterul era peste tot, inclusiv în
+          jurul și prin laboratorul de pe Pământ.
+        </p>
+        <details class="wait">
+          <summary>De ce credeau că există eter?</summary>
+          <p>Pentru că lumina era undă, iar toate undele cunoscute aveau un mediu. Era o presupunere
+          rezonabilă, nu o prostie. Și, spre deosebire de multe presupuneri, se putea testa.</p>
+        </details>
+      </div>
     </div>
-    <h1 class="display">Prin ce se propagă<br><span class="stress">lumina</span>?</h1>
-    <p class="hero-lead" style="max-width:52ch">
-      În anii 1800, fizicienii știau că lumina se comportă ca o undă. Dar orice undă cunoscută
-      avea ceva prin care se propaga. Valurile aveau apa. Sunetul avea aerul.
-      Atunci prin ce se deplasa lumina prin spațiul aparent gol?
-    </p>
-    <button class="cta" data-goto="s-ether-idea">Răspunsul lor →</button>
   </section>
 
-  <!-- ══ 01 · ETERUL ══════════════════════════════════════════════ -->
-  <section id="s-ether-idea">
-    <div class="shead"><span class="sym">01</span><div><h2 class="display">Ideea lor: eterul</h2></div></div>
-    <p class="say">
-      Fizicienii au presupus că întreg spațiul e umplut de un mediu invizibil numit
-      <strong>eter luminifer</strong>. Nu era aer și nu era doar „în spațiu". În modelul lor,
-      eterul era peste tot, inclusiv în jurul și prin laboratorul de pe Pământ.
-    </p>
-    <details class="wait">
-      <summary>De ce credeau că există eter?</summary>
-      <p>Pentru că lumina era undă, iar toate undele cunoscute aveau un mediu. Părea firesc
-      să existe și pentru lumină. Era o presupunere rezonabilă, nu o prostie. Și, spre deosebire
-      de multe presupuneri, se putea testa.</p>
-    </details>
-  </section>
-
-  <!-- ══ 02 · DE CE ȘI PE PĂMÂNT ══════════════════════════════════ -->
-  <section id="s-why-earth">
-    <div class="shead"><span class="sym">02</span><div><h2 class="display">De ce ar fi eter<br>și pe Pământ?</h2></div></div>
-    <p class="say" style="margin-bottom:16px">
-      Apasă pe cele trei trepte și urmărește punctele albastre: sunt aceleași la toate scările.
-    </p>
-    <div class="inst">
-      <div class="inst-head"><b>Zoom: sistem solar → Pământ → laborator</b><span id="zoomName">Sistemul solar</span></div>
+  <!-- 02 · Și pe Pământ -->
+  <section class="sec" id="s-why-earth">
+    <header class="sec-head">
+      <span class="num">02</span>
+      <h2>De ce ar fi eter <em>și pe Pământ?</em></h2>
+    </header>
+    <figure class="stage">
       <canvas id="zoomCv" aria-label="Zoom de la sistemul solar până în laborator, cu eterul prezent la toate scările"></canvas>
-      <div class="pad">
-        <div class="row">
+      <figcaption class="stage-foot">
+        <div class="tabs" role="group" aria-label="Scara">
           <button id="zoom0" aria-pressed="true">Sistemul solar</button>
           <button id="zoom1" aria-pressed="false">Pământul</button>
           <button id="zoom2" aria-pressed="false">Laboratorul</button>
         </div>
-        <p class="say" id="zoomNote" style="margin:12px 0 0"></p>
-      </div>
-    </div>
-    <details class="wait" open>
+        <p class="cap"><span id="zoomName" class="sr">Sistemul solar</span><span id="zoomNote"></span></p>
+      </figcaption>
+    </figure>
+    <details class="wait">
       <summary>De ce ar fi eter și pe Pământ?</summary>
-      <p>Pentru că eterul nu era imaginat ca atmosfera Pământului. Era presupus un mediu
-      <strong>universal</strong>, care umple tot spațiul. Pământul ar fi fost practic scufundat
-      în el, ca un pește în apă.</p>
+      <p>Pentru că eterul nu era imaginat ca atmosfera. Era presupus un mediu <strong>universal</strong>,
+      care umple tot spațiul. Pământul ar fi fost scufundat în el, ca un pește în apă.</p>
     </details>
   </section>
 
-  <!-- ══ 03 · VÂNTUL DE ETER ══════════════════════════════════════ -->
-  <section id="s-ether-wind">
-    <div class="shead"><span class="sym">03</span><div><h2 class="display">Vântul de eter</h2></div></div>
-    <div class="duo">
-      <div>
-        <p class="say">
-          Scoate mâna pe geamul mașinii în mers: simți un vânt, deși aerul stă pe loc.
-          Nu aerul se mișcă: tu te miști prin el.
+  <!-- 03 · Vântul de eter -->
+  <section class="sec" id="s-ether-wind">
+    <div class="split">
+      <div class="col-6 prose">
+        <header class="sec-head">
+          <span class="num">03</span>
+          <h2>Vântul <em>de eter</em></h2>
+        </header>
+        <p>
+          Scoate mâna pe geam când mașina merge: simți vânt, deși aerul stă pe loc. Nu aerul se mișcă:
+          tu te miști prin el.
         </p>
-        <p class="say">
-          Același raționament, aplicat Pământului: dacă eterul stă pe loc și planeta îl
-          străbate cu <strong>30 km/s</strong>, atunci în laborator ar trebui să se simtă un
-          „vânt de eter". Iar dacă bate un vânt, lumina care merge în lungul lui ar trebui să
-          se comporte altfel decât cea care merge de-a curmezișul.
-        </p>
-        <p class="say">
-          Rămâne o singură problemă: cum măsori așa ceva, când lumina merge cu 300 000 km/s?
+        <p>
+          La fel cu Pământul. Dacă eterul stă pe loc și planeta îl străbate cu 30 km/s, în laborator ar
+          trebui să bată un <strong>vânt de eter</strong>, iar lumina care merge în lungul lui ar trebui
+          să se poarte altfel decât cea care merge de-a curmezișul.
         </p>
       </div>
-      <div class="inst pad">
-        <p class="tag" style="margin-bottom:10px">ordinul de mărime</p>
-        <div class="kv" style="border:0;padding-top:0"><span>viteza Pământului</span><b>30 km/s</b></div>
-        <div class="kv"><span>viteza luminii</span><b>299 792 km/s</b></div>
-        <div class="kv"><span>raportul v/c</span><b>0,0001</b></div>
-        <div class="kv"><span>efectul, în v²/c²</span><b>0,00000001</b></div>
-        <p class="say" style="font-size:.85rem;margin:12px 0 0">
-          O parte dintr-o sută de milioane. De asta nimeni nu reușise să-l măsoare.
-        </p>
+      <div class="col-6 figures">
+        <div class="fig-num">
+          <span class="v">30<small> km/s</small></span>
+          <span class="k">viteza Pământului pe orbită</span>
+        </div>
+        <div class="fig-num">
+          <span class="v">299 792<small> km/s</small></span>
+          <span class="k">viteza luminii</span>
+        </div>
+        <div class="fig-num accent">
+          <span class="v">10<sup>−8</sup></span>
+          <span class="k">cât de mare era efectul căutat. O parte dintr-o sută de milioane.</span>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- ══ 04 · RÂUL ════════════════════════════════════════════════ -->
-  <section id="s-river">
-    <div class="shead"><span class="sym">04</span><div><h2 class="display">Analogia râului</h2></div></div>
-    <p class="say" style="margin-bottom:16px">
-      Doi înotători, aceeași distanță, aceeași viteză prin apă. Unul traversează râul și se
-      întoarce, celălalt înoată în lungul curentului și se întoarce.
-      <strong>Pune curentul pe zero</strong> și privește: se întorc simultan.
+  <!-- 04 · Râul -->
+  <section class="sec" id="s-river">
+    <header class="sec-head">
+      <span class="num">04</span>
+      <h2>Doi înotători, <em>un râu</em></h2>
+    </header>
+    <p class="intro">
+      Aceeași distanță, aceeași viteză prin apă. Unul traversează și se întoarce, celălalt merge în
+      lungul curentului și se întoarce. Pune curentul pe zero: se întorc simultan.
     </p>
-    <div class="inst">
-      <div class="inst-head"><b>Doi înotători, un curent</b><span>timpii sunt în unități de L/c</span></div>
+    <figure class="stage">
       <canvas id="riverCv" aria-label="Doi înotători într-un râu cu curent"></canvas>
-      <div class="pad">
-        <div class="ctl">
-          <div class="ctl-top"><label for="riverCurrent">viteza curentului</label><span class="v" id="riverCurrentV">50% din viteza înotătorului</span></div>
+      <figcaption class="stage-foot">
+        <div class="ctl grow">
+          <div class="ctl-top"><label for="riverCurrent">Viteza curentului</label><span class="v" id="riverCurrentV">50% din viteza înotătorului</span></div>
           <input type="range" id="riverCurrent" min="0" max="80" step="1" value="50">
         </div>
-        <div class="row" style="margin-top:12px">
-          <button id="riverMorph" aria-pressed="false">Transformă apa în eter →</button>
-        </div>
-      </div>
-    </div>
-    <p class="say" style="margin-top:14px">
-      Cel care înoată în lungul curentului câștigă timp la dus, cu curentul, dar pierde mai mult
-      la întoarcere, contra lui, pentru că petrece mai mult timp în porțiunea lentă. Asta era ideea lui Michelson:
-      <strong>dacă eterul există în forma presupusă, două raze trimise pe direcții diferite
-      ar trebui să aibă timpi de parcurs puțin diferiți.</strong>
-    </p>
-    <figure class="fig" style="margin-top:14px;max-width:520px">
-      <video controls preload="metadata" playsinline muted loop
-             aria-label="Filmare: valuri pe apă în curgere, model pentru vântul de eter">
-        <source src="vid/vant-de-eter-apa.webm" type="video/webm">
-        <a href="vid/vant-de-eter-apa.webm">Descarcă filmarea</a>.
-      </video>
-      <figcaption>
-        <span class="ptag vtag">filmare reală</span>
-        <b>Același model, pe apă adevărată.</b> Valuri făcute cu mâna pe o apă care curge;
-        <em>Strömung</em> înseamnă „curent". Se vede că mediul poartă unda cu el.
-        <span class="cr">Rhetos · CC BY-SA 4.0 ·
-          <a href="https://commons.wikimedia.org/wiki/File:%C3%84therwind_(Wasserwellen-Modell).webm">Wikimedia Commons</a></span>
+        <button class="btn" id="riverMorph" aria-pressed="false">Transformă apa în eter</button>
       </figcaption>
     </figure>
-  </section>
-
-  <!-- ══ 05 · CUM CRONOMETREZI LUMINA ═════════════════════════════ -->
-  <section id="s-timing">
-    <div class="shead"><span class="sym">05</span><div><h2 class="display">Cum cronometrezi lumina?</h2></div></div>
-    <div class="duo">
-      <div>
-        <p class="say">
-          Diferența de timp căutată e de ordinul a <span class="mono">10⁻¹⁶</span> secunde.
-          Niciun cronometru din 1887, și niciunul de azi, nu poate măsura direct așa ceva.
-        </p>
-        <p class="say">
-          Soluția lui Michelson: <strong>nu cronometra deloc.</strong> Lasă cele două raze să se
-          întâlnească din nou. Dacă una a întârziat fie și cu o fracțiune de lungime de undă,
-          undele nu mai sunt sincronizate, iar asta se vede cu ochiul liber, ca întuneric
-          acolo unde te-ai aștepta la lumină.
+    <div class="split tight">
+      <div class="col-6 prose">
+        <p>
+          Cel care merge în lungul curentului câștigă timp la dus, dar pierde mai mult la întoarcere,
+          pentru că stă mai mult în porțiunea lentă. Asta voia Michelson să prindă: <strong>două raze
+          trimise pe direcții diferite ar trebui să aibă timpi de parcurs puțin diferiți.</strong>
         </p>
       </div>
-      <details class="wait" open>
+      <figure class="plate col-6">
+        <video controls preload="metadata" playsinline muted loop
+               aria-label="Filmare: valuri pe apă în curgere, model pentru vântul de eter">
+          <source src="vid/vant-de-eter-apa.webm" type="video/webm">
+          <a href="vid/vant-de-eter-apa.webm">Descarcă filmarea</a>.
+        </video>
+        <figcaption>
+          <span class="kind">filmare</span>
+          Același model, pe apă adevărată: valuri făcute cu mâna pe o apă care curge
+          (<i>Strömung</i> înseamnă „curent"). Mediul poartă unda cu el.
+          <span class="credit">Rhetos · CC BY-SA 4.0 · <a href="https://commons.wikimedia.org/wiki/File:%C3%84therwind_(Wasserwellen-Modell).webm">Wikimedia Commons</a></span>
+        </figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- 05 · Cum cronometrezi lumina -->
+  <section class="sec statement-sec" id="s-timing">
+    <span class="num">05</span>
+    <p class="statement">
+      Diferența căutată era de <span class="mono-accent">10<sup>−16</sup></span> secunde.
+      <em>Nu o cronometrezi.</em> Lași razele să se reîntâlnească.
+    </p>
+    <div class="split tight">
+      <p class="col-6 prose">
+        Niciun cronometru, nici din 1887, nici de azi, nu măsoară direct așa ceva. Dar dacă o rază a
+        întârziat fie și cu o fracțiune de lungime de undă, când se întâlnește cu cealaltă nu mai sunt
+        sincronizate. Și asta se vede cu ochiul liber, ca întuneric acolo unde te-ai aștepta la lumină.
+      </p>
+      <details class="wait col-6" open>
         <summary>Cum știe că una a întârziat, dacă n-o cronometrează?</summary>
-        <p>Nu măsoară timpul, ci <strong>consecința</strong> lui. Două unde decalate dau alt
-        rezultat când se adună: mai multă lumină, mai puțină, sau deloc. Instrumentul transformă
-        o întârziere imposibil de cronometrat într-o schimbare de luminozitate.</p>
+        <p>Nu măsoară timpul, ci <strong>consecința</strong> lui: două unde decalate dau alt rezultat
+        când se adună. Întârzierea imposibil de cronometrat devine o schimbare de lumină.</p>
       </details>
     </div>
   </section>
+</main>
 
-  <!-- ══ 06 · CONSTRUIEȘTE APARATUL ═══════════════════════════════ -->
-  <section id="ch-apparatus">
-    <div class="shead"><span class="sym">06</span><div><h2 class="display">Construiește interferometrul</h2></div></div>
-    <div class="inst">
-      <div class="inst-head"><b id="buildTitle">Sursa</b><span id="buildCount">1 / 6</span></div>
+<!-- ══════════════════ II · APARATUL ══════════════════ -->
+<section class="opener" id="ch-apparatus">
+  <div class="opener-in">
+    <span class="roman">II</span>
+    <h2 class="giant">Aparatul</h2>
+    <p class="kicker">O rază tăiată în două, trimisă pe două drumuri și pusă să se reîntâlnească.</p>
+  </div>
+</section>
+
+<main class="wrap">
+
+  <!-- 06 · Construiește -->
+  <section class="sec" id="s-build">
+    <header class="sec-head">
+      <span class="num">06</span>
+      <h2>Construiește <em>interferometrul</em></h2>
+    </header>
+    <nav class="stepper" aria-label="Pașii construcției">
+      <span class="bdot" role="button" tabindex="0">Sursa</span>
+      <span class="bdot" role="button" tabindex="0">Lama</span>
+      <span class="bdot" role="button" tabindex="0">Brațele</span>
+      <span class="bdot" role="button" tabindex="0">Întoarcerea</span>
+      <span class="bdot" role="button" tabindex="0">Recombinarea</span>
+      <span class="bdot" role="button" tabindex="0">Suprapunerea</span>
+    </nav>
+    <figure class="stage">
       <canvas id="buildCv" aria-label="Interferometrul construit pas cu pas"></canvas>
-      <div class="pad">
-        <p class="say" id="buildText" style="min-height:3.4em;margin-bottom:12px"></p>
-        <div class="row">
-          <button id="buildPrev">‹ Înapoi</button>
-          <button id="buildNext">Pasul următor ›</button>
-          <span class="row" style="gap:4px;margin-left:auto">
-            <i class="bdot" role="button" tabindex="0" aria-label="Pasul 1"></i>
-            <i class="bdot" role="button" tabindex="0" aria-label="Pasul 2"></i>
-            <i class="bdot" role="button" tabindex="0" aria-label="Pasul 3"></i>
-            <i class="bdot" role="button" tabindex="0" aria-label="Pasul 4"></i>
-            <i class="bdot" role="button" tabindex="0" aria-label="Pasul 5"></i>
-            <i class="bdot" role="button" tabindex="0" aria-label="Pasul 6"></i>
-          </span>
+      <figcaption class="stage-foot">
+        <div class="step-copy">
+          <span class="step-count" id="buildCount">1 / 6</span>
+          <h3 id="buildTitle">Sursa</h3>
+          <p id="buildText"></p>
         </div>
-      </div>
-    </div>
-    <div class="duo" style="margin-top:14px">
+        <div class="step-nav">
+          <button class="btn" id="buildPrev">Înapoi</button>
+          <button class="btn strong" id="buildNext">Pasul următor</button>
+        </div>
+      </figcaption>
+    </figure>
+    <div class="notes-row">
       <details class="wait">
         <summary>Cum împarte lumina în două?</summary>
         <p>Cu o lamă semitransparentă: o placă de sticlă cu un strat metalic de câțiva nanometri.
-        Jumătate din lumină trece prin ea, jumătate e reflectată în unghi drept. Nu taie fasciculul
-        în bucăți, ci îl împarte pe amândouă direcțiile deodată.</p>
+        Jumătate din lumină trece, jumătate e reflectată în unghi drept.</p>
       </details>
       <details class="wait">
         <summary>După oglindă, unde se întoarce raza?</summary>
-        <p>Exact de unde a venit: la aceeași lamă separatoare. Oglinzile sunt perpendiculare pe
-        fascicul, deci îl trimit înapoi pe același drum.</p>
+        <p>Exact de unde a venit: la aceeași lamă. Oglinzile sunt perpendiculare pe fascicul, deci îl
+        trimit înapoi pe același drum.</p>
       </details>
     </div>
   </section>
 
-  <!-- ══ 07 · RECOMBINAREA ════════════════════════════════════════ -->
-  <section id="s-recombine">
-    <div class="shead"><span class="sym">07</span><div><h2 class="display">Cum ajung iar împreună?</h2></div></div>
-    <p class="say" style="margin-bottom:16px">
-      Aici e locul unde majoritatea explicațiilor sar peste pas. Zoom pe lama separatoare:
-      raza A vine de sus, raza B vine din dreapta. Din A, o componentă e <strong>transmisă</strong>
-      prin lamă spre detector. Din B, o componentă e <strong>reflectată</strong> de lamă spre
-      același detector.
-    </p>
-    <figure class="fig">
-      <svg class="schema" viewBox="0 0 1000 680" role="img"
-           aria-label="Schema interferometrului: raza 1 urcă spre oglinda M1, raza 2 merge spre oglinda M2, apoi amândouă coboară spre ecran">
-        <rect width="1000" height="680" fill="#0e1218"/>
-        <rect x="30" y="285" width="120" height="90" fill="#1a232c" stroke="#3a4a55" stroke-width="2"/>
-        <text x="90" y="270" text-anchor="middle" class="sl">Laser</text>
-        <path d="M150 330H424" stroke="#ffb04a" stroke-width="3" fill="none"/>
-        <path d="M280 322l16 8-16 8z" fill="#ffb04a"/>
-        <path d="M438 330H792" stroke="#ffb04a" stroke-width="3" fill="none"/>
-        <path d="M792 342H432L430 612" stroke="#ffb04a" stroke-width="3" fill="none"/>
-        <path d="M424 322V72" stroke="#7fd4ee" stroke-width="3" fill="none"/>
-        <path d="M438 72V304L446 350L442 612" stroke="#7fd4ee" stroke-width="3" fill="none"/>
-        <g transform="rotate(-45 432 330)">
-          <rect x="352" y="319" width="160" height="22" fill="rgba(127,212,238,.20)" stroke="#7fd4ee" stroke-width="2"/>
-        </g>
-        <text x="490" y="408" class="sl">Lamă separatoare</text>
-        <rect x="346" y="40" width="170" height="26" fill="#cfd8de"/>
-        <rect x="346" y="30" width="170" height="10" fill="#49555e"/>
-        <text x="530" y="60" class="sl">Oglinda 1 (M1)</text>
-        <rect x="792" y="250" width="26" height="170" fill="#cfd8de"/>
-        <rect x="818" y="250" width="10" height="170" fill="#49555e"/>
-        <text x="842" y="340" class="sl">Oglinda 2</text>
-        <text x="842" y="368" class="sl">(M2)</text>
-        <path d="M300 624H570" stroke="#96a3ad" stroke-width="5"/>
-        <path d="M300 606V642M570 606V642" stroke="#96a3ad" stroke-width="8"/>
-        <text x="435" y="668" text-anchor="middle" class="sl">Ecran</text>
-        <path d="M384 80V310" stroke="#96a3ad" stroke-width="1.6"/>
-        <path d="M384 80l-6 12h12zM384 310l-6-12h12z" fill="#96a3ad"/>
-        <text x="352" y="204" class="sm">L₁</text>
-        <path d="M474 292H786" stroke="#96a3ad" stroke-width="1.6"/>
-        <path d="M474 292l12-6v12zM786 292l-12-6v12z" fill="#96a3ad"/>
-        <text x="610" y="278" class="sm">L₂</text>
-        <text x="452" y="196" class="sb" fill="#7fd4ee">(1)</text>
-        <text x="640" y="382" class="sb" fill="#ffb04a">(2)</text>
-        <text x="458" y="530" class="sb"><tspan fill="#7fd4ee">(1)</tspan><tspan fill="#f0f3f5"> + </tspan><tspan fill="#ffb04a">(2)</tspan></text>
-      </svg>
-      <figcaption>
-        <b>Cum se reîntâlnesc.</b> Raza <span style="color:var(--a)">(1)</span> e reflectată în sus
-        spre M1, se întoarce și <em>trece prin</em> lamă spre ecran; se vede cum sticla o deplasează
-        puțin. Raza <span style="color:var(--b)">(2)</span> trece spre M2, se întoarce și e
-        <em>reflectată</em> de lamă spre același ecran. De la lamă în jos merg împreună:
-        <span style="color:var(--a)">(1)</span> + <span style="color:var(--b)">(2)</span>.
-        <span class="cr">Schemă redesenată pentru acest proiect, după o diagramă clasică de manual.</span>
-      </figcaption>
-    </figure>
-    <details class="wait" open style="margin-top:14px">
-      <summary>Cum ajung razele iar împreună?</summary>
-      <p>Nu se „lipesc" și nu se amestecă. Una este reflectată, cealaltă transmisă, iar amândouă
-      pleacă pe aceeași ieșire, către același detector. În desenul de mai sus sunt trasate alături
-      doar ca să se vadă că sunt două drumuri diferite. În realitate se suprapun.</p>
-    </details>
-  </section>
-
-  <!-- ══ 08 · SUPRAPUNEREA ════════════════════════════════════════ -->
-  <section id="s-superpose">
-    <div class="shead"><span class="sym">08</span><div><h2 class="display">Ce înseamnă „se suprapun"?</h2></div></div>
-    <div class="duo wide-left">
-      <div class="inst">
-        <div class="inst-head"><b>Aceeași regiune, câmpurile se adună</b><span>suprapunere</span></div>
-        <canvas id="superposeCv" aria-label="Cele două fascicule suprapuse, mergând spre detector"></canvas>
-      </div>
-      <div>
-        <p class="say">
-          Cele două fascicule ocupă <strong>aceeași regiune din spațiu</strong>. Fiecare e o undă
-          electromagnetică, adică un câmp electric care oscilează. Acolo unde se întâlnesc,
-          câmpurile se adună punct cu punct, ca două valuri care trec unul prin altul.
+  <!-- 07 · Recombinarea -->
+  <section class="sec" id="s-recombine">
+    <div class="split">
+      <div class="col-5 prose">
+        <header class="sec-head">
+          <span class="num">07</span>
+          <h2>Cum ajung <em>iar împreună?</em></h2>
+        </header>
+        <p>
+          Aici sar majoritatea explicațiilor. Raza <span class="a">(1)</span> se întoarce de la M1 și
+          <strong>trece prin</strong> lamă. Raza <span class="b">(2)</span> se întoarce de la M2 și e
+          <strong>reflectată</strong> de lamă. Amândouă pleacă spre același ecran.
         </p>
         <details class="wait" open>
-          <summary>Ce înseamnă exact „se suprapun"?</summary>
-          <p>Că în fiecare punct și în fiecare moment, câmpul electric total este suma celor două
-          câmpuri. Dacă amândouă „urcă" în același timp, suma e mai mare. Dacă una urcă în timp ce
-          cealaltă coboară, se anulează.</p>
+          <summary>Se „lipesc" razele?</summary>
+          <p>Nu. Una e transmisă, cealaltă reflectată, iar amândouă ajung pe aceeași ieșire. În schemă
+          sunt trasate puțin decalat doar ca să se vadă că vin pe drumuri diferite.</p>
         </details>
-        <p class="say" style="margin-top:12px">
-          Detectorul nu vede câmpul, ci <strong>pătratul</strong> lui, mediat în timp. De aceea
-          două unde care se anulează dau întuneric, nu „jumătate de lumină".
+      </div>
+      <figure class="col-7 schema-wrap">
+        <svg class="schema" viewBox="0 0 1000 680" role="img"
+             aria-label="Schema interferometrului: raza 1 urcă spre oglinda M1, raza 2 merge spre oglinda M2, apoi amândouă coboară spre ecran">
+          <rect x="30" y="285" width="120" height="90" fill="#141b22" stroke="#34424d" stroke-width="2"/>
+          <text x="90" y="270" text-anchor="middle" class="sl">Laser</text>
+          <path d="M150 330H424" stroke="#ffb04a" stroke-width="3" fill="none"/>
+          <path d="M280 322l16 8-16 8z" fill="#ffb04a"/>
+          <path d="M438 330H792" stroke="#ffb04a" stroke-width="3" fill="none"/>
+          <path d="M792 342H432L430 612" stroke="#ffb04a" stroke-width="3" fill="none"/>
+          <path d="M424 322V72" stroke="#7fd4ee" stroke-width="3" fill="none"/>
+          <path d="M438 72V304L446 350L442 612" stroke="#7fd4ee" stroke-width="3" fill="none"/>
+          <g transform="rotate(-45 432 330)">
+            <rect x="352" y="319" width="160" height="22" fill="rgba(127,212,238,.20)" stroke="#7fd4ee" stroke-width="2"/>
+          </g>
+          <text x="490" y="408" class="sl">Lamă separatoare</text>
+          <rect x="346" y="40" width="170" height="26" fill="#cfd8de"/>
+          <rect x="346" y="30" width="170" height="10" fill="#49555e"/>
+          <text x="530" y="60" class="sl">Oglinda 1 (M1)</text>
+          <rect x="792" y="250" width="26" height="170" fill="#cfd8de"/>
+          <rect x="818" y="250" width="10" height="170" fill="#49555e"/>
+          <text x="842" y="340" class="sl">Oglinda 2</text>
+          <text x="842" y="368" class="sl">(M2)</text>
+          <path d="M300 624H570" stroke="#96a3ad" stroke-width="5"/>
+          <path d="M300 606V642M570 606V642" stroke="#96a3ad" stroke-width="8"/>
+          <text x="435" y="668" text-anchor="middle" class="sl">Ecran</text>
+          <path d="M384 80V310" stroke="#96a3ad" stroke-width="1.6"/>
+          <path d="M384 80l-6 12h12zM384 310l-6-12h12z" fill="#96a3ad"/>
+          <text x="352" y="204" class="sm">L₁</text>
+          <path d="M474 292H786" stroke="#96a3ad" stroke-width="1.6"/>
+          <path d="M474 292l12-6v12zM786 292l-12-6v12z" fill="#96a3ad"/>
+          <text x="610" y="278" class="sm">L₂</text>
+          <text x="452" y="196" class="sb" fill="#7fd4ee">(1)</text>
+          <text x="640" y="382" class="sb" fill="#ffb04a">(2)</text>
+          <text x="458" y="530" class="sb"><tspan fill="#7fd4ee">(1)</tspan><tspan fill="#eef1f3"> + </tspan><tspan fill="#ffb04a">(2)</tspan></text>
+        </svg>
+        <figcaption class="cap">Schemă redesenată pentru acest proiect, după o diagramă clasică de manual.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- 08 · Suprapunerea -->
+  <section class="sec" id="s-superpose">
+    <div class="split rev">
+      <figure class="col-7 stage">
+        <canvas id="superposeCv" aria-label="Cele două fascicule suprapuse, mergând spre detector"></canvas>
+      </figure>
+      <div class="col-5 prose">
+        <header class="sec-head">
+          <span class="num">08</span>
+          <h2>Ce înseamnă <em>„se suprapun"</em></h2>
+        </header>
+        <p>
+          Cele două raze ocupă <strong>aceeași regiune din spațiu</strong>. Fiecare e o undă
+          electromagnetică, un câmp electric care oscilează. Unde se întâlnesc, câmpurile se adună
+          punct cu punct, ca două valuri care trec unul prin altul.
+        </p>
+        <p>
+          Detectorul vede <strong>pătratul</strong> câmpului. De aceea două unde care se anulează dau
+          întuneric, nu „jumătate de lumină".
         </p>
       </div>
     </div>
   </section>
 
-  <!-- ══ 09 · FAZA, TREI STĂRI ════════════════════════════════════ -->
-  <section id="s-phase">
-    <div class="shead"><span class="sym">09</span><div><h2 class="display">Faza: cât de decalate<br>sunt cele două unde</h2></div></div>
-    <div class="phase3">
-      <div class="p3">
+  <!-- 09 · Faza -->
+  <section class="sec" id="s-phase">
+    <header class="sec-head">
+      <span class="num">09</span>
+      <h2>Faza: cât de <em>decalate</em> sunt undele</h2>
+    </header>
+    <div class="triptych">
+      <figure>
         <canvas id="ph0" aria-label="Unde în fază, rezultanta de amplitudine dublă"></canvas>
-        <div class="p3-cap"><b>φ = 0°</b><i>constructiv</i><span>lumină maximă</span></div>
-      </div>
-      <div class="p3">
+        <figcaption><b>0°</b><span>în fază</span><i>lumină maximă</i></figcaption>
+      </figure>
+      <figure>
         <canvas id="ph90" aria-label="Unde defazate cu 90 de grade, rezultanta intermediară"></canvas>
-        <div class="p3-cap"><b>φ = 90°</b><i>parțial</i><span>lumină intermediară</span></div>
-      </div>
-      <div class="p3">
+        <figcaption><b>90°</b><span>puțin decalate</span><i>lumină intermediară</i></figcaption>
+      </figure>
+      <figure>
         <canvas id="ph180" aria-label="Unde în antifază, rezultanta este o linie dreaptă"></canvas>
-        <div class="p3-cap"><b>φ = 180°</b><i>distructiv</i><span>lumină minimă</span></div>
-      </div>
+        <figcaption><b>180°</b><span>în antifază</span><i>întuneric</i></figcaption>
+      </figure>
     </div>
 
-    <div class="inst" style="margin-top:12px">
-      <div class="inst-head"><b>Mișcă unda B și urmărește rezultanta</b><span id="heroVerdictTag">constructiv</span></div>
+    <figure class="stage feature">
       <canvas id="heroCv" aria-label="Cele două unde, rezultanta și detectorul"></canvas>
-      <div class="pad">
-        <div class="ctl">
-          <div class="ctl-top"><label for="heroPhase">faza φ</label><span class="v" id="heroPhaseV">0°</span></div>
+      <figcaption class="stage-foot">
+        <div class="ctl grow">
+          <div class="ctl-top"><label for="heroPhase">Mută unda B</label><span class="v" id="heroPhaseV">0°</span></div>
           <input type="range" id="heroPhase" min="0" max="360" step="1" value="0">
         </div>
-        <div class="row" style="margin-top:10px">
+        <div class="tabs" role="group" aria-label="Faze prestabilite">
           <button data-phase="0">0°</button>
           <button data-phase="90">90°</button>
           <button data-phase="180">180°</button>
           <button data-phase="270">270°</button>
-          <span class="verdict bright" id="heroVerdict">lumină maximă</span>
         </div>
-      </div>
-    </div>
-    <details class="wait" style="margin-top:14px">
-      <summary>Ce este faza, pe scurt?</summary>
-      <p><strong>Faza = cât de decalate sunt cele două unde.</strong> Zero înseamnă că urcă și
-      coboară împreună. 180° înseamnă că una urcă exact când cealaltă coboară.</p>
-    </details>
+        <p class="verdict-line"><span id="heroVerdict" class="verdict bright">lumină maximă</span><span id="heroVerdictTag" class="sr">constructiv</span></p>
+      </figcaption>
+    </figure>
+    <p class="statement small">Două raze de lumină pot produce <em>întuneric</em>.</p>
   </section>
 
-  <!-- ══ 10 · MIȘCĂ OGLINDA ═══════════════════════════════════════ -->
-  <section id="s-mirror">
-    <div class="shead"><span class="sym">10</span><div><h2 class="display">Mișcă oglinda</h2></div></div>
-    <p class="say" style="margin-bottom:16px">
-      Cum produci un decalaj? Faci un drum mai lung decât celălalt. Mută oglinda și urmărește
-      cum se propagă efectul prin toate cele cinci reprezentări: toate citesc aceeași stare.
+  <!-- 10 · Mișcă oglinda -->
+  <section class="sec" id="s-mirror">
+    <header class="sec-head">
+      <span class="num">10</span>
+      <h2>Mișcă <em>oglinda</em></h2>
+    </header>
+    <p class="intro">
+      Cum produci decalajul? Lungești un drum. Mută oglinda și urmărește cum trece efectul prin toate
+      cele cinci reprezentări: toate citesc aceeași stare.
     </p>
     <div class="chain" id="chain">
-      <div class="link">
+      <figure class="link">
         <canvas data-stage="0" aria-label="Oglinda care se deplasează"></canvas>
-        <span class="k">1 · oglinda Δx</span><span class="val" id="chainDx">0,0 nm</span>
-      </div>
-      <div class="link">
+        <figcaption><span class="k">oglinda</span><span class="val" id="chainDx">0,0 nm</span></figcaption>
+      </figure>
+      <figure class="link">
         <canvas data-stage="1" aria-label="Drumul optic, dus și întors"></canvas>
-        <span class="k">2 · drum ΔL</span><span class="val" id="chainDL">0,0 nm</span>
-      </div>
-      <div class="link">
+        <figcaption><span class="k">drumul</span><span class="val" id="chainDL">0,0 nm</span></figcaption>
+      </figure>
+      <figure class="link">
         <canvas data-stage="2" aria-label="Unda care alunecă"></canvas>
-        <span class="k">3 · unda alunecă</span><span class="val" id="chainLambda">589,3 nm</span>
-      </div>
-      <div class="link">
+        <figcaption><span class="k">unda</span><span class="val" id="chainLambda">589,3 nm</span></figcaption>
+      </figure>
+      <figure class="link">
         <canvas data-stage="3" aria-label="Cadranul de fază"></canvas>
-        <span class="k">4 · faza φ</span><span class="val" id="chainPhi">0,00π = 0°</span>
-      </div>
-      <div class="link">
+        <figcaption><span class="k">faza</span><span class="val" id="chainPhi">0,00π = 0°</span></figcaption>
+      </figure>
+      <figure class="link">
         <canvas data-stage="4" aria-label="Franja și intensitatea"></canvas>
-        <span class="k">5 · franja I/Imax</span><span class="val" id="chainI">1,00</span>
-      </div>
+        <figcaption><span class="k">lumina</span><span class="val" id="chainI">1,00</span></figcaption>
+      </figure>
     </div>
-    <div class="inst pad" style="margin-top:10px">
-      <div class="ctl">
-        <div class="ctl-top"><label for="chainMirror">Δx · deplasarea oglinzii</label><span class="v" id="chainDx2">0,0 nm</span></div>
+    <div class="stage-foot free">
+      <div class="ctl grow">
+        <div class="ctl-top"><label for="chainMirror">Deplasarea oglinzii</label><span class="v" id="chainDx2">0,0 nm</span></div>
         <input type="range" id="chainMirror" min="0" max="1178" step="1" value="0">
       </div>
-      <div class="chain-verdict">
-        <button id="chainQuarter">Sari la λ/4 = 147 nm</button>
-        <button id="chainZero">Înapoi la zero</button>
-        <span class="verdict bright" id="chainVerdict">MAXIM</span>
-      </div>
+      <button class="btn" id="chainQuarter">Sari la 147 nm</button>
+      <button class="btn" id="chainZero">Înapoi la zero</button>
+      <span class="verdict bright" id="chainVerdict">MAXIM</span>
     </div>
   </section>
 
-  <!-- ══ 11 · DE CE 2Δx ═══════════════════════════════════════════ -->
-  <section id="s-two-dx">
-    <div class="shead"><span class="sym">11</span><div><h2 class="display">De ce contează de două ori</h2></div></div>
-    <div class="duo">
-      <div>
-        <p class="say">
-          Ai văzut animația: muți oglinda cu 147 nm și se face întuneric. Dar λ/2 pentru sodiu
-          înseamnă 295 nm. De ce a fost destul jumătate?
-        </p>
+  <!-- 11 · Factorul 2 -->
+  <section class="sec" id="s-two-dx">
+    <div class="split">
+      <div class="col-6">
+        <header class="sec-head">
+          <span class="num">11</span>
+          <h2>De ce contează <em>de două ori</em></h2>
+        </header>
         <div class="ledger">
           <div class="lr"><span>dus</span><b>+Δx</b></div>
           <div class="lr"><span>întors</span><b>+Δx</b></div>
-          <div class="lr total"><span>total</span><b>+2Δx</b></div>
+          <div class="lr total"><span>total</span><b>2Δx</b></div>
         </div>
-        <p class="say" style="margin-top:14px">
-          Lumina parcurge brațul de două ori. Oglinda merge cu <span class="mono">Δx</span>,
-          drumul optic crește cu <span class="mono">2Δx</span>. Abia acum formula are sens,
-          pentru că ai văzut întâi ce face.
-        </p>
-        <p class="say">
-          Asta face din interferometru o riglă: numeri franjele care trec și afli deplasarea. Între
-          1960 și 1983, chiar <strong>metrul</strong> a fost definit așa, ca 1 650 763,73 lungimi de
-          undă ale kriptonului-86.
-        </p>
       </div>
-      <div>
-        <div class="inst pad">
-          <p class="tag" style="margin-bottom:8px">exemplu numeric, cu sodiu</p>
-          <div class="kv" style="border:0;padding-top:0"><span>oglinda</span><b>+147,3 nm</b></div>
-          <div class="kv"><span>drumul optic</span><b>+294,6 nm</b></div>
-          <div class="kv"><span>adică</span><b>λ/2</b></div>
-          <div class="kv"><span>faza</span><b>180°</b></div>
-          <div class="kv"><span>rezultat</span><b style="color:var(--a)">minim</b></div>
-        </div>
-        <details class="wait" style="margin-top:12px">
-          <summary>De ce mutarea oglinzii contează de două ori?</summary>
-          <p>Dus + întors. Lumina străbate distanța adăugată o dată la ducere și încă o dată la
-          întoarcere, deci drumul optic se schimbă cu dublul deplasării.</p>
-        </details>
+      <div class="col-6 prose">
+        <p class="pull">Oglinda merge 147 nm. Lumina, 294.</p>
+        <p>
+          Lumina parcurge brațul de două ori, deci drumul crește cu dublul deplasării oglinzii. 294 nm
+          înseamnă exact jumătate de lungime de undă pentru sodiu: cele două unde ajung în antifază și
+          se sting. Abia acum formula are sens, pentru că ai văzut întâi ce face.
+        </p>
+        <p>
+          Asta face din interferometru o riglă: numeri franjele și afli deplasarea. Între 1960 și 1983,
+          chiar <strong>metrul</strong> a fost definit așa, ca 1 650 763,73 lungimi de undă ale
+          kriptonului-86.
+        </p>
       </div>
     </div>
   </section>
 
-  <!-- ══ 12 · FRANJELE ════════════════════════════════════════════ -->
-  <section id="s-fringes">
-    <div class="shead"><span class="sym">12</span><div><h2 class="display">Cum apar franjele</h2></div></div>
-    <p class="say" style="margin-bottom:16px">
-      Până acum am privit un singur punct. Pe un ecran întreg, fiecare direcție are propria
-      diferență de drum, de aceea apar inele. Plimbă mouse-ul peste ecran ca să citești
-      valorile în punctul țintit.
+  <!-- 12 · Franjele -->
+  <section class="sec" id="s-fringes">
+    <header class="sec-head">
+      <span class="num">12</span>
+      <h2>Cum apar <em>franjele</em></h2>
+    </header>
+    <p class="intro">
+      Pe un ecran întreg, fiecare punct are altă diferență de drum, de aceea apar inele. Plimbă
+      mouse-ul peste ecran ca să citești valorile din punctul țintit.
     </p>
-    <div class="inst">
-      <div class="inst-head"><b>Interferometru · simulare</b><span>treci cu mouse-ul peste ecran</span></div>
-      <div class="lab">
-        <div class="lab-view">
-          <canvas id="fringeCv" aria-label="Câmpul de interferență"></canvas>
-          <canvas id="profileCv" aria-label="Profilul de intensitate"></canvas>
+    <div class="lab">
+      <div class="lab-screen">
+        <canvas id="fringeCv" aria-label="Câmpul de interferență"></canvas>
+        <canvas id="profileCv" aria-label="Profilul de intensitate"></canvas>
+      </div>
+      <div class="lab-ctl">
+        <div class="tabs" role="group" aria-label="Mod de citire">
+          <button id="modeScreen" aria-pressed="true">Ecran</button>
+          <button id="modePoint" aria-pressed="false">Un punct</button>
         </div>
-        <div class="lab-ctl">
-          <div class="seg" role="group" aria-label="Mod de citire">
-            <button id="modeScreen" aria-pressed="true">Ecran</button>
-            <button id="modePoint" aria-pressed="false">Un punct</button>
-          </div>
-          <div class="row">
-            <button id="modeWhite" aria-pressed="false" style="flex:1">Lumină albă</button>
-            <button id="modeMicro" aria-pressed="false" style="flex:1">Microscop</button>
-          </div>
-          <div class="ctl" id="ctlLambdaWrap">
-            <div class="ctl-top"><label for="ctlLambda">λ culoarea</label><span class="v" id="ctlLambdaV">589 nm</span></div>
-            <input type="range" id="ctlLambda" min="400" max="700" step="1" value="589">
-          </div>
-          <div class="ctl">
-            <div class="ctl-top"><label for="ctlArm">Δd diferența de braț</label><span class="v" id="ctlArmV">4,00 µm</span></div>
-            <input type="range" id="ctlArm" min="0" max="14000" step="10" value="4000">
-          </div>
-          <div class="ctl">
-            <div class="ctl-top"><label for="ctlTilt">înclinarea oglinzii</label><span class="v" id="ctlTiltV">0 µrad</span></div>
-            <input type="range" id="ctlTilt" min="0" max="400" step="1" value="0">
-          </div>
+        <div class="tabs" role="group" aria-label="Opțiuni">
+          <button id="modeWhite" aria-pressed="false">Lumină albă</button>
+          <button id="modeMicro" aria-pressed="false">Microscop</button>
+        </div>
+        <div class="ctl" id="ctlLambdaWrap">
+          <div class="ctl-top"><label for="ctlLambda">Culoarea</label><span class="v" id="ctlLambdaV">589 nm</span></div>
+          <input type="range" id="ctlLambda" min="400" max="700" step="1" value="589">
+        </div>
+        <div class="ctl">
+          <div class="ctl-top"><label for="ctlArm">Diferența de braț</label><span class="v" id="ctlArmV">4,00 µm</span></div>
+          <input type="range" id="ctlArm" min="0" max="14000" step="10" value="4000">
+        </div>
+        <div class="ctl">
+          <div class="ctl-top"><label for="ctlTilt">Înclinarea oglinzii</label><span class="v" id="ctlTiltV">0 µrad</span></div>
+          <input type="range" id="ctlTilt" min="0" max="400" step="1" value="0">
         </div>
       </div>
     </div>
-    <div class="duo" style="margin-top:14px">
-      <figure class="fig">
+    <div class="pair">
+      <figure class="plate">
         <img src="img/inele-newton-laser.jpg" width="329" height="300" loading="lazy"
              alt="Fotografie a unor inele de interferență roșii, cu laser de 650 nm">
         <figcaption>
-          <span class="ptag">fotografie reală</span>
-          <b>Franje fotografiate.</b> Inele Newton cu laser roșu de 650 nm, la microscop.
-          Nu sunt franje de interferometru, dar e aceeași fizică. Așa arată în realitate.
-          <span class="cr">Foto: Robert D. Anderson · CC BY-SA 3.0 ·
-            <a href="https://commons.wikimedia.org/wiki/File:Newton%27s_rings_(650nm_red_laser_light).jpeg">Wikimedia Commons</a></span>
+          <span class="kind">fotografie</span>
+          Franje fotografiate la microscop, cu laser roșu de 650 nm. Sunt inele Newton, nu franje de
+          interferometru, dar e aceeași fizică: așa arată în realitate.
+          <span class="credit">Robert D. Anderson · CC BY-SA 3.0 · <a href="https://commons.wikimedia.org/wiki/File:Newton%27s_rings_(650nm_red_laser_light).jpeg">Wikimedia Commons</a></span>
         </figcaption>
       </figure>
-      <figure class="fig">
+      <figure class="plate">
         <img src="img/interferometru-modern.jpg" width="782" height="626" loading="lazy"
              alt="Fotografie a unui interferometru Michelson pe o masă optică">
         <figcaption>
-          <span class="ptag">fotografie reală</span>
-          <b>Aparatul, într-un laborator de azi.</b> Etichetele sunt în germană: <em>Laser</em>,
-          <em>Strahlteilerwürfel</em> (cubul separator), <em>Spiegel</em> (oglindă),
-          <em>Schirm</em> (ecranul cu franje).
-          <span class="cr">Foto: FL0 · CC BY-SA 3.0 ·
-            <a href="https://commons.wikimedia.org/wiki/File:Aufbau-Michelson-Interferometer-Beschriftung-Strahlengang.jpg">Wikimedia Commons</a></span>
+          <span class="kind">fotografie</span>
+          Același aparat într-un laborator de azi. Etichetele sunt în germană: <i>Strahlteilerwürfel</i>
+          (cubul separator), <i>Spiegel</i> (oglindă), <i>Schirm</i> (ecranul cu franje).
+          <span class="credit">FL0 · CC BY-SA 3.0 · <a href="https://commons.wikimedia.org/wiki/File:Aufbau-Michelson-Interferometer-Beschriftung-Strahlengang.jpg">Wikimedia Commons</a></span>
+        </figcaption>
+      </figure>
+    </div>
+  </section>
+</main>
+
+<!-- ══════════════════ III · 1887 ══════════════════ -->
+<section class="opener" id="ch-1887">
+  <div class="opener-in">
+    <span class="roman">III</span>
+    <h2 class="giant">1887</h2>
+    <p class="kicker">Instrumentul e gata. Acum putem testa ipoteza eterului.</p>
+  </div>
+</section>
+
+<main class="wrap">
+
+  <!-- 13 · De ce rotim -->
+  <section class="sec" id="s-rotate-why">
+    <div class="split">
+      <div class="col-5 prose">
+        <header class="sec-head">
+          <span class="num">13</span>
+          <h2>De ce rotea <em>aparatul?</em></h2>
+        </header>
+        <p>
+          Michelson nu putea ști dinainte care braț e „mai lung". Dar dacă rotea aparatul, brațele
+          <strong>își schimbau rolurile</strong> față de vântul presupus: cel paralel devenea
+          perpendicular și invers.
+        </p>
+        <p>
+          Dacă vântul exista, rotirea trebuia să schimbe faza, deci franjele trebuiau să se miște. O
+          mișcare se vede, chiar fără să știi de unde a pornit.
+        </p>
+      </div>
+      <figure class="col-7 stage">
+        <canvas id="rolesCv" aria-label="Brațele aparatului înainte și după rotirea cu 90 de grade"></canvas>
+        <figcaption class="stage-foot">
+          <button class="btn" id="rolesToggle">Rotește cu 90°</button>
+          <span class="cap" id="rolesTag">înainte de rotire</span>
         </figcaption>
       </figure>
     </div>
   </section>
 
-  <!-- ══ 14 · DE CE ROTIM ═════════════════════════════════════════ -->
-  <section id="ch-1887">
-    <div class="shead"><span class="sym">13</span><div><h2 class="display">De ce rotea Michelson aparatul?</h2></div></div>
-    <p class="say" style="margin-bottom:16px">
-      Acum ai instrumentul: o riglă care sesizează diferențe de drum de sub o miime de milimetru,
-      exact ordinul de mărime al efectului prezis de eter. Mai lipsea un singur truc.
-    </p>
-    <div class="duo">
-      <div class="inst">
-        <div class="inst-head"><b>Rolurile brațelor</b><span id="rolesTag">înainte de rotire</span></div>
-        <canvas id="rolesCv" aria-label="Brațele aparatului înainte și după rotirea cu 90 de grade"></canvas>
-        <div class="pad">
-          <button id="rolesToggle">Rotește cu 90°</button>
+  <!-- 14 · Prezice -->
+  <section class="sec" id="s-predict">
+    <header class="sec-head">
+      <span class="num">14</span>
+      <h2>Prezice <em>rezultatul</em></h2>
+    </header>
+    <div class="split">
+      <div class="col-5">
+        <div class="fig-num accent solo">
+          <span class="v" id="predShift">0,37</span>
+          <span class="k">franje prezise de modelul eterului, la rotirea cu 90°. De patruzeci de ori peste ce se putea citi.</span>
         </div>
-      </div>
-      <div>
-        <p class="say">
-          Prin rotirea aparatului, cele două brațe <strong>își schimbă rolurile</strong> față de
-          presupusul vânt de eter: cel paralel devine perpendicular și invers.
-        </p>
-        <p class="say">
-          Dacă vântul produce într-adevăr diferența de timp, atunci rotirea trebuie să schimbe
-          faza, deci franjele trebuie să se miște. Asta poți măsura, chiar fără să cunoști
-          diferența de referință.
-        </p>
-        <details class="wait">
-          <summary>De ce rotește aparatul?</summary>
-          <p>Ca brațele să-și schimbe orientarea față de presupusul vânt de eter. Efectul ar
-          trebui să se inverseze, iar o inversare se vede, pe când o valoare absolută necunoscută nu.</p>
-        </details>
-      </div>
-    </div>
-  </section>
-
-  <!-- ══ 15 · PREZICE ═════════════════════════════════════════════ -->
-  <section id="s-predict">
-    <div class="shead"><span class="sym">14</span><div><h2 class="display">Prezice rezultatul</h2></div></div>
-    <p class="say" style="margin-bottom:16px">
-      Cu brațul efectiv de 11 metri din 1887 și cu Pământul la 30 km/s, modelul eterului prezice
-      o deplasare de aproximativ <strong>0,4 franje</strong> la rotirea cu 90°, de patruzeci de
-      ori peste ce se putea citi. <strong>Ce crezi că s-a văzut?</strong>
-    </p>
-    <div class="duo wide-left">
-      <div class="inst pad">
         <div class="ctl">
-          <div class="ctl-top"><label for="armLen">L · lungimea efectivă a brațului</label><span class="v" id="armLenV">11,0 m</span></div>
+          <div class="ctl-top"><label for="armLen">Lungimea brațului</label><span class="v" id="armLenV">11,0 m</span></div>
           <input type="range" id="armLen" min="1" max="20" step="0.5" value="11">
         </div>
-        <div class="ctl" style="margin-top:12px">
-          <div class="ctl-top"><label for="etherV">v · viteza față de eter</label><span class="v" id="etherVV">30 km/s</span></div>
+        <div class="ctl" style="margin-top:14px">
+          <div class="ctl-top"><label for="etherV">Viteza prin eter</label><span class="v" id="etherVV">30 km/s</span></div>
           <input type="range" id="etherV" min="0" max="100" step="1" value="30">
         </div>
-        <div class="counter" style="margin-top:16px">
-          <span class="big" id="predShift">0,37</span>
-          <span class="lbl">franje prezise<br>de modelul eterului</span>
-        </div>
-        <p class="say" style="font-size:.84rem;margin:12px 0 0">
-          Aceasta este predicția <em>modelului istoric al eterului staționar</em>, nu a fizicii de azi.
-        </p>
       </div>
-      <div>
-        <p class="tag" style="margin-bottom:10px">ce prezici?</p>
-        <div class="ch-opts" id="predictGuess">
-          <button class="ch-opt" data-guess="0">Franjele se deplasează cu ≈0,4, cât prezice modelul</button>
-          <button class="ch-opt" data-guess="1">Franjele se deplasează, dar mai puțin</button>
-          <button class="ch-opt" data-guess="2">Franjele nu se deplasează deloc</button>
+      <div class="col-7">
+        <p class="question">Ce crezi că s-a văzut?</p>
+        <div class="choices" id="predictGuess">
+          <button class="ch-opt" data-guess="0">Franjele s-au mișcat cu 0,4, cum spunea teoria</button>
+          <button class="ch-opt" data-guess="1">S-au mișcat, dar mai puțin</button>
+          <button class="ch-opt" data-guess="2">Nu s-au mișcat deloc</button>
         </div>
-        <p class="say" id="predictAck" hidden style="margin-top:12px"></p>
+        <p class="ack" id="predictAck" hidden></p>
       </div>
     </div>
   </section>
 
-  <!-- ══ 16 · PREDICȚIE VS 1887 ═══════════════════════════════════ -->
-  <section id="s-vs">
-    <div class="shead"><span class="sym">15</span><div><h2 class="display">Predicție vs. 1887</h2></div></div>
-    <div class="inst">
-      <div class="inst-head"><b>Aparatul în rotație</b><span id="rotTag">θ = 0°</span></div>
+  <!-- 15 · Predicție vs 1887 -->
+  <section class="sec" id="s-vs">
+    <header class="sec-head">
+      <span class="num">15</span>
+      <h2>Predicție <em>vs. 1887</em></h2>
+    </header>
+    <figure class="stage">
       <canvas id="mmCv" aria-label="Aparatul rotindu-se și curba deplasării prezise"></canvas>
-    </div>
-    <div class="row" style="margin:12px 0">
-      <button id="rotateBtn">Rotește aparatul cu 90°</button>
-      <button id="revealBtn" hidden>Arată ce s-a măsurat în 1887</button>
-    </div>
-    <div class="inst">
-      <div class="inst-head"><b>Predicție / observație</b><span>aceleași franje, aceeași scară</span></div>
+      <figcaption class="stage-foot">
+        <button class="btn strong" id="rotateBtn">Rotește aparatul cu 90°</button>
+        <button class="btn" id="revealBtn" hidden>Arată ce s-a măsurat</button>
+        <span class="cap" id="rotTag">θ = 0°</span>
+      </figcaption>
+    </figure>
+    <figure class="stage">
       <canvas id="splitCv" aria-label="Franjele prezise față de cele observate"></canvas>
-    </div>
+    </figure>
 
-    <div class="duo wide-left" style="margin-top:16px">
-      <figure class="fig">
-        <div style="position:relative">
-          <img src="img/figura-6-1887.png" width="770" height="396" loading="lazy" style="background:#f4f2ee"
+    <div class="split archive">
+      <figure class="col-7 plate paper">
+        <div class="paper-in">
+          <img src="img/figura-6-1887.png" width="770" height="396" loading="lazy"
                alt="Figura 6 din lucrarea din 1887">
-          <div id="figNotes" hidden style="position:absolute;inset:0;pointer-events:none">
-            <span class="fnote" style="left:3%;top:4%">punctat: predicția eterului, deja redusă la ⅛</span>
-            <span class="fnote" style="left:3%;top:54%">continuu: ce s-a măsurat efectiv</span>
+          <div id="figNotes" hidden class="notes-layer">
+            <span class="fnote" style="left:3%;top:4%">punctat: predicția, deja redusă la ⅛</span>
+            <span class="fnote" style="left:3%;top:54%">continuu: ce s-a măsurat</span>
             <span class="fnote" style="right:3%;top:26%">o diviziune = 0,05 λ</span>
           </div>
         </div>
         <figcaption>
-          <span class="ptag">datele originale, 1887</span>
-          <b>Figura 6 din lucrarea publicată.</b> Sus: observațiile de la amiază. Jos: cele de seara.
-          <span class="cr">Michelson &amp; Morley, American Journal of Science 34 (1887) · domeniu public ·
-            <a href="https://commons.wikimedia.org/wiki/File:Michelson_Morley_1887_Figure_6.png">Wikimedia Commons</a></span>
+          <span class="kind">datele originale</span>
+          Figura 6 din lucrarea publicată în 1887. Sus, observațiile de la amiază; jos, cele de seara.
+          <span class="credit">Michelson &amp; Morley, American Journal of Science 34 · domeniu public · <a href="https://commons.wikimedia.org/wiki/File:Michelson_Morley_1887_Figure_6.png">Wikimedia Commons</a></span>
         </figcaption>
       </figure>
-      <div>
-        <div class="seg" style="max-width:240px;margin-bottom:14px">
+      <div class="col-5 prose">
+        <div class="tabs" role="group" aria-label="Figura">
           <button id="figOriginal" aria-pressed="true">Original</button>
           <button id="figExplained" aria-pressed="false">Explicat</button>
         </div>
-        <p class="say">
-          Liniile continue sunt măsurătorile. Liniile punctate sunt predicția modelului. Iar
-          autorii o desenaseră deja <strong>redusă la o optime</strong>, altfel n-ar fi încăput în
-          figură. Chiar și micșorată de opt ori, predicția rămâne vizibil mai mare decât tot ce
-          s-a măsurat.
+        <p>
+          Linia continuă e măsurătoarea. Linia punctată e predicția, pe care autorii o desenaseră
+          deja <strong>micșorată de opt ori</strong>, altfel n-ar fi încăput în figură. Chiar și așa,
+          e vizibil mai mare decât tot ce s-a măsurat.
         </p>
-        <div class="figrow" style="margin-top:12px">
-          <figure class="fig">
-            <img src="img/aparat-1887.jpg" width="742" height="432" loading="lazy"
-                 alt="Fotografie din 1887 cu placa de gresie plutind pe mercur">
-            <figcaption>
-              <span class="ptag">fotografie reală, 1887</span>
-              <b>Aparatul.</b> Placă de gresie plutind pe mercur, ca să se rotească fără vibrații.
-              <span class="cr">Case Western Reserve University · domeniu public ·
-                <a href="https://commons.wikimedia.org/wiki/File:Michelson_morley_experiment_1887.jpg">Wikimedia Commons</a></span>
-            </figcaption>
-          </figure>
-          <figure class="fig">
-            <img src="img/michelson-portret.jpg" width="916" height="1286" loading="lazy"
-                 alt="Portret fotografic al lui Albert A. Michelson">
-            <figcaption>
-              <span class="ptag">fotografie reală</span>
-              <b>Albert A. Michelson</b> (1852–1931), ofițer de marină devenit fizician.
-              <span class="cr">Domeniu public ·
-                <a href="https://commons.wikimedia.org/wiki/File:Albert_Abraham_Michelson2.jpg">Wikimedia Commons</a></span>
-            </figcaption>
-          </figure>
-        </div>
       </div>
     </div>
-  </section>
 
-  <!-- ══ 17 · CE A ÎNSEMNAT ═══════════════════════════════════════ -->
-  <section id="s-meaning">
-    <h2 class="display" style="font-size:clamp(2rem,5.6vw,3.6rem);max-width:18ch">
-      Efectul așteptat<br>nu a apărut.
-    </h2>
-    <p class="say" style="margin-top:18px;font-size:1.05rem">
-      Formulat precis: experimentul Michelson–Morley <strong>nu a detectat mișcarea relativă
-      față de eter în forma prezisă de modelul clasic al unui eter staționar.</strong>
+    <div class="pair">
+      <figure class="plate">
+        <img src="img/aparat-1887.jpg" width="742" height="432" loading="lazy"
+             alt="Fotografie din 1887 cu placa de gresie plutind pe mercur">
+        <figcaption>
+          <span class="kind">fotografie, 1887</span>
+          Aparatul adevărat: o placă de gresie plutind pe mercur, ca să se rotească fără vibrații.
+          <span class="credit">Case Western Reserve University · domeniu public · <a href="https://commons.wikimedia.org/wiki/File:Michelson_morley_experiment_1887.jpg">Wikimedia Commons</a></span>
+        </figcaption>
+      </figure>
+      <figure class="plate portrait">
+        <img src="img/michelson-portret.jpg" width="916" height="1286" loading="lazy"
+             alt="Portret fotografic al lui Albert A. Michelson">
+        <figcaption>
+          <span class="kind">fotografie</span>
+          Albert A. Michelson (1852–1931), ofițer de marină devenit fizician. Primul american premiat
+          cu Nobel într-o știință exactă.
+          <span class="credit">domeniu public · <a href="https://commons.wikimedia.org/wiki/File:Albert_Abraham_Michelson2.jpg">Wikimedia Commons</a></span>
+        </figcaption>
+      </figure>
+    </div>
+  </section>
+</main>
+
+<!-- Rezultatul, pe tot ecranul -->
+<section class="verdict-screen" id="s-meaning">
+  <div class="verdict-in">
+    <p class="giant-statement">Efectul așteptat<br><em>nu a apărut.</em></p>
+    <p class="verdict-body">
+      Formulat precis: experimentul nu a detectat mișcarea față de eter în forma prezisă de modelul
+      clasic al unui eter staționar. Nu „a demonstrat că eterul nu există": a arătat că, dacă există,
+      nu se comportă cum cerea teoria.
     </p>
-    <p class="say">
-      Nu „a demonstrat că eterul nu există": asta n-ar fi putut face niciun experiment singur.
-      A arătat că, dacă eterul există, nu se comportă deloc cum cerea teoria. Iar un rezultat nul
-      obținut cu un aparat de patruzeci de ori mai sensibil decât efectul căutat este el însuși
-      un rezultat, nu un eșec.
-    </p>
-    <details class="wait" open>
+    <details class="wait center">
       <summary>Deci ce a demonstrat, până la urmă?</summary>
-      <p>Că efectul prezis de modelul clasic al eterului staționar nu se observă. Atât, dar e
-      enorm: a obligat fizica să caute altă explicație, iar căutarea aceea a durat optsprezece ani.</p>
+      <p>Că efectul prezis nu se observă. Atât, dar e enorm: a obligat fizica să caute altă explicație,
+      iar căutarea a durat optsprezece ani.</p>
     </details>
-  </section>
+  </div>
+</section>
 
-  <!-- ══ 18 · EINSTEIN ════════════════════════════════════════════ -->
-  <section id="s-einstein">
-    <div class="shead"><span class="sym">16</span><div><h2 class="display">Unde intră Einstein</h2></div></div>
-    <p class="say" style="margin-bottom:14px">
-      Relativitatea nu s-a născut dintr-un singur experiment. A fost un drum de douăzeci de ani,
-      cu mai mulți autori și cu mai multe încercări de a salva eterul.
+<main class="wrap">
+  <!-- 16 · Einstein -->
+  <section class="sec" id="s-einstein">
+    <header class="sec-head">
+      <span class="num">16</span>
+      <h2>Unde intră <em>Einstein</em></h2>
+    </header>
+    <p class="intro">
+      Relativitatea nu s-a născut dintr-un singur experiment. A fost un drum de douăzeci de ani, cu mai
+      mulți autori și cu mai multe încercări de a salva eterul.
     </p>
-    <ol class="time">
-      <li><span class="yr">1881</span><div><h3>Primul interferometru, la Potsdam</h3><p>Sensibilitate insuficientă, dar principiul funcționează.</p></div></li>
-      <li><span class="yr">1887</span><div><h3>Michelson–Morley, Cleveland</h3><p>Rezultat nul, cu un aparat mult mai sensibil decât efectul căutat.</p></div></li>
-      <li><span class="yr">1889–1892</span><div><h3>FitzGerald și Lorentz</h3><p>Propun contracția lungimilor: obiectele s-ar scurta pe direcția mișcării, ascunzând exact efectul. O încercare de a salva eterul.</p></div></li>
-      <li><span class="yr">1904</span><div><h3>Transformările Lorentz</h3><p>Formalismul matematic e complet, dar interpretat încă în termeni de eter.</p></div></li>
-      <li><span class="yr">1905</span><div><h3>Einstein</h3><p>Renunță la eter cu totul și ia constanța vitezei luminii ca postulat. Aceleași ecuații, alt fundament.</p></div></li>
-      <li><span class="yr">1907</span><div><h3>Nobel pentru Michelson</h3><p>Pentru instrumentele optice de precizie, nu pentru relativitate.</p></div></li>
+    <ol class="timeline">
+      <li><span class="yr">1881</span><div><h3>Primul interferometru</h3><p>La Potsdam. Sensibilitate prea mică, dar principiul funcționează.</p></div></li>
+      <li><span class="yr">1887</span><div><h3>Michelson și Morley</h3><p>Rezultat nul, cu un aparat mult mai sensibil decât efectul căutat.</p></div></li>
+      <li><span class="yr">1892</span><div><h3>FitzGerald și Lorentz</h3><p>Obiectele s-ar scurta pe direcția mișcării, ascunzând exact efectul. O încercare de a salva eterul.</p></div></li>
+      <li><span class="yr">1904</span><div><h3>Transformările Lorentz</h3><p>Matematica e completă, dar încă interpretată prin eter.</p></div></li>
+      <li class="key"><span class="yr">1905</span><div><h3>Einstein</h3><p>Renunță la eter și pornește de la ideea că viteza luminii e aceeași pentru toți. Aceleași ecuații, alt fundament.</p></div></li>
+      <li><span class="yr">1907</span><div><h3>Nobel pentru Michelson</h3><p>Pentru instrumentele de precizie, nu pentru relativitate.</p></div></li>
     </ol>
-    <details class="wait" style="margin-top:14px">
+    <details class="wait">
       <summary>Deci Michelson a demonstrat relativitatea?</summary>
-      <p>Nu. Experimentul a fost o piesă importantă din context, dar relativitatea restrânsă a
-      apărut din alt raționament, al lui Einstein, optsprezece ani mai târziu. Einstein însuși
-      a relatat diferit, în momente diferite, cât de mult a cântărit acest experiment pentru el.</p>
+      <p>Nu. Experimentul face parte din context, dar relativitatea a apărut din raționamentul lui
+      Einstein, optsprezece ani mai târziu.</p>
     </details>
   </section>
+</main>
 
-  <!-- ══ 19 · EXPLORE MORE ════════════════════════════════════════ -->
-  <section id="ch-explore">
-    <div class="shead"><span class="sym">17</span><div><h2 class="display">Explore more</h2></div></div>
-    <p class="say" style="margin-bottom:20px">
-      De aici încolo, lucruri care nu erau necesare pentru poveste, dar care arată cât de departe
-      merge instrumentul.
-    </p>
+<!-- ══════════════════ IV · MAI DEPARTE ══════════════════ -->
+<section class="opener" id="ch-explore">
+  <div class="opener-in">
+    <span class="roman">IV</span>
+    <h2 class="giant">Mai departe</h2>
+    <p class="kicker">Același instrument, după eter: aerul cântărit cu lumina și undele gravitaționale.</p>
+  </div>
+</section>
 
+<main class="wrap">
+  <section class="sec explore">
     <details class="xp">
-      <summary><b>Cântărește aerul</b><span>indicele de refracție</span></summary>
+      <summary><span class="xp-n">i</span><b>Cântărește aerul</b><span class="xp-k">indicele de refracție</span></summary>
       <div class="xp-body">
-        <p class="say" style="margin-bottom:14px">
-          Geometria nu se schimbă, dar franjele se mișcă. De ce? Pentru că lumina nu măsoară
-          distanța, ci timpul de parcurs: drumul optic e <span class="mono">n·L</span>.
+        <p class="intro">
+          Geometria nu se schimbă, dar franjele se mișcă. Lumina nu măsoară distanța, ci timpul de
+          parcurs: drumul optic e <span class="mono-accent">n · L</span>.
         </p>
-        <div class="inst">
-          <div class="inst-head"><b>Tub cu gaz într-un braț</b><span id="gasTotal">99,4 franje</span></div>
+        <figure class="stage">
           <canvas id="gasCv" aria-label="Tubul cu gaz și franjele care defilează la vidare"></canvas>
-          <div class="pad">
-            <div class="duo" style="gap:14px">
-              <div class="ctl">
-                <div class="ctl-top"><label for="gasLen">lungimea tubului</label><span class="v" id="gasLenV">10,0 cm</span></div>
-                <input type="range" id="gasLen" min="1" max="30" step="0.5" value="10">
-              </div>
-              <div>
-                <p class="tag" style="margin-bottom:5px">gazul din tub</p>
-                <div class="seg">
-                  <button id="gasAir" aria-pressed="true">Aer</button>
-                  <button id="gasCO2" aria-pressed="false">CO₂</button>
-                  <button id="gasHe" aria-pressed="false">Heliu</button>
-                </div>
-              </div>
+          <figcaption class="stage-foot">
+            <div class="ctl grow">
+              <div class="ctl-top"><label for="gasLen">Lungimea tubului</label><span class="v" id="gasLenV">10,0 cm</span></div>
+              <input type="range" id="gasLen" min="1" max="30" step="0.5" value="10">
             </div>
-            <div class="row" style="margin-top:12px">
-              <button id="gasPump">Scoate aerul</button>
-              <button id="gasFill">Umple din nou</button>
+            <div class="tabs" role="group" aria-label="Gazul din tub">
+              <button id="gasAir" aria-pressed="true">Aer</button>
+              <button id="gasCO2" aria-pressed="false">CO₂</button>
+              <button id="gasHe" aria-pressed="false">Heliu</button>
             </div>
-          </div>
-        </div>
-        <p class="chips" style="margin-top:12px">
-          <span class="chip"><b>OPL = n·L</b><i>drum optic</i></span>
-          <span class="chip"><b>δ = 2(n−1)L</b><i>ce adaugă gazul</i></span>
-        </p>
+            <button class="btn strong" id="gasPump">Scoate aerul</button>
+            <button class="btn" id="gasFill">Umple din nou</button>
+            <span class="cap" id="gasTotal">99,4 franje</span>
+          </figcaption>
+        </figure>
       </div>
     </details>
 
     <details class="xp">
-      <summary><b>LIGO</b><span>același aparat, brațe de 4 km</span></summary>
+      <summary><span class="xp-n">ii</span><b>LIGO</b><span class="xp-k">același aparat, brațe de 4 km</span></summary>
       <div class="xp-body">
-        <p class="say" style="margin-bottom:14px">
-          Desparte → parcurge → reflectă → recombină → citește diferența de fază. Exact pașii din
-          capitolul 6, la altă scară: LIGO măsoară o variație de drum de 10⁻¹⁸ metri.
+        <p class="intro">
+          Desparte, trimite, reflectă, recombină, citește faza: exact pașii din capitolul II. LIGO
+          măsoară o variație de drum de 10⁻¹⁸ metri, o miime din diametrul unui proton.
         </p>
-        <div class="figrow">
-          <figure class="fig">
+        <div class="pair">
+          <figure class="plate">
             <video controls preload="metadata" playsinline poster="vid/interferometru-animatie.jpg"
                    aria-label="Animație: un interferometru gigant detectând o undă gravitațională">
               <source src="vid/interferometru-animatie.webm" type="video/webm">
               <a href="vid/interferometru-animatie.webm">Descarcă animația</a>.
             </video>
             <figcaption>
-              <span class="ptag vtag">animație · 20 s</span>
-              <b>Detectorul Virgo în funcțiune.</b> Laser, lamă separatoare, două brațe de 3 km,
-              fotodiodă. Oglinzile se mișcă, faza se schimbă, semnalul apare jos.
-              <span class="cr">Thuiop · CC BY-SA 4.0 ·
-                <a href="https://commons.wikimedia.org/wiki/File:Gravitational_wave_interferometer_animation.ogg">Wikimedia Commons</a></span>
+              <span class="kind">animație</span>
+              Detectorul Virgo în funcțiune: laser, lamă, două brațe de 3 km, fotodiodă. Oglinzile se
+              mișcă, faza se schimbă, semnalul apare jos.
+              <span class="credit">Thuiop · CC BY-SA 4.0 · <a href="https://commons.wikimedia.org/wiki/File:Gravitational_wave_interferometer_animation.ogg">Wikimedia Commons</a></span>
             </figcaption>
           </figure>
-          <figure class="fig">
+          <figure class="plate">
             <video controls preload="metadata" playsinline poster="vid/unde-gravitationale-pamant.jpg"
                    aria-label="Animație: efectul undelor gravitaționale asupra Pământului">
               <source src="vid/unde-gravitationale-pamant.webm" type="video/webm">
               <a href="vid/unde-gravitationale-pamant.webm">Descarcă animația</a>.
             </video>
             <figcaption>
-              <span class="ptag vtag">animație · LIGO</span>
-              <b>Ce face o undă gravitațională.</b> Întinde și strânge spațiul; efectul e mult exagerat.
-              <span class="cr">LIGO Lab Caltech/MIT, R. Hurt · CC BY 3.0 ·
-                <a href="https://commons.wikimedia.org/wiki/File:Exaggerated_Effects_of_Gravitational_Waves_on_Earth.webm">Wikimedia Commons</a></span>
+              <span class="kind">animație</span>
+              O undă gravitațională întinde și strânge spațiul. Efectul e mult exagerat aici.
+              <span class="credit">LIGO Lab Caltech/MIT, R. Hurt · CC BY 3.0 · <a href="https://commons.wikimedia.org/wiki/File:Exaggerated_Effects_of_Gravitational_Waves_on_Earth.webm">Wikimedia Commons</a></span>
             </figcaption>
           </figure>
-        </div>
-        <div class="figrow" style="margin-top:8px">
-          <figure class="fig">
+          <figure class="plate">
             <img src="img/ligo-hanford.jpg" width="600" height="400" loading="lazy"
                  alt="Vedere aeriană a observatorului LIGO Hanford">
             <figcaption>
-              <span class="ptag">fotografie reală</span>
-              <b>LIGO Hanford.</b> Două brațe de beton de câte 4 km, în unghi drept.
-              <span class="cr">Caltech/MIT/LIGO Laboratory · domeniu public ·
-                <a href="https://commons.wikimedia.org/wiki/File:Aerial_View_Of_LIGO_Hanford.jpg">Wikimedia Commons</a></span>
+              <span class="kind">fotografie</span>
+              LIGO Hanford: două brațe de beton de câte 4 km, în unghi drept.
+              <span class="credit">Caltech/MIT/LIGO Laboratory · domeniu public · <a href="https://commons.wikimedia.org/wiki/File:Aerial_View_Of_LIGO_Hanford.jpg">Wikimedia Commons</a></span>
             </figcaption>
           </figure>
-          <figure class="fig">
+          <figure class="plate">
             <img src="img/gw150914.png" width="1280" height="1600" loading="lazy"
                  alt="Semnalul GW150914 înregistrat de cele două detectoare LIGO">
             <figcaption>
-              <span class="ptag">date reale, 2015</span>
-              <b>Primul semnal detectat.</b> 14 septembrie 2015, fuziunea a două găuri negre,
-              citită ca o deplasare de fază.
-              <span class="cr">Caltech/MIT/LIGO Laboratory · CC0 ·
-                <a href="https://commons.wikimedia.org/wiki/File:GW150914_Strain-diagrams.png">Wikimedia Commons</a></span>
+              <span class="kind">date reale, 2015</span>
+              Primul semnal detectat: fuziunea a două găuri negre, citită ca o deplasare de fază.
+              <span class="credit">Caltech/MIT/LIGO Laboratory · CC0 · <a href="https://commons.wikimedia.org/wiki/File:GW150914_Strain-diagrams.png">Wikimedia Commons</a></span>
             </figcaption>
           </figure>
         </div>
@@ -1134,63 +1195,63 @@ footer li i{font-style:italic;color:var(--fg2)}
     </details>
 
     <details class="xp">
-      <summary><b>Prezici, apoi verifici</b><span>șase provocări</span></summary>
+      <summary><span class="xp-n">iii</span><b>Prezici, apoi verifici</b><span class="xp-k">șase provocări</span></summary>
       <div class="xp-body">
-        <div class="duo wide-left">
-          <div id="challenges"></div>
-          <div>
-            <p class="tag" id="chScore">0 / 6 corecte</p>
-            <p class="say" style="margin-top:14px">
-              Formulele complete sunt în sertarul <em>ƒ Formule</em> din bara de sus, cu valorile
-              curente înlocuite numeric.
-            </p>
+        <div class="split">
+          <div class="col-7" id="challenges"></div>
+          <div class="col-5 prose">
+            <p class="score" id="chScore">0 / 6 corecte</p>
+            <p>Alege un răspuns, apoi cere simulatorului să-ți arate ce se întâmplă. Formulele, cu
+            valorile de acum, sunt în <strong>Formule</strong>, sus.</p>
           </div>
         </div>
       </div>
     </details>
   </section>
-
-  <footer>
-    <p class="tag">Ce ar trebui să poți explica acum</p>
-    <p class="say" style="margin-top:8px;max-width:64ch">
-      Credeau că lumina, fiind undă, trebuie să aibă un mediu, ca apa pentru valuri sau aerul
-      pentru sunet. L-au numit eter. Dacă Pământul se mișca prin el, trebuia să existe un vânt de
-      eter. Michelson a împărțit lumina pe două direcții, a recombinat-o și a folosit interferența
-      ca să observe diferențe minuscule. A rotit aparatul ca razele să-și schimbe orientarea față
-      de presupusul vânt. Deplasarea prezisă a franjelor nu a apărut.
-    </p>
-
-    <p class="tag" style="margin-top:24px">Surse bibliografice</p>
-    <ul>
-      <li>A. A. Michelson, E. W. Morley, <i>On the Relative Motion of the Earth and the Luminiferous Ether</i>, American Journal of Science 34, 1887.</li>
-      <li>E. Hecht, <i>Optics</i>, ed. a 5-a, cap. 9.</li>
-      <li>Nagel et al., <i>Direct terrestrial test of Lorentz symmetry in electrodynamics</i>, Nature Communications 6, 2015.</li>
-      <li>BIPM, istoricul definițiilor metrului.</li>
-    </ul>
-    <p class="tag" style="margin-top:18px">Fotografii, filmări și date originale</p>
-    <ul>
-      <li>Aparatul din 1887: Case Western Reserve University, domeniu public.</li>
-      <li>Portretul lui Michelson: domeniu public.</li>
-      <li>Figura 6 din lucrarea din 1887: domeniu public.</li>
-      <li>Interferometru pe masă optică: <i>FL0</i>, CC BY-SA 3.0.</li>
-      <li>Inele Newton cu laser: <i>Robert D. Anderson</i>, CC BY-SA 3.0.</li>
-      <li>LIGO Hanford: Caltech/MIT/LIGO Laboratory, domeniu public.</li>
-      <li>Semnalul GW150914: Caltech/MIT/LIGO Laboratory, CC0.</li>
-      <li>Filmare: modelul cu valuri pe apă: <i>Rhetos</i>, CC BY-SA 4.0.</li>
-      <li>Animație: interferometrul Virgo: <i>Thuiop</i>, CC BY-SA 4.0.</li>
-      <li>Animație: unde gravitaționale: LIGO Lab Caltech/MIT, R. Hurt, CC BY 3.0.</li>
-    </ul>
-    <p class="tag" style="margin-top:18px">
-      Fotografiile și filmările sunt reale. Simulările sunt calculate în pagină de un motor fizic
-      separat de interfață, acoperit cu teste automate.
-    </p>
-  </footer>
 </main>
+
+<footer class="closing">
+  <div class="wrap">
+    <p class="eyebrow">Ce ar trebui să poți explica acum</p>
+    <p class="closing-text">
+      Credeau că lumina, fiind undă, are nevoie de un mediu, ca apa pentru valuri. L-au numit eter.
+      Dacă Pământul se mișca prin el, trebuia să bată un vânt de eter. Michelson a împărțit lumina pe
+      două drumuri, a recombinat-o și a folosit interferența ca să vadă diferențe minuscule. A rotit
+      aparatul. <em>Deplasarea prezisă nu a apărut.</em>
+    </p>
+    <div class="sources">
+      <div>
+        <p class="eyebrow">Surse</p>
+        <ul>
+          <li>A. A. Michelson, E. W. Morley, <i>On the Relative Motion of the Earth and the Luminiferous Ether</i>, American Journal of Science 34, 1887.</li>
+          <li>E. Hecht, <i>Optics</i>, ed. a 5-a, cap. 9.</li>
+          <li>Nagel et al., <i>Direct terrestrial test of Lorentz symmetry in electrodynamics</i>, Nature Communications 6, 2015.</li>
+          <li>BIPM, istoricul definițiilor metrului.</li>
+        </ul>
+      </div>
+      <div>
+        <p class="eyebrow">Imagini și filmări</p>
+        <ul>
+          <li>Aparatul din 1887: Case Western Reserve University, domeniu public.</li>
+          <li>Portretul lui Michelson: domeniu public.</li>
+          <li>Figura 6 din 1887: domeniu public.</li>
+          <li>Interferometru pe masă optică: <i>FL0</i>, CC BY-SA 3.0.</li>
+          <li>Inele Newton: <i>Robert D. Anderson</i>, CC BY-SA 3.0.</li>
+          <li>LIGO Hanford și semnalul GW150914: Caltech/MIT/LIGO Laboratory.</li>
+          <li>Filmare cu valuri pe apă: <i>Rhetos</i>, CC BY-SA 4.0.</li>
+          <li>Animația Virgo: <i>Thuiop</i>, CC BY-SA 4.0.</li>
+          <li>Animația undelor gravitaționale: LIGO Lab, R. Hurt, CC BY 3.0.</li>
+        </ul>
+      </div>
+    </div>
+    <p class="fine">Fotografiile și filmările sunt reale. Simulările sunt calculate în pagină, de un motor fizic acoperit cu teste.</p>
+  </div>
+</footer>
 
 <aside class="drawer" id="drawer" aria-label="Formule">
   <div class="drawer-head">
-    <span class="tag">Formule · valorile curente</span>
-    <button id="drawerClose">Închide</button>
+    <span class="eyebrow">Formule, cu valorile de acum</span>
+    <button class="tool" id="drawerClose">Închide</button>
   </div>
   <div class="drawer-body" id="drawerBody"></div>
 </aside>
@@ -1199,9 +1260,9 @@ footer li i{font-style:italic;color:var(--fg2)}
   <span class="pt" id="presentTitle"></span>
   <span class="pl" id="presentLine"></span>
   <span id="presentCount"></span>
-  <button id="presentPrev">‹</button>
-  <button id="presentNext">›</button>
-  <button id="presentExit">Ieși</button>
+  <button class="tool" id="presentPrev" aria-label="Scena anterioară">‹</button>
+  <button class="tool" id="presentNext" aria-label="Scena următoare">›</button>
+  <button class="tool" id="presentExit">Ieși</button>
 </div>
 
 <script>
@@ -1229,6 +1290,7 @@ const { makeFringes, drawProfile } = __req("sims/fringes.js");
 const { makeGasCell } = __req("sims/gasCell.js");
 const { makeRiver, makeApparatus, makeSplit } = __req("sims/ether.js");
 const { makeEtherZoom, ZOOM_STAGES, drawPhaseState, drawRotationRoles } = __req("sims/story.js");
+const { makeHeroField } = __req("sims/heroField.js");
 const { initNav, initProgress, initDrawer, initPresenter, initChallenge, fmt } = __req("ui.js");
 
 const $ = id => document.getElementById(id);
@@ -1275,6 +1337,10 @@ function redrawSoon() {
 document.querySelectorAll("[data-goto]").forEach(b =>
   b.addEventListener("click", () =>
     $(b.dataset.goto)?.scrollIntoView({ behavior: "smooth", block: "start" })));
+
+/* ── hero: campul de franje care reactioneaza la mouse ──────────── */
+const heroField = makeHeroField($("heroField"));
+every($("heroField"), heroField.draw);
 
 /* ── 02 · zoom: sistem solar -> Pamant -> laborator ─────────────── */
 const zoom = makeEtherZoom($("zoomCv"));
@@ -1970,7 +2036,7 @@ __mods["sims/palette.js"] = function(__e, __req){
 // Culorile si conversia lungime de unda -> RGB, folosite de toate desenele.
 const COL = {
   void: "#07090d",
-  panel: "#0e1218",
+  panel: "#07090d",        // identic cu fundalul paginii
   line: "#1a232c",
   line2: "#27343e",
   fg: "#f0f3f5",
@@ -2228,8 +2294,6 @@ function panel(cv) {
   const ctx = cv.getContext("2d");
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   ctx.clearRect(0, 0, w, h);
-  ctx.fillStyle = "#0a0e13";
-  ctx.fillRect(0, 0, w, h);
   return { ctx, w, h };
 }
 
@@ -3232,8 +3296,7 @@ function makeEtherZoom(cv) {
    Fiecare panou arata A, B si rezultanta pentru o faza fixa. */
 function drawPhaseState(cv, phi, animT) {
   const { ctx, w, h } = surface(cv, 0.74);
-  ctx.fillStyle = "#0a0e13";
-  ctx.fillRect(0, 0, w, h);
+  ctx.clearRect(0, 0, w, h);
 
   const x0 = 8, x1 = w - 8;
   const A = h * 0.11, per = Math.max(64, (x1 - x0) / 1.9);
@@ -3321,6 +3384,118 @@ function drawRotationRoles(cv, rotated) {
   __e.drawPhaseState = drawPhaseState;
   __e.drawRotationRoles = drawRotationRoles;
 };
+__mods["sims/heroField.js"] = function(__e, __req){
+// Campul de franje din hero, calculat pe placa video.
+// Fiecare pixel rezolva I = cos^2(pi*delta/lambda) cu delta = 2*d*cos(theta).
+// Mouse-ul muta, lin, oglinda: inelele respira pe masura ce misti cursorul.
+const { wavelengthRGB } = __req("sims/palette.js");
+
+const VS = "attribute vec2 a;void main(){gl_Position=vec4(a,0.0,1.0);}";
+const FS = [
+  "precision highp float;",
+  "uniform vec2 uRes;uniform vec2 uCtr;uniform float uD;uniform float uLam;",
+  "uniform float uT;uniform float uFade;uniform vec3 uCol;",
+  "float hash(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}",
+  "void main(){",
+  "  vec2 px=gl_FragCoord.xy;",
+  "  vec2 p=(px-uCtr)/min(uRes.x,uRes.y);",
+  "  float r=length(p);",
+  "  float ph=4.0*3.14159265*uD/uLam*cos(r*0.75);",
+  "  float I=pow(0.5+0.5*cos(ph),1.6);",
+  "  float fall=exp(-r*r*1.35);",
+  "  float grain=(hash(px+vec2(uT))-0.5)*0.014;",          // fara benzi de culoare
+  "  vec3 ground=vec3(0.027,0.035,0.051);",                 // exact fundalul paginii
+  "  vec3 c=ground+uCol*(I*fall*uFade*0.92)+grain;",
+  "  gl_FragColor=vec4(max(c,0.0),1.0);",
+  "}"
+].join("\n");
+
+function makeHeroField(cv) {
+  const LAM = 589.3;
+  const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let gl = null, uni = {}, t = 0, fade = reduced ? 1 : 0;
+  let d = 5200, target = 5200, pointer = 0.5;
+
+  try { gl = cv.getContext("webgl", { alpha: false, antialias: false, depth: false }); } catch (e) { gl = null; }
+  if (gl) {
+    const mk = (type, src) => {
+      const s = gl.createShader(type);
+      gl.shaderSource(s, src); gl.compileShader(s);
+      return gl.getShaderParameter(s, gl.COMPILE_STATUS) ? s : null;
+    };
+    const vs = mk(gl.VERTEX_SHADER, VS), fs = mk(gl.FRAGMENT_SHADER, FS);
+    const pr = vs && fs ? gl.createProgram() : null;
+    if (pr) {
+      gl.attachShader(pr, vs); gl.attachShader(pr, fs); gl.linkProgram(pr);
+    }
+    if (pr && gl.getProgramParameter(pr, gl.LINK_STATUS)) {
+      gl.useProgram(pr);
+      const buf = gl.createBuffer();
+      gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
+      const loc = gl.getAttribLocation(pr, "a");
+      gl.enableVertexAttribArray(loc);
+      gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+      for (const n of ["uRes", "uCtr", "uD", "uLam", "uT", "uFade", "uCol"]) uni[n] = gl.getUniformLocation(pr, n);
+    } else {
+      gl = null;
+    }
+  }
+
+  const host = cv.parentElement;
+  host.addEventListener("pointermove", e => {
+    const r = host.getBoundingClientRect();
+    pointer = Math.min(1, Math.max(0, (e.clientX - r.left) / r.width));
+  });
+
+  function size() {
+    const dpr = Math.min(window.devicePixelRatio || 1, 1.75);
+    const w = Math.round((cv.clientWidth || 800) * dpr), h = Math.round((cv.clientHeight || 600) * dpr);
+    if (cv.width !== w || cv.height !== h) {
+      cv.width = w; cv.height = h;
+      if (gl) gl.viewport(0, 0, w, h);
+    }
+    return { w, h };
+  }
+
+  function center(w, h) {
+    // pe ecrane late campul sta in dreapta, langa titlu; pe telefon, sus
+    return w / h > 1.1 ? [w * 0.74, h * 0.52] : [w * 0.5, h * 0.72];
+  }
+
+  function draw() {
+    const { w, h } = size();
+    t += 1;
+    if (fade < 1) fade = Math.min(1, fade + 0.012);
+    target = 4200 + pointer * 3600 + (reduced ? 0 : 500 * Math.sin(t * 0.004));
+    d += (target - d) * (reduced ? 1 : 0.035);
+
+    if (gl) {
+      const [cx, cy] = center(w, h), col = wavelengthRGB(LAM);
+      gl.uniform2f(uni.uRes, w, h);
+      gl.uniform2f(uni.uCtr, cx, h - cy);                 // WebGL numara de jos in sus
+      gl.uniform1f(uni.uD, d);
+      gl.uniform1f(uni.uLam, LAM);
+      gl.uniform1f(uni.uT, t % 1000);
+      gl.uniform1f(uni.uFade, fade);
+      gl.uniform3f(uni.uCol, col[0], col[1], col[2]);
+      gl.drawArrays(gl.TRIANGLES, 0, 3);
+      return;
+    }
+    // rezerva fara WebGL: o lumina calda, statica
+    const ctx = cv.getContext("2d");
+    const [cx, cy] = center(w, h);
+    const g = ctx.createRadialGradient(cx, cy, 0, cx, cy, Math.min(w, h) * 0.6);
+    g.addColorStop(0, "rgba(255,176,74,.22)");
+    g.addColorStop(1, "rgba(7,9,13,1)");
+    ctx.fillStyle = g; ctx.fillRect(0, 0, w, h);
+  }
+
+  return { draw, webgl: !!gl };
+}
+
+  __e.makeHeroField = makeHeroField;
+};
 __mods["ui.js"] = function(__e, __req){
 // Stratul de interfata: navigatie pe capitole, sertarul de formule,
 // Presenter Mode si Challenge Mode. Nu contine fizica.
@@ -3345,28 +3520,29 @@ function reveal(id) {
 function initNav() {
   const links = [...document.querySelectorAll("[data-chapter]")];
   const chapters = links.map(a => document.getElementById(a.dataset.chapter));
-
   links.forEach(a => a.addEventListener("click", e => {
     e.preventDefault();
-    document.getElementById(a.dataset.chapter)
-      ?.scrollIntoView({ behavior: "smooth", block: "start" });
+    document.getElementById(a.dataset.chapter)?.scrollIntoView({ behavior: "smooth", block: "start" });
   }));
-
-  if (!("IntersectionObserver" in window)) return;
-  const io = new IntersectionObserver(entries => {
-    for (const e of entries) {
-      if (!e.isIntersecting) continue;
-      const i = chapters.indexOf(e.target);
-      links.forEach((a, j) => a.setAttribute("aria-current", j === i ? "true" : "false"));
-    }
-  }, { rootMargin: "-20% 0px -70% 0px" });
-  chapters.forEach(c => c && io.observe(c));
+  let last = -1;
+  function update() {
+    const line = innerHeight * 0.4;
+    let k = 0;
+    chapters.forEach((c, i) => { if (c && c.getBoundingClientRect().top <= line) k = i; });
+    if (k === last) return;
+    last = k;
+    links.forEach((a, j) => a.setAttribute("aria-current", j === k ? "true" : "false"));
+  }
+  addEventListener("scroll", update, { passive: true });
+  addEventListener("resize", update);
+  update();
 }
 
 function initProgress() {
   const bar = document.getElementById("prog");
   if (!bar) return;
   addEventListener("scroll", () => {
+    document.querySelector(".topbar")?.classList.toggle("scrolled", scrollY > 30);
     const d = document.documentElement;
     bar.style.width = (d.scrollTop / Math.max(1, d.scrollHeight - d.clientHeight) * 100) + "%";
   }, { passive: true });
@@ -3434,14 +3610,14 @@ const SCENES = [
   ["s-ether-wind", "Vântul de eter", "Ne mișcăm prin el cu 30 km/s, deci ar trebui să-l simțim."],
   ["s-river", "Râul", "Cine înoată în lungul curentului pierde timp."],
   ["s-timing", "Cum cronometrezi lumina", "Nu o cronometrezi. Lași razele să se reîntâlnească."],
-  ["ch-apparatus", "Aparatul", "Sursă, lamă separatoare, două brațe, două oglinzi."],
+  ["s-build", "Aparatul", "Sursă, lamă separatoare, două brațe, două oglinzi."],
   ["s-recombine", "Recombinarea", "Una reflectată, cealaltă transmisă, spre același detector."],
   ["s-superpose", "Suprapunerea", "Aceeași regiune din spațiu; câmpurile se adună."],
   ["s-phase", "Faza", "Cât de decalate sunt cele două unde."],
   ["s-mirror", "Mișcă oglinda", "Drumul crește, faza se schimbă, franja se mișcă."],
   ["s-two-dx", "Factorul 2", "Dus plus întors: oglinda Δx, drumul 2Δx."],
   ["s-fringes", "Franjele", "Fiecare direcție are propria diferență de drum."],
-  ["ch-1887", "De ce rotim", "Brațele își schimbă rolurile față de vântul ipotetic."],
+  ["s-rotate-why", "De ce rotim", "Brațele își schimbă rolurile față de vântul ipotetic."],
   ["s-predict", "Predicția", "Modelul eterului cere aproximativ 0,4 franje."],
   ["s-vs", "1887", "Rotim aparatul și comparăm."],
   ["s-meaning", "Rezultatul", "Efectul așteptat nu a apărut."],
@@ -3535,7 +3711,7 @@ const CHALLENGES = [
     a: ["Ca să se încălzească uniform", "Ca să schimbe rolurile celor două brațe față de vântul ipotetic", "Ca să amestece mercurul", "Ca să verifice oglinzile"],
     c: 1,
     why: "O singură poziție nu spune nimic: nu știi diferența de drum de referință. Rotind, efectul ar fi trebuit să se inverseze, iar asta se putea măsura.",
-    goto: "ch-1887"
+    goto: "s-rotate-why"
   }
 ];
 
