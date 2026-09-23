@@ -15,6 +15,12 @@ export function deltaTime(L, v, c = C) {
   return timeParallel(L, v, c) - timePerpendicular(L, v, c);
 }
 
+/** Cele doua jumatati ale drumului paralel, in unitati de L/c, cu v ca fractiune din c.
+    Dusul merge in sensul curentului (rapid), intoarcerea contra lui (lent). */
+export function parallelLegs(v) {
+  return { withCurrent: 1 / (1 + v), againstCurrent: 1 / (1 - v) };
+}
+
 /** Deplasarea de franje prezisa la rotirea aparatului cu 90 de grade. */
 export function predictedFringeShift(L, v, lambda, c = C) {
   return 2 * L * v * v / (lambda * c * c);
