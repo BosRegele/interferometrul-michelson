@@ -61,6 +61,13 @@ a:hover{border-color:var(--b)}
   color:var(--fg2);background:transparent;border:1px solid var(--line2);padding:6px 10px;cursor:pointer
 }
 .topbtn:hover{color:var(--fg);border-color:var(--fg3)}
+/* bara de sus pe un singur rand si pe ecrane inguste */
+@media (max-width:920px){.brand{display:none}.chapters{margin-right:auto}}
+@media (max-width:620px){
+  .topbar-in{gap:6px;padding-inline:10px}
+  .chapters a{padding:6px 6px;letter-spacing:.06em}
+  .topbtn{padding:6px 7px;letter-spacing:.06em}
+}
 .topbtn[aria-pressed=true],.topbtn[aria-expanded=true]{color:var(--b);border-color:var(--b)}
 
 /* structura */
