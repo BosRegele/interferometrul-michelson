@@ -3,7 +3,7 @@
 import { COL, MONO, wavelengthRGB } from "./palette.js";
 import { state } from "../state.js";
 import { TAU } from "../physics/phase.js";
-import { shiftAtAngle, OBSERVED_1887_UPPER_BOUND } from "../physics/etherModel.js";
+import { shiftAtAngle, parallelLegs, OBSERVED_1887_UPPER_BOUND } from "../physics/etherModel.js";
 
 function surface(cv, ratio) {
   const dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -60,8 +60,12 @@ export function makeRiver(cv) {
         ctx.stroke();
       }
     }
-    ctx.fillStyle = COL.fg3; ctx.font = `12px ${MONO}`;
-    ctx.fillText(morph ? "VÂNT DE ETER  v →" : "CURENTUL APEI  v →", 12, 18);
+    ctx.font = `12px ${MONO}`;
+    const head = morph ? "VÂNT DE ETER  v →" : "CURENTUL APEI  v →";
+    ctx.fillStyle = "rgba(14,18,24,.94)";
+    ctx.fillRect(7, 5, ctx.measureText(head).width + 10, 18);
+    ctx.fillStyle = COL.fg3;
+    ctx.fillText(head, 12, 18);
 
     // tinte
     ctx.strokeStyle = COL.line2; ctx.setLineDash([4, 5]); ctx.lineWidth = 1;
@@ -73,11 +77,12 @@ export function makeRiver(cv) {
 
     // pozitiile: B in lungul curentului, A perpendicular
     function posPar(tt) {
+      // Curentul curge spre dreapta. Dusul spre dreapta e CU curentul (c+v, rapid),
+      // intoarcerea spre stanga e CONTRA curentului (c-v, lenta).
       if (tt >= tPar) return { d: 0, done: true };
-      const up = 1 / (1 - current);            // timp la dus (contra curentului)
-      if (tt <= up) return { d: (tt / up), done: false };
-      const back = 1 / (1 + current);
-      return { d: 1 - (tt - up) / back, done: false };
+      const { withCurrent: out, againstCurrent: back } = parallelLegs(current);
+      if (tt <= out) return { d: tt / out, done: false };
+      return { d: 1 - (tt - out) / back, done: false };
     }
     function posPerp(tt) {
       if (tt >= tPerp) return { d: 0, done: true };
@@ -100,18 +105,26 @@ export function makeRiver(cv) {
     ctx.fillStyle = COL.beamB;
     ctx.beginPath(); ctx.arc(bx, cy + 16, 6, 0, TAU); ctx.fill();
 
-    // etichete si cronometre
+    // etichete si cronometre, pe fundal propriu: sagetile curentului trec pe sub ele
     ctx.font = `12px ${MONO}`;
-    ctx.fillStyle = COL.ok;
-    ctx.fillText(morph ? "fascicul perpendicular" : "traversează", cx + 12, h * 0.16);
-    ctx.fillText(`t = ${tPerp.toFixed(2)}`, cx + 12, h * 0.16 + 16);
-    ctx.fillStyle = COL.beamB;
-    ctx.fillText(morph ? "fascicul paralel" : "contra curentului și înapoi", cx + 12, cy + 44);
-    ctx.fillText(tPar === Infinity ? "t = ∞" : `t = ${tPar.toFixed(2)}`, cx + 12, cy + 60);
+    const label = (txt, x, y, col) => {
+      const tw = ctx.measureText(txt).width;
+      ctx.fillStyle = "rgba(14,18,24,.94)";
+      ctx.fillRect(x - 5, y - 13, tw + 10, 18);
+      ctx.fillStyle = col;
+      ctx.fillText(txt, x, y);
+    };
+    const ro = (x, d) => x.toFixed(d).replace(".", ",");
+    label(morph ? "fascicul perpendicular" : "traversează", cx + 14, h * 0.16, COL.ok);
+    label(`t = ${ro(tPerp, 2)}`, cx + 14, h * 0.16 + 18, COL.ok);
+    const leg = pPar.done ? "" : (tau <= parallelLegs(current).withCurrent ? "  → cu curentul, rapid" : "  ← contra curentului, lent");
+    label((morph ? "fascicul paralel" : "cu curentul, apoi înapoi contra lui") + (current > 0.01 ? leg : ""),
+          cx + 14, cy + 46, COL.beamB);
+    label(tPar === Infinity ? "t = ∞" : `t = ${ro(tPar, 2)}`, cx + 14, cy + 64, COL.beamB);
 
     const diff = tPar - tPerp;
-    ctx.fillStyle = diff > 0.005 ? COL.warn : COL.fg3;
-    ctx.fillText(diff > 0.005 ? `diferență: ${diff.toFixed(3)}` : "se întorc simultan", cx + 12, h - 14);
+    label(diff > 0.005 ? `diferență: ${ro(diff, 3)}` : "se întorc simultan",
+          cx + 14, h - 14, diff > 0.005 ? COL.warn : COL.fg3);
   }
 
   return {
