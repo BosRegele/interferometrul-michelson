@@ -19,8 +19,6 @@ function panel(cv) {
   const ctx = cv.getContext("2d");
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   ctx.clearRect(0, 0, w, h);
-  ctx.fillStyle = "#0a0e13";
-  ctx.fillRect(0, 0, w, h);
   return { ctx, w, h };
 }
 
