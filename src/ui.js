@@ -250,7 +250,7 @@ export function initChallenge(root, onApply) {
 
         const act = document.createElement("button");
         act.type = "button"; act.className = "ch-show";
-        act.textContent = "Arată-mi în simulator";
+        act.textContent = "Demonstrația în simulare";
         act.addEventListener("click", () => {
           ch.apply?.();
           onApply?.();
