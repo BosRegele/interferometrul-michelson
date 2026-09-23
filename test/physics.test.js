@@ -8,7 +8,7 @@ import { normalizedIntensity, absoluteIntensity, resultantAmplitude,
          isMaximum, isMinimum, fringeIntensity } from "../src/physics/interference.js";
 import { coherenceLength, visibility, bandwidthFromSlider } from "../src/physics/coherence.js";
 import { pathDiffFromGas, fringesFromGas, indexFromFringes, GASES } from "../src/physics/refractiveIndex.js";
-import { predictedFringeShift, shiftAtAngle, timeParallel, timePerpendicular,
+import { predictedFringeShift, predictedSwing, shiftSinceStart, timeParallel, timePerpendicular,
          deltaTime, C } from "../src/physics/etherModel.js";
 
 const NA = 589.3;                       // nm, linia D a sodiului
@@ -124,12 +124,23 @@ test("configuratia din 1887 prezicea aproximativ 0,37 franje", () => {
   assert.ok(shift > 0.35 && shift < 0.40, `shift = ${shift}`);
 });
 
-test("predictia se inverseaza la 90 de grade si revine la 180", () => {
+test("rotirea cu 90° muta franjele exact cu predictia, nu cu dublul ei", () => {
   const s = 0.37;
-  assert.ok(close(shiftAtAngle(s, 0), s, 1e-12));
-  assert.ok(close(shiftAtAngle(s, Math.PI / 4), 0, 1e-15));
-  assert.ok(close(shiftAtAngle(s, Math.PI / 2), -s, 1e-12));
-  assert.ok(close(shiftAtAngle(s, Math.PI), s, 1e-12));
+  // de la 0° la 90°, oscilatia trece de la +s/2 la −s/2: in total s
+  assert.ok(close(predictedSwing(s, 0) - predictedSwing(s, Math.PI / 2), s, 1e-12));
+  assert.ok(close(predictedSwing(s, Math.PI / 4), 0, 1e-15));
+  assert.ok(close(predictedSwing(s, Math.PI), s / 2, 1e-12));
+});
+
+test("deplasarea fata de start: 0 la inceput, toata predictia la 90°, inapoi la 0 la 180°", () => {
+  const s = 0.37;
+  assert.ok(close(shiftSinceStart(s, 0), 0, 1e-15));
+  assert.ok(close(shiftSinceStart(s, Math.PI / 2), s, 1e-12));
+  assert.ok(close(shiftSinceStart(s, Math.PI), 0, 1e-12));
+  for (let th = 0; th <= Math.PI; th += 0.1) {
+    const v = shiftSinceStart(s, th);
+    assert.ok(v >= -1e-15 && v <= s + 1e-12, `theta=${th}`);
+  }
 });
 
 test("viteza luminii este cea din SI", () => {
