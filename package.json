@@ -1,0 +1,11 @@
+{
+  "name": "interferometrul-michelson",
+  "version": "2.0.0",
+  "description": "Proiect interactiv de fizica: interferometrul Michelson",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "test": "node --test test/physics.test.js",
+    "build": "node build.js"
+  }
+}
