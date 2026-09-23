@@ -5,10 +5,10 @@
   <div class="topbar-in">
     <span class="brand">Interferometrul Michelson</span>
     <nav class="chapters" aria-label="Capitole">
-      <a href="#ch-hero" data-chapter="ch-hero">Learn</a>
-      <a href="#ch-lab" data-chapter="ch-lab">Lab</a>
+      <a href="#ch-story" data-chapter="ch-story">Povestea</a>
+      <a href="#ch-apparatus" data-chapter="ch-apparatus">Aparatul</a>
       <a href="#ch-1887" data-chapter="ch-1887">1887</a>
-      <a href="#ch-challenge" data-chapter="ch-challenge">Challenge</a>
+      <a href="#ch-explore" data-chapter="ch-explore">Explore</a>
     </nav>
     <button class="topbtn" id="drawerBtn" aria-expanded="false">ƒ Formule</button>
     <button class="topbtn" id="presentBtn" aria-pressed="false">Prezentare</button>
@@ -18,46 +18,173 @@
 
 <main class="wrap">
 
-  <!-- ══ HERO: paradoxul ══════════════════════════════════════════ -->
-  <section class="hero-sec" id="ch-hero">
-    <div class="hero-grid">
-      <div>
-        <p class="tag">Optică ondulatorie · clasa a XII-a</p>
-        <h1 class="display" style="margin-top:14px">Două raze de lumină<br>pot produce <span class="stress">întuneric</span>.</h1>
-        <p class="hero-lead">
-          Nu e o metaforă. Trage cursorul: la 180° cele două unde se anulează una pe alta
-          și detectorul se stinge complet.
-        </p>
-        <div style="margin-top:18px;display:grid;gap:8px;max-width:340px">
-          <div class="ctl">
-            <div class="ctl-top"><label for="heroPhase">Defazajul dintre raze</label><span class="v" id="heroPhaseV">0°</span></div>
-            <input type="range" id="heroPhase" min="0" max="360" step="1" value="0">
-          </div>
-          <span class="verdict bright" id="heroVerdict">lumină maximă</span>
+  <!-- ══ 00 · HERO ════════════════════════════════════════════════ -->
+  <section class="hero-sec" id="ch-story">
+    <p class="tag">Optică ondulatorie · clasa a XII-a</p>
+    <div class="triad" style="margin:22px 0 26px;max-width:720px">
+      <div class="tri"><span class="w">valurile</span><span class="m">→ apa</span></div>
+      <div class="tri"><span class="w">sunetul</span><span class="m">→ aerul</span></div>
+      <div class="tri unknown"><span class="w">lumina</span><span class="m">→ ???</span></div>
+    </div>
+    <h1 class="display">Prin ce se propagă<br><span class="stress">lumina</span>?</h1>
+    <p class="hero-lead" style="max-width:52ch">
+      În anii 1800, fizicienii știau că lumina se comportă ca o undă. Dar orice undă cunoscută
+      avea ceva prin care se propaga. Valurile aveau apa. Sunetul avea aerul.
+      Atunci prin ce se deplasa lumina prin spațiul aparent gol?
+    </p>
+    <button class="cta" data-goto="s-ether-idea">Răspunsul lor →</button>
+  </section>
+
+  <!-- ══ 01 · ETERUL ══════════════════════════════════════════════ -->
+  <section id="s-ether-idea">
+    <div class="shead"><span class="sym">01</span><div><h2 class="display">Ideea lor: eterul</h2></div></div>
+    <p class="say">
+      Fizicienii au presupus că întreg spațiul e umplut de un mediu invizibil numit
+      <strong>eter luminifer</strong>. Nu era aer și nu era doar „în spațiu". În modelul lor,
+      eterul era peste tot — inclusiv în jurul și prin laboratorul de pe Pământ.
+    </p>
+    <details class="wait">
+      <summary>De ce credeau că există eter?</summary>
+      <p>Pentru că lumina era undă, iar toate undele cunoscute aveau un mediu. Părea firesc
+      să existe și pentru lumină. Era o presupunere rezonabilă, nu o prostie — și, spre deosebire
+      de multe presupuneri, se putea testa.</p>
+    </details>
+  </section>
+
+  <!-- ══ 02 · DE CE ȘI PE PĂMÂNT ══════════════════════════════════ -->
+  <section id="s-why-earth">
+    <div class="shead"><span class="sym">02</span><div><h2 class="display">De ce ar fi eter<br>și pe Pământ?</h2></div></div>
+    <p class="say" style="margin-bottom:16px">
+      Apasă pe cele trei trepte și urmărește punctele albastre: sunt aceleași la toate scările.
+    </p>
+    <div class="inst">
+      <div class="inst-head"><b>Zoom: sistem solar → Pământ → laborator</b><span id="zoomName">Sistemul solar</span></div>
+      <canvas id="zoomCv" aria-label="Zoom de la sistemul solar până în laborator, cu eterul prezent la toate scările"></canvas>
+      <div class="pad">
+        <div class="row">
+          <button id="zoom0" aria-pressed="true">Sistemul solar</button>
+          <button id="zoom1" aria-pressed="false">Pământul</button>
+          <button id="zoom2" aria-pressed="false">Laboratorul</button>
         </div>
-        <button class="cta" onclick="document.getElementById('s-build').scrollIntoView({behavior:'smooth'})">
-          Construiește interferometrul →
-        </button>
+        <p class="say" id="zoomNote" style="margin:12px 0 0"></p>
       </div>
-      <div class="inst">
-        <div class="inst-head"><b>Suprapunerea a două unde</b><span>detector în dreapta</span></div>
-        <canvas id="heroCv" aria-label="Două unde care se suprapun și intensitatea rezultantă"></canvas>
+    </div>
+    <details class="wait" open>
+      <summary>De ce ar fi eter și pe Pământ?</summary>
+      <p>Pentru că eterul nu era imaginat ca atmosfera Pământului. Era presupus un mediu
+      <strong>universal</strong>, care umple tot spațiul. Pământul ar fi fost practic scufundat
+      în el, ca un pește în apă.</p>
+    </details>
+  </section>
+
+  <!-- ══ 03 · VÂNTUL DE ETER ══════════════════════════════════════ -->
+  <section id="s-ether-wind">
+    <div class="shead"><span class="sym">03</span><div><h2 class="display">Vântul de eter</h2></div></div>
+    <div class="duo">
+      <div>
+        <p class="say">
+          Scoate mâna pe geamul mașinii în mers: simți un vânt, deși aerul stă pe loc.
+          Nu aerul se mișcă — tu te miști prin el.
+        </p>
+        <p class="say">
+          Același raționament, aplicat Pământului: dacă eterul stă pe loc și planeta îl
+          străbate cu <strong>30 km/s</strong>, atunci în laborator ar trebui să se simtă un
+          „vânt de eter". Iar dacă bate un vânt, lumina care merge în lungul lui ar trebui să
+          se comporte altfel decât cea care merge de-a curmezișul.
+        </p>
+        <p class="say">
+          Rămâne o singură problemă: cum măsori așa ceva, când lumina merge cu 300 000 km/s?
+        </p>
+      </div>
+      <div class="inst pad">
+        <p class="tag" style="margin-bottom:10px">ordinul de mărime</p>
+        <div class="kv" style="border:0;padding-top:0"><span>viteza Pământului</span><b>30 km/s</b></div>
+        <div class="kv"><span>viteza luminii</span><b>299 792 km/s</b></div>
+        <div class="kv"><span>raportul v/c</span><b>0,0001</b></div>
+        <div class="kv"><span>efectul, în v²/c²</span><b>0,00000001</b></div>
+        <p class="say" style="font-size:.85rem;margin:12px 0 0">
+          O parte dintr-o sută de milioane. De asta nimeni nu reușise să-l măsoare.
+        </p>
       </div>
     </div>
   </section>
 
-  <!-- ══ BUILD ════════════════════════════════════════════════════ -->
-  <section id="s-build">
-    <div class="shead"><span class="sym">1</span><div><h2 class="display">Construiește aparatul</h2></div></div>
+  <!-- ══ 04 · RÂUL ════════════════════════════════════════════════ -->
+  <section id="s-river">
+    <div class="shead"><span class="sym">04</span><div><h2 class="display">Analogia râului</h2></div></div>
     <p class="say" style="margin-bottom:16px">
-      Șase pași. Al cincilea e cel care contează: acolo se vede de ce cele două jumătăți
-      ajung să se influențeze reciproc.
+      Doi înotători, aceeași distanță, aceeași viteză prin apă. Unul traversează râul și se
+      întoarce, celălalt înoată în lungul curentului și se întoarce.
+      <strong>Pune curentul pe zero</strong> și privește: se întorc simultan.
     </p>
+    <div class="inst">
+      <div class="inst-head"><b>Doi înotători, un curent</b><span>timpii sunt în unități de L/c</span></div>
+      <canvas id="riverCv" aria-label="Doi înotători într-un râu cu curent"></canvas>
+      <div class="pad">
+        <div class="ctl">
+          <div class="ctl-top"><label for="riverCurrent">viteza curentului</label><span class="v" id="riverCurrentV">50% din viteza înotătorului</span></div>
+          <input type="range" id="riverCurrent" min="0" max="80" step="1" value="50">
+        </div>
+        <div class="row" style="margin-top:12px">
+          <button id="riverMorph" aria-pressed="false">Transformă apa în eter →</button>
+        </div>
+      </div>
+    </div>
+    <p class="say" style="margin-top:14px">
+      Cel care înoată în lungul curentului pierde mai mult la dus decât câștigă la întors,
+      pentru că petrece mai mult timp în zona lentă. Asta era ideea lui Michelson:
+      <strong>dacă eterul există în forma presupusă, două raze trimise pe direcții diferite
+      ar trebui să aibă timpi de parcurs puțin diferiți.</strong>
+    </p>
+    <figure class="fig" style="margin-top:14px;max-width:520px">
+      <video controls preload="metadata" playsinline muted loop
+             aria-label="Filmare: valuri pe apă în curgere, model pentru vântul de eter">
+        <source src="vid/vant-de-eter-apa.webm" type="video/webm">
+        <a href="vid/vant-de-eter-apa.webm">Descarcă filmarea</a>.
+      </video>
+      <figcaption>
+        <span class="ptag vtag">filmare reală</span>
+        <b>Același model, pe apă adevărată.</b> Valuri făcute cu mâna pe o apă care curge;
+        <em>Strömung</em> înseamnă „curent". Se vede că mediul poartă unda cu el.
+        <span class="cr">Rhetos · CC BY-SA 4.0 ·
+          <a href="https://commons.wikimedia.org/wiki/File:%C3%84therwind_(Wasserwellen-Modell).webm">Wikimedia Commons</a></span>
+      </figcaption>
+    </figure>
+  </section>
+
+  <!-- ══ 05 · CUM CRONOMETREZI LUMINA ═════════════════════════════ -->
+  <section id="s-timing">
+    <div class="shead"><span class="sym">05</span><div><h2 class="display">Cum cronometrezi lumina?</h2></div></div>
+    <div class="duo">
+      <div>
+        <p class="say">
+          Diferența de timp căutată e de ordinul a <span class="mono">10⁻¹⁶</span> secunde.
+          Niciun cronometru din 1887 — și niciunul de azi — nu poate măsura direct așa ceva.
+        </p>
+        <p class="say">
+          Soluția lui Michelson: <strong>nu cronometra deloc.</strong> Lasă cele două raze să se
+          întâlnească din nou. Dacă una a întârziat fie și cu o fracțiune de lungime de undă,
+          undele nu mai sunt sincronizate — iar asta se vede cu ochiul liber, ca întuneric
+          acolo unde te-ai aștepta la lumină.
+        </p>
+      </div>
+      <details class="wait" open>
+        <summary>Cum știe că una a întârziat, dacă n-o cronometrează?</summary>
+        <p>Nu măsoară timpul, ci <strong>consecința</strong> lui. Două unde decalate dau alt
+        rezultat când se adună: mai multă lumină, mai puțină, sau deloc. Instrumentul transformă
+        o întârziere imposibil de cronometrat într-o schimbare de luminozitate.</p>
+      </details>
+    </div>
+  </section>
+
+  <!-- ══ 06 · CONSTRUIEȘTE APARATUL ═══════════════════════════════ -->
+  <section id="ch-apparatus">
+    <div class="shead"><span class="sym">06</span><div><h2 class="display">Construiește interferometrul</h2></div></div>
     <div class="inst">
       <div class="inst-head"><b id="buildTitle">Sursa</b><span id="buildCount">1 / 6</span></div>
       <canvas id="buildCv" aria-label="Interferometrul construit pas cu pas"></canvas>
       <div class="pad">
-        <p class="say" id="buildText" style="min-height:3.2em;margin-bottom:12px"></p>
+        <p class="say" id="buildText" style="min-height:3.4em;margin-bottom:12px"></p>
         <div class="row">
           <button id="buildPrev">‹ Înapoi</button>
           <button id="buildNext">Pasul următor ›</button>
@@ -73,52 +200,129 @@
       </div>
     </div>
     <div class="duo" style="margin-top:14px">
-      <figure class="fig">
-        <img src="img/interferometru-modern.jpg" width="782" height="626" loading="lazy"
-             alt="Fotografie a unui interferometru Michelson pe o masă optică, cu traseul laserului marcat">
-        <figcaption>
-          <span class="ptag">fotografie reală</span>
-          <b>Același aparat, pe o masă optică.</b> Etichetele sunt în germană: <em>Laser</em>,
-          <em>Strahlteilerwürfel</em> — cubul separator, <em>Spiegel</em> — oglindă,
-          <em>Spiegel auf Verschiebetisch</em> — oglinda pe masă de translație, <em>Schirm</em> — ecranul.
-          <span class="cr">Foto: FL0 · CC BY-SA 3.0 ·
-            <a href="https://commons.wikimedia.org/wiki/File:Aufbau-Michelson-Interferometer-Beschriftung-Strahlengang.jpg">Wikimedia Commons</a></span>
-        </figcaption>
-      </figure>
+      <details class="wait">
+        <summary>Cum împarte lumina în două?</summary>
+        <p>Cu o lamă semitransparentă: o placă de sticlă cu un strat metalic de câțiva nanometri.
+        Jumătate din lumină trece prin ea, jumătate e reflectată în unghi drept. Nu taie fasciculul
+        în bucăți — îl împarte pe amândouă direcțiile deodată.</p>
+      </details>
+      <details class="wait">
+        <summary>După oglindă, unde se întoarce raza?</summary>
+        <p>Exact de unde a venit: la aceeași lamă separatoare. Oglinzile sunt perpendiculare pe
+        fascicul, deci îl trimit înapoi pe același drum.</p>
+      </details>
+    </div>
+  </section>
+
+  <!-- ══ 07 · RECOMBINAREA ════════════════════════════════════════ -->
+  <section id="s-recombine">
+    <div class="shead"><span class="sym">07</span><div><h2 class="display">Cum ajung iar împreună?</h2></div></div>
+    <p class="say" style="margin-bottom:16px">
+      Aici e locul unde majoritatea explicațiilor sar peste pas. Zoom pe lama separatoare:
+      raza A vine de sus, raza B vine din dreapta. Din A, o componentă e <strong>transmisă</strong>
+      prin lamă spre detector. Din B, o componentă e <strong>reflectată</strong> de lamă spre
+      același detector.
+    </p>
+    <div class="inst">
+      <div class="inst-head"><b>Recombinarea, cu traseele desenate alături</b><span>doar ca să le poți vedea separat</span></div>
+      <canvas id="recombineCv" aria-label="Cele două componente care pleacă spre același detector"></canvas>
+    </div>
+    <details class="wait" open style="margin-top:14px">
+      <summary>Cum ajung razele iar împreună?</summary>
+      <p>Nu se „lipesc" și nu se amestecă. Una este reflectată, cealaltă transmisă, iar amândouă
+      pleacă pe aceeași ieșire, către același detector. În desenul de mai sus sunt trasate alături
+      doar ca să se vadă că sunt două drumuri diferite — în realitate se suprapun.</p>
+    </details>
+  </section>
+
+  <!-- ══ 08 · SUPRAPUNEREA ════════════════════════════════════════ -->
+  <section id="s-superpose">
+    <div class="shead"><span class="sym">08</span><div><h2 class="display">Ce înseamnă „se suprapun"?</h2></div></div>
+    <div class="duo wide-left">
+      <div class="inst">
+        <div class="inst-head"><b>Aceeași regiune, câmpurile se adună</b><span>suprapunere</span></div>
+        <canvas id="superposeCv" aria-label="Cele două fascicule suprapuse, mergând spre detector"></canvas>
+      </div>
       <div>
         <p class="say">
-          <strong>De ce e nevoie de o singură sursă?</strong> Două becuri separate nu se pot
-          interfera stabil: fazele lor sar haotic de milioane de ori pe secundă. Tăind un
-          singur fascicul în două, cele două jumătăți rămân sincronizate oricât de lungi
-          ar fi brațele.
+          Cele două fascicule ocupă <strong>aceeași regiune din spațiu</strong>. Fiecare e o undă
+          electromagnetică, adică un câmp electric care oscilează. Acolo unde se întâlnesc,
+          câmpurile se adună punct cu punct — ca două valuri care trec unul prin altul.
         </p>
-        <p class="say">
-          Lama compensatoare, pusă pe brațul transmis, face ca ambele să traverseze exact
-          aceeași grosime de sticlă.
+        <details class="wait" open>
+          <summary>Ce înseamnă exact „se suprapun"?</summary>
+          <p>Că în fiecare punct și în fiecare moment, câmpul electric total este suma celor două
+          câmpuri. Dacă amândouă „urcă" în același timp, suma e mai mare. Dacă una urcă în timp ce
+          cealaltă coboară, se anulează.</p>
+        </details>
+        <p class="say" style="margin-top:12px">
+          Detectorul nu vede câmpul, ci <strong>pătratul</strong> lui, mediat în timp. De aceea
+          două unde care se anulează dau întuneric, nu „jumătate de lumină".
         </p>
       </div>
     </div>
   </section>
 
-  <!-- ══ CHAIN: faza si factorul 2 ════════════════════════════════ -->
-  <section id="s-chain">
-    <div class="shead"><span class="sym">2</span><div><h2 class="display">Lanțul: de la oglindă la franjă</h2></div></div>
-    <p class="say" style="margin-bottom:16px">
-      Mută oglinda și urmărește cum se propagă efectul prin toate cele cinci reprezentări.
-      Nimic nu e desenat separat — toate citesc aceeași stare.
-    </p>
+  <!-- ══ 09 · FAZA, TREI STĂRI ════════════════════════════════════ -->
+  <section id="s-phase">
+    <div class="shead"><span class="sym">09</span><div><h2 class="display">Faza: cât de decalate<br>sunt cele două unde</h2></div></div>
+    <div class="phase3">
+      <div class="p3">
+        <canvas id="ph0" aria-label="Unde în fază, rezultanta de amplitudine dublă"></canvas>
+        <div class="p3-cap"><b>φ = 0°</b><i>constructiv</i><span>lumină maximă</span></div>
+      </div>
+      <div class="p3">
+        <canvas id="ph90" aria-label="Unde defazate cu 90 de grade, rezultanta intermediară"></canvas>
+        <div class="p3-cap"><b>φ = 90°</b><i>parțial</i><span>lumină intermediară</span></div>
+      </div>
+      <div class="p3">
+        <canvas id="ph180" aria-label="Unde în antifază, rezultanta este o linie dreaptă"></canvas>
+        <div class="p3-cap"><b>φ = 180°</b><i>distructiv</i><span>lumină minimă</span></div>
+      </div>
+    </div>
 
+    <div class="inst" style="margin-top:12px">
+      <div class="inst-head"><b>Mișcă unda B și urmărește rezultanta</b><span id="heroVerdictTag">constructiv</span></div>
+      <canvas id="heroCv" aria-label="Cele două unde, rezultanta și detectorul"></canvas>
+      <div class="pad">
+        <div class="ctl">
+          <div class="ctl-top"><label for="heroPhase">faza φ</label><span class="v" id="heroPhaseV">0°</span></div>
+          <input type="range" id="heroPhase" min="0" max="360" step="1" value="0">
+        </div>
+        <div class="row" style="margin-top:10px">
+          <button data-phase="0">0°</button>
+          <button data-phase="90">90°</button>
+          <button data-phase="180">180°</button>
+          <button data-phase="270">270°</button>
+          <span class="verdict bright" id="heroVerdict">lumină maximă</span>
+        </div>
+      </div>
+    </div>
+    <details class="wait" style="margin-top:14px">
+      <summary>Ce este faza, pe scurt?</summary>
+      <p><strong>Faza = cât de decalate sunt cele două unde.</strong> Zero înseamnă că urcă și
+      coboară împreună. 180° înseamnă că una urcă exact când cealaltă coboară.</p>
+    </details>
+  </section>
+
+  <!-- ══ 10 · MIȘCĂ OGLINDA ═══════════════════════════════════════ -->
+  <section id="s-mirror">
+    <div class="shead"><span class="sym">10</span><div><h2 class="display">Mișcă oglinda</h2></div></div>
+    <p class="say" style="margin-bottom:16px">
+      Cum produci un decalaj? Faci un drum mai lung decât celălalt. Mută oglinda și urmărește
+      cum se propagă efectul prin toate cele cinci reprezentări — toate citesc aceeași stare.
+    </p>
     <div class="chain" id="chain">
       <div class="link">
         <canvas data-stage="0" aria-label="Oglinda care se deplasează"></canvas>
-        <span class="k">1 · oglinda</span><span class="val" id="chainDx">0,0 nm</span>
+        <span class="k">1 · oglinda Δx</span><span class="val" id="chainDx">0,0 nm</span>
       </div>
       <div class="link">
         <canvas data-stage="1" aria-label="Drumul optic, dus și întors"></canvas>
-        <span class="k">2 · drum ΔL = 2Δx</span><span class="val" id="chainDL">0,0 nm</span>
+        <span class="k">2 · drum ΔL</span><span class="val" id="chainDL">0,0 nm</span>
       </div>
       <div class="link">
-        <canvas data-stage="2" aria-label="Cele două unde și rezultanta"></canvas>
+        <canvas data-stage="2" aria-label="Unda care alunecă"></canvas>
         <span class="k">3 · unda alunecă</span><span class="val" id="chainLambda">589,3 nm</span>
       </div>
       <div class="link">
@@ -127,13 +331,12 @@
       </div>
       <div class="link">
         <canvas data-stage="4" aria-label="Franja și intensitatea"></canvas>
-        <span class="k">5 · franja · I/Imax</span><span class="val" id="chainI">1,00</span>
+        <span class="k">5 · franja I/Imax</span><span class="val" id="chainI">1,00</span>
       </div>
     </div>
-
     <div class="inst pad" style="margin-top:10px">
       <div class="ctl">
-        <div class="ctl-top"><label for="chainMirror">Δx · deplasarea oglinzii</label><span class="v" id="chainDx2"></span></div>
+        <div class="ctl-top"><label for="chainMirror">Δx · deplasarea oglinzii</label><span class="v" id="chainDx2">0,0 nm</span></div>
         <input type="range" id="chainMirror" min="0" max="1178" step="1" value="0">
       </div>
       <div class="chain-verdict">
@@ -142,492 +345,516 @@
         <span class="verdict bright" id="chainVerdict">MAXIM</span>
       </div>
     </div>
+  </section>
 
-    <div class="duo" style="margin-top:16px">
+  <!-- ══ 11 · DE CE 2Δx ═══════════════════════════════════════════ -->
+  <section id="s-two-dx">
+    <div class="shead"><span class="sym">11</span><div><h2 class="display">De ce contează de două ori</h2></div></div>
+    <div class="duo">
       <div>
         <p class="say">
-          <strong>Factorul 2 nu e o convenție, e geometrie.</strong> Lumina merge până la oglindă
-          <em>și se întoarce</em>. Muți oglinda cu 147,3 nm, drumul crește cu 294,6 nm — adică
-          exact λ/2. Cele două unde ajung în antifază și se sting.
+          Ai văzut animația: muți oglinda cu 147 nm și se face întuneric. Dar λ/2 pentru sodiu
+          înseamnă 295 nm. De ce a fost destul jumătate?
         </p>
-        <p class="say">
-          De aceea panoul 2 din lanț are trei bare: dus, întors, total. Bara totală atinge
-          reperul roșu λ/2 exact când detectorul se stinge.
+        <div class="ledger">
+          <div class="lr"><span>dus</span><b>+Δx</b></div>
+          <div class="lr"><span>întors</span><b>+Δx</b></div>
+          <div class="lr total"><span>total</span><b>+2Δx</b></div>
+        </div>
+        <p class="say" style="margin-top:14px">
+          Lumina parcurge brațul de două ori. Oglinda merge cu <span class="mono">Δx</span>,
+          drumul optic crește cu <span class="mono">2Δx</span>. Abia acum formula are sens —
+          pentru că ai văzut întâi ce face.
         </p>
       </div>
-      <p class="chips">
-        <span class="chip"><b>δ = 2Δd</b><i>diferența de drum</i></span>
-        <span class="chip"><b>φ = 2πδ/λ</b><i>faza</i></span>
-        <span class="chip"><b>I = 4I₀cos²(φ/2)</b><i>intensitatea</i></span>
-      </p>
+      <div>
+        <p class="chips" style="margin-bottom:12px">
+          <span class="chip"><b>δ = 2Δx</b><i>diferența de drum</i></span>
+          <span class="chip"><b>φ = 2πδ/λ</b><i>faza</i></span>
+        </p>
+        <div class="inst pad">
+          <p class="tag" style="margin-bottom:8px">exemplu numeric, cu sodiu</p>
+          <div class="kv" style="border:0;padding-top:0"><span>oglinda</span><b>+147,3 nm</b></div>
+          <div class="kv"><span>drumul optic</span><b>+294,6 nm</b></div>
+          <div class="kv"><span>adică</span><b>λ/2</b></div>
+          <div class="kv"><span>faza</span><b>180°</b></div>
+          <div class="kv"><span>rezultat</span><b style="color:var(--a)">minim</b></div>
+        </div>
+        <details class="wait" style="margin-top:12px">
+          <summary>De ce mutarea oglinzii contează de două ori?</summary>
+          <p>Dus + întors. Lumina străbate distanța adăugată o dată la ducere și încă o dată la
+          întoarcere, deci drumul optic se schimbă cu dublul deplasării.</p>
+        </details>
+      </div>
     </div>
   </section>
 
-  <!-- ══ FRINGES ══════════════════════════════════════════════════ -->
-  <section id="ch-lab">
-    <div id="s-fringes">
-      <div class="shead"><span class="sym">3</span><div><h2 class="display">Franjele</h2></div></div>
-      <p class="say" style="margin-bottom:16px">
-        Ecranul nu e o poză: fiecare pixel rezolvă aceeași formulă. Plimbă cursorul peste el
-        ca să citești diferența de drum și faza în punctul țintit.
-      </p>
-      <div class="inst">
-        <div class="inst-head"><b>Interferometru · simulare</b><span>treci cu mouse-ul peste ecran</span></div>
-        <div class="lab">
-          <div class="lab-view">
-            <canvas id="fringeCv" aria-label="Câmpul de interferență"></canvas>
-            <canvas id="profileCv" aria-label="Profilul de intensitate"></canvas>
+  <!-- ══ 12 · FRANJELE ════════════════════════════════════════════ -->
+  <section id="s-fringes">
+    <div class="shead"><span class="sym">12</span><div><h2 class="display">Cum apar franjele</h2></div></div>
+    <p class="say" style="margin-bottom:16px">
+      Până acum am privit un singur punct. Pe un ecran întreg, fiecare direcție are propria
+      diferență de drum — de aceea apar inele. Plimbă mouse-ul peste ecran ca să citești
+      valorile în punctul țintit.
+    </p>
+    <div class="inst">
+      <div class="inst-head"><b>Interferometru · simulare</b><span>treci cu mouse-ul peste ecran</span></div>
+      <div class="lab">
+        <div class="lab-view">
+          <canvas id="fringeCv" aria-label="Câmpul de interferență"></canvas>
+          <canvas id="profileCv" aria-label="Profilul de intensitate"></canvas>
+        </div>
+        <div class="lab-ctl">
+          <div class="seg" role="group" aria-label="Mod de citire">
+            <button id="modeScreen" aria-pressed="true">Ecran</button>
+            <button id="modePoint" aria-pressed="false">Un punct</button>
           </div>
-          <div class="lab-ctl">
-            <div class="seg" role="group" aria-label="Mod de citire">
-              <button id="modeScreen" aria-pressed="true">Ecran</button>
-              <button id="modePoint" aria-pressed="false">Un punct</button>
-            </div>
-            <div class="row">
-              <button id="modeWhite" aria-pressed="false" style="flex:1">Lumină albă</button>
-              <button id="modeMicro" aria-pressed="false" style="flex:1">Microscop</button>
-            </div>
-            <div class="ctl" id="ctlLambdaWrap">
-              <div class="ctl-top"><label for="ctlLambda">λ culoarea</label><span class="v" id="ctlLambdaV">589 nm</span></div>
-              <input type="range" id="ctlLambda" min="400" max="700" step="1" value="589">
-            </div>
-            <div class="ctl">
-              <div class="ctl-top"><label for="ctlArm">Δd diferența de braț</label><span class="v" id="ctlArmV">4,00 µm</span></div>
-              <input type="range" id="ctlArm" min="0" max="14000" step="10" value="4000">
-            </div>
-            <div class="ctl">
-              <div class="ctl-top"><label for="ctlTilt">înclinarea oglinzii</label><span class="v" id="ctlTiltV">0 µrad</span></div>
-              <input type="range" id="ctlTilt" min="0" max="400" step="1" value="0">
-            </div>
-            <div class="ctl" id="ctlBandWrap">
-              <div class="ctl-top"><label for="ctlBand">sursa</label><span class="v" id="ctlBandV">laser</span></div>
-              <input type="range" id="ctlBand" min="0" max="100" step="1" value="100">
-            </div>
-            <div class="kv"><span>Lc coerență</span><b id="ctlLc">174 mm</b></div>
+          <div class="row">
+            <button id="modeWhite" aria-pressed="false" style="flex:1">Lumină albă</button>
+            <button id="modeMicro" aria-pressed="false" style="flex:1">Microscop</button>
           </div>
+          <div class="ctl" id="ctlLambdaWrap">
+            <div class="ctl-top"><label for="ctlLambda">λ culoarea</label><span class="v" id="ctlLambdaV">589 nm</span></div>
+            <input type="range" id="ctlLambda" min="400" max="700" step="1" value="589">
+          </div>
+          <div class="ctl">
+            <div class="ctl-top"><label for="ctlArm">Δd diferența de braț</label><span class="v" id="ctlArmV">4,00 µm</span></div>
+            <input type="range" id="ctlArm" min="0" max="14000" step="10" value="4000">
+          </div>
+          <div class="ctl">
+            <div class="ctl-top"><label for="ctlTilt">înclinarea oglinzii</label><span class="v" id="ctlTiltV">0 µrad</span></div>
+            <input type="range" id="ctlTilt" min="0" max="400" step="1" value="0">
+          </div>
+          <div class="ctl" id="ctlBandWrap">
+            <div class="ctl-top"><label for="ctlBand">sursa</label><span class="v" id="ctlBandV">laser</span></div>
+            <input type="range" id="ctlBand" min="0" max="100" step="1" value="100">
+          </div>
+          <div class="kv"><span>Lc coerență</span><b id="ctlLc">174 mm</b></div>
         </div>
       </div>
+    </div>
+    <div class="duo" style="margin-top:14px">
+      <figure class="fig">
+        <img src="img/inele-newton-laser.jpg" width="329" height="300" loading="lazy"
+             alt="Fotografie a unor inele de interferență roșii, cu laser de 650 nm">
+        <figcaption>
+          <span class="ptag">fotografie reală</span>
+          <b>Franje fotografiate.</b> Inele Newton cu laser roșu de 650 nm, la microscop.
+          Nu sunt franje de interferometru, dar e aceeași fizică — așa arată în realitate.
+          <span class="cr">Foto: Robert D. Anderson · CC BY-SA 3.0 ·
+            <a href="https://commons.wikimedia.org/wiki/File:Newton%27s_rings_(650nm_red_laser_light).jpeg">Wikimedia Commons</a></span>
+        </figcaption>
+      </figure>
+      <figure class="fig">
+        <img src="img/interferometru-modern.jpg" width="782" height="626" loading="lazy"
+             alt="Fotografie a unui interferometru Michelson pe o masă optică">
+        <figcaption>
+          <span class="ptag">fotografie reală</span>
+          <b>Aparatul, într-un laborator de azi.</b> Etichetele sunt în germană: <em>Laser</em>,
+          <em>Strahlteilerwürfel</em> — cubul separator, <em>Spiegel</em> — oglindă,
+          <em>Schirm</em> — ecranul cu franje.
+          <span class="cr">Foto: FL0 · CC BY-SA 3.0 ·
+            <a href="https://commons.wikimedia.org/wiki/File:Aufbau-Michelson-Interferometer-Beschriftung-Strahlengang.jpg">Wikimedia Commons</a></span>
+        </figcaption>
+      </figure>
+    </div>
+  </section>
 
-      <div class="duo" style="margin-top:14px">
-        <div class="inst">
-          <div class="inst-head"><b>Cât de departe rezistă franjele</b><span>lungimea de coerență</span></div>
-          <canvas id="cohCv" aria-label="Cinci surse și distanța la care franjele își pierd contrastul"></canvas>
+  <!-- ══ 13 · ÎNAPOI LA ETER ══════════════════════════════════════ -->
+  <section id="ch-1887">
+    <div class="shead"><span class="sym">13</span><div><h2 class="display">Înapoi la eter</h2></div></div>
+    <p class="say">
+      Acum ai instrumentul. Michelson avea o riglă care sesizează diferențe de drum de sub o
+      miime de milimetru — exact ordinul de mărime al efectului pe care îl prezicea eterul.
+    </p>
+    <p class="say">
+      Un singur lucru mai lipsea: nu poți ști dinainte care braț e „mai lung", pentru că
+      diferența de referință e necunoscută. Deci nu poți spune, dintr-o singură măsurătoare,
+      dacă franjele stau acolo din cauza eterului sau pentru că așa a ieșit montajul.
+    </p>
+  </section>
+
+  <!-- ══ 14 · DE CE ROTIM ═════════════════════════════════════════ -->
+  <section id="s-rotate-why">
+    <div class="shead"><span class="sym">14</span><div><h2 class="display">De ce rotea Michelson aparatul?</h2></div></div>
+    <div class="duo">
+      <div class="inst">
+        <div class="inst-head"><b>Rolurile brațelor</b><span id="rolesTag">înainte de rotire</span></div>
+        <canvas id="rolesCv" aria-label="Brațele aparatului înainte și după rotirea cu 90 de grade"></canvas>
+        <div class="pad">
+          <button id="rolesToggle">Rotește cu 90°</button>
         </div>
-        <div>
-          <p class="say">
-            Fiecare sursă are o limită. Laserul ține franjele la decalaje de zeci de centimetri,
-            lampa cu sodiu cam o jumătate de milimetru, iar <strong>lumina albă doar vreo două
-            lungimi de undă</strong>.
-          </p>
-          <p class="say">
-            Ăsta era trucul lui Michelson: găsea zeroul aproximativ cu sodiu, apoi trecea pe
-            lumină albă, unde franja colorată din centru îi arăta zeroul exact.
-          </p>
-          <figure class="fig" style="margin-top:10px">
-            <img src="img/inele-newton-laser.jpg" width="329" height="300" loading="lazy"
-                 alt="Fotografie a unor inele de interferență roșii, cu laser de 650 nm">
+      </div>
+      <div>
+        <p class="say">
+          Prin rotirea aparatului, cele două brațe <strong>își schimbă rolurile</strong> față de
+          presupusul vânt de eter: cel paralel devine perpendicular și invers.
+        </p>
+        <p class="say">
+          Dacă vântul produce într-adevăr diferența de timp, atunci rotirea trebuie să schimbe
+          faza — deci franjele trebuie să se miște. Asta poți măsura, chiar fără să cunoști
+          diferența de referință.
+        </p>
+        <details class="wait">
+          <summary>De ce rotește aparatul?</summary>
+          <p>Ca brațele să-și schimbe orientarea față de presupusul vânt de eter. Efectul ar
+          trebui să se inverseze, iar o inversare se vede — o valoare absolută necunoscută, nu.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ 15 · PREZICE ═════════════════════════════════════════════ -->
+  <section id="s-predict">
+    <div class="shead"><span class="sym">15</span><div><h2 class="display">Prezice rezultatul</h2></div></div>
+    <p class="say" style="margin-bottom:16px">
+      Cu brațul efectiv de 11 metri din 1887 și cu Pământul la 30 km/s, modelul eterului prezice
+      o deplasare de aproximativ <strong>0,4 franje</strong> la rotirea cu 90° — de patruzeci de
+      ori peste ce se putea citi. <strong>Ce crezi că s-a văzut?</strong>
+    </p>
+    <div class="duo wide-left">
+      <div class="inst pad">
+        <div class="ctl">
+          <div class="ctl-top"><label for="armLen">L · lungimea efectivă a brațului</label><span class="v" id="armLenV">11,0 m</span></div>
+          <input type="range" id="armLen" min="1" max="20" step="0.5" value="11">
+        </div>
+        <div class="ctl" style="margin-top:12px">
+          <div class="ctl-top"><label for="etherV">v · viteza față de eter</label><span class="v" id="etherVV">30 km/s</span></div>
+          <input type="range" id="etherV" min="0" max="100" step="1" value="30">
+        </div>
+        <div class="counter" style="margin-top:16px">
+          <span class="big" id="predShift">0,37</span>
+          <span class="lbl">franje prezise<br>de modelul eterului</span>
+        </div>
+        <p class="say" style="font-size:.84rem;margin:12px 0 0">
+          Aceasta este predicția <em>modelului istoric al eterului staționar</em>, nu a fizicii de azi.
+        </p>
+      </div>
+      <div>
+        <p class="tag" style="margin-bottom:10px">ce prezici?</p>
+        <div class="ch-opts" id="predictGuess">
+          <button class="ch-opt" data-guess="0">Franjele se deplasează cu ≈0,4, cât prezice modelul</button>
+          <button class="ch-opt" data-guess="1">Franjele se deplasează, dar mai puțin</button>
+          <button class="ch-opt" data-guess="2">Franjele nu se deplasează deloc</button>
+        </div>
+        <p class="say" id="predictAck" hidden style="margin-top:12px"></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ 16 · PREDICȚIE VS 1887 ═══════════════════════════════════ -->
+  <section id="s-vs">
+    <div class="shead"><span class="sym">16</span><div><h2 class="display">Predicție vs. 1887</h2></div></div>
+    <div class="inst">
+      <div class="inst-head"><b>Aparatul în rotație</b><span id="rotTag">θ = 0°</span></div>
+      <canvas id="mmCv" aria-label="Aparatul rotindu-se și curba deplasării prezise"></canvas>
+    </div>
+    <div class="row" style="margin:12px 0">
+      <button id="rotateBtn">Rotește aparatul cu 90°</button>
+      <button id="revealBtn" hidden>Arată ce s-a măsurat în 1887</button>
+    </div>
+    <div class="inst">
+      <div class="inst-head"><b>Predicție / observație</b><span>aceleași franje, aceeași scară</span></div>
+      <canvas id="splitCv" aria-label="Franjele prezise față de cele observate"></canvas>
+    </div>
+
+    <div class="duo wide-left" style="margin-top:16px">
+      <figure class="fig">
+        <div style="position:relative">
+          <img src="img/figura-6-1887.png" width="770" height="396" loading="lazy" style="background:#f4f2ee"
+               alt="Figura 6 din lucrarea din 1887">
+          <div id="figNotes" hidden style="position:absolute;inset:0;pointer-events:none">
+            <span class="fnote" style="left:3%;top:4%">punctat: predicția eterului, deja redusă la ⅛</span>
+            <span class="fnote" style="left:3%;top:54%">continuu: ce s-a măsurat efectiv</span>
+            <span class="fnote" style="right:3%;top:26%">o diviziune = 0,05 λ</span>
+          </div>
+        </div>
+        <figcaption>
+          <span class="ptag">datele originale, 1887</span>
+          <b>Figura 6 din lucrarea publicată.</b> Sus: observațiile de la amiază. Jos: cele de seara.
+          <span class="cr">Michelson &amp; Morley, American Journal of Science 34 (1887) · domeniu public ·
+            <a href="https://commons.wikimedia.org/wiki/File:Michelson_Morley_1887_Figure_6.png">Wikimedia Commons</a></span>
+        </figcaption>
+      </figure>
+      <div>
+        <div class="seg" style="max-width:240px;margin-bottom:14px">
+          <button id="figOriginal" aria-pressed="true">Original</button>
+          <button id="figExplained" aria-pressed="false">Explicat</button>
+        </div>
+        <p class="say">
+          Liniile continue sunt măsurătorile. Liniile punctate sunt predicția modelului — iar
+          autorii o desenaseră deja <strong>redusă la o optime</strong>, altfel n-ar fi încăput în
+          figură. Chiar și micșorată de opt ori, predicția rămâne vizibil mai mare decât tot ce
+          s-a măsurat.
+        </p>
+        <div class="figrow" style="margin-top:12px">
+          <figure class="fig">
+            <img src="img/aparat-1887.jpg" width="742" height="432" loading="lazy"
+                 alt="Fotografie din 1887 cu placa de gresie plutind pe mercur">
+            <figcaption>
+              <span class="ptag">fotografie reală, 1887</span>
+              <b>Aparatul.</b> Placă de gresie plutind pe mercur, ca să se rotească fără vibrații.
+              <span class="cr">Case Western Reserve University · domeniu public ·
+                <a href="https://commons.wikimedia.org/wiki/File:Michelson_morley_experiment_1887.jpg">Wikimedia Commons</a></span>
+            </figcaption>
+          </figure>
+          <figure class="fig">
+            <img src="img/michelson-portret.jpg" width="916" height="1286" loading="lazy"
+                 alt="Portret fotografic al lui Albert A. Michelson">
             <figcaption>
               <span class="ptag">fotografie reală</span>
-              <b>Franje fotografiate.</b> Inele Newton cu laser roșu de 650 nm, la microscop.
-              Nu sunt franje de interferometru, dar e aceeași fizică.
-              <span class="cr">Foto: Robert D. Anderson · CC BY-SA 3.0 ·
-                <a href="https://commons.wikimedia.org/wiki/File:Newton%27s_rings_(650nm_red_laser_light).jpeg">Wikimedia Commons</a></span>
+              <b>Albert A. Michelson</b> (1852–1931), ofițer de marină devenit fizician.
+              <span class="cr">Domeniu public ·
+                <a href="https://commons.wikimedia.org/wiki/File:Albert_Abraham_Michelson2.jpg">Wikimedia Commons</a></span>
             </figcaption>
           </figure>
         </div>
       </div>
     </div>
+  </section>
 
-    <!-- ══ MEASURE ════════════════════════════════════════════════ -->
-    <div id="s-measure" style="padding-top:clamp(44px,7vw,92px)">
-      <div class="shead"><span class="sym">4</span><div><h2 class="display">Nu măsurăm oglinda.<br>Numărăm lumina.</h2></div></div>
-      <div class="duo wide-left">
-        <div class="inst pad">
-          <div class="counter" id="measureCounter">
-            <span class="big" id="measureCounterV">0,0</span>
-            <span class="lbl">franje trecute</span>
+  <!-- ══ 17 · CE A ÎNSEMNAT ═══════════════════════════════════════ -->
+  <section id="s-meaning">
+    <h2 class="display" style="font-size:clamp(2rem,5.6vw,3.6rem);max-width:18ch">
+      Efectul așteptat<br>nu a apărut.
+    </h2>
+    <p class="say" style="margin-top:18px;font-size:1.05rem">
+      Formulat precis: experimentul Michelson–Morley <strong>nu a detectat mișcarea relativă
+      față de eter în forma prezisă de modelul clasic al unui eter staționar.</strong>
+    </p>
+    <p class="say">
+      Nu „a demonstrat că eterul nu există" — asta n-ar fi putut face niciun experiment singur.
+      A arătat că, dacă eterul există, nu se comportă deloc cum cerea teoria. Iar un rezultat nul
+      obținut cu un aparat de patruzeci de ori mai sensibil decât efectul căutat este el însuși
+      un rezultat, nu un eșec.
+    </p>
+    <details class="wait" open>
+      <summary>Deci ce a demonstrat, până la urmă?</summary>
+      <p>Că efectul prezis de modelul clasic al eterului staționar nu se observă. Atât — dar e
+      enorm: a obligat fizica să caute altă explicație, iar căutarea aceea a durat optsprezece ani.</p>
+    </details>
+  </section>
+
+  <!-- ══ 18 · EINSTEIN ════════════════════════════════════════════ -->
+  <section id="s-einstein">
+    <div class="shead"><span class="sym">18</span><div><h2 class="display">Unde intră Einstein</h2></div></div>
+    <p class="say" style="margin-bottom:14px">
+      Relativitatea nu s-a născut dintr-un singur experiment. A fost un drum de douăzeci de ani,
+      cu mai mulți autori și cu mai multe încercări de a salva eterul.
+    </p>
+    <ol class="time">
+      <li><span class="yr">1881</span><div><h3>Primul interferometru, la Potsdam</h3><p>Sensibilitate insuficientă, dar principiul funcționează.</p></div></li>
+      <li><span class="yr">1887</span><div><h3>Michelson–Morley, Cleveland</h3><p>Rezultat nul, cu un aparat mult mai sensibil decât efectul căutat.</p></div></li>
+      <li><span class="yr">1889–1892</span><div><h3>FitzGerald și Lorentz</h3><p>Propun contracția lungimilor: obiectele s-ar scurta pe direcția mișcării, ascunzând exact efectul. O încercare de a salva eterul.</p></div></li>
+      <li><span class="yr">1904</span><div><h3>Transformările Lorentz</h3><p>Formalismul matematic e complet — dar interpretat încă în termeni de eter.</p></div></li>
+      <li><span class="yr">1905</span><div><h3>Einstein</h3><p>Renunță la eter cu totul și ia constanța vitezei luminii ca postulat. Aceleași ecuații, alt fundament.</p></div></li>
+      <li><span class="yr">1907</span><div><h3>Nobel pentru Michelson</h3><p>Pentru instrumentele optice de precizie — nu pentru relativitate.</p></div></li>
+    </ol>
+    <details class="wait" style="margin-top:14px">
+      <summary>Deci Michelson a demonstrat relativitatea?</summary>
+      <p>Nu. Experimentul a fost o piesă importantă din context, dar relativitatea restrânsă a
+      apărut din alt raționament, al lui Einstein, optsprezece ani mai târziu. Einstein însuși
+      a relatat diferit, în momente diferite, cât de mult a cântărit acest experiment pentru el.</p>
+    </details>
+  </section>
+
+  <!-- ══ 19 · EXPLORE MORE ════════════════════════════════════════ -->
+  <section id="ch-explore">
+    <div class="shead"><span class="sym">19</span><div><h2 class="display">Explore more</h2></div></div>
+    <p class="say" style="margin-bottom:20px">
+      De aici încolo, lucruri care nu erau necesare pentru poveste, dar care arată cât de departe
+      merge instrumentul.
+    </p>
+
+    <details class="xp">
+      <summary><b>Interferometrul ca riglă</b><span>numără lumina, nu oglinda</span></summary>
+      <div class="xp-body">
+        <div class="duo wide-left">
+          <div class="inst pad">
+            <div class="counter" id="measureCounter">
+              <span class="big" id="measureCounterV">0,0</span>
+              <span class="lbl">franje trecute</span>
+            </div>
+            <div class="ctl" style="margin-top:16px">
+              <div class="ctl-top"><label for="measureMirror">deplasarea oglinzii</label><span class="v" id="measureDx">0,0 nm</span></div>
+              <input type="range" id="measureMirror" min="0" max="6000" step="1" value="0">
+            </div>
+            <div class="row" style="margin-top:12px">
+              <button id="measureScan" aria-pressed="false">Scanează</button>
+              <button id="measureZero">Zero contor</button>
+            </div>
+            <div class="kv" style="margin-top:14px"><span>Δx = N·λ/2 verificare</span><b id="measureCheck">0,0 nm</b></div>
           </div>
-          <div class="ctl" style="margin-top:16px">
-            <div class="ctl-top"><label for="measureMirror">deplasarea oglinzii</label><span class="v" id="measureDx">0,0 nm</span></div>
-            <input type="range" id="measureMirror" min="0" max="6000" step="1" value="0">
-          </div>
-          <div class="row" style="margin-top:12px">
-            <button id="measureScan" aria-pressed="false">Scanează</button>
-            <button id="measureZero">Zero contor</button>
-          </div>
-          <div class="kv" style="margin-top:14px"><span>Δx = N·λ/2 verificare</span><b id="measureCheck">0,0 nm</b></div>
-        </div>
-        <div>
           <p class="say">
-            Contorul nu știe nimic despre oglindă. Numără doar de câte ori s-a stins și s-a
-            aprins lumina. Din numărul ăsta iese deplasarea, cu o precizie de fracțiuni de
-            lungime de undă.
-          </p>
-          <p class="chips" style="margin:12px 0">
-            <span class="chip"><b>N = 2Δx / λ</b><i>franje ↔ deplasare</i></span>
-          </p>
-          <p class="say">
-            Între 1960 și 1983 <strong>metrul</strong> a fost definit exact așa: 1 650 763,73
-            lungimi de undă ale kriptonului-86, numărate cu un interferometru. Pentru comparație:
-            un fir de păr are vreo 200 de franje, o monedă peste trei mii.
+            Contorul nu știe nimic despre oglindă: numără doar de câte ori s-a stins lumina.
+            Între 1960 și 1983, <strong>metrul</strong> a fost definit exact așa — 1 650 763,73
+            lungimi de undă ale kriptonului-86, numărate interferometric.
           </p>
         </div>
       </div>
-    </div>
+    </details>
 
-    <!-- ══ MATTER ═════════════════════════════════════════════════ -->
-    <div id="s-matter" style="padding-top:clamp(44px,7vw,92px)">
-      <div class="shead"><span class="sym">5</span><div><h2 class="display">Geometria nu s-a schimbat.<br>De ce s-au mișcat franjele?</h2></div></div>
-      <p class="say" style="margin-bottom:16px">
-        Pune un tub cu aer pe un braț și scoate aerul din el. Nicio oglindă nu s-a clintit —
-        și totuși trec aproape o sută de franje. Apasă butonul înainte de a citi explicația.
-      </p>
-      <div class="inst">
-        <div class="inst-head"><b>Tub cu gaz într-un braț</b><span id="gasTotal">99,4 franje</span></div>
-        <canvas id="gasCv" aria-label="Tubul cu gaz și franjele care defilează la vidare"></canvas>
-        <div class="pad">
-          <div class="duo" style="gap:14px">
-            <div class="ctl">
-              <div class="ctl-top"><label for="gasLen">lungimea tubului</label><span class="v" id="gasLenV">10,0 cm</span></div>
-              <input type="range" id="gasLen" min="1" max="30" step="0.5" value="10">
-            </div>
-            <div>
-              <p class="tag" style="margin-bottom:5px">gazul din tub</p>
-              <div class="seg">
-                <button id="gasAir" aria-pressed="true">Aer</button>
-                <button id="gasCO2" aria-pressed="false">CO₂</button>
-                <button id="gasHe" aria-pressed="false">Heliu</button>
+    <details class="xp">
+      <summary><b>Coerența: de ce nu merge cu orice lumină</b><span>laser, sodiu, lumină albă</span></summary>
+      <div class="xp-body">
+        <div class="duo">
+          <div class="inst">
+            <div class="inst-head"><b>Cât de departe rezistă franjele</b><span>lungimea de coerență</span></div>
+            <canvas id="cohCv" aria-label="Cinci surse și distanța la care franjele își pierd contrastul"></canvas>
+          </div>
+          <div>
+            <p class="say">
+              Laserul ține franjele la decalaje de zeci de centimetri, lampa cu sodiu cam o
+              jumătate de milimetru, iar lumina albă doar vreo două lungimi de undă.
+            </p>
+            <p class="say">
+              De asta Michelson găsea zeroul aproximativ cu sodiu, apoi trecea pe lumină albă,
+              unde franja colorată din centru îi arăta zeroul exact.
+            </p>
+            <p class="chips"><span class="chip"><b>Lc = λ²/Δλ</b><i>lungimea de coerență</i></span></p>
+          </div>
+        </div>
+      </div>
+    </details>
+
+    <details class="xp">
+      <summary><b>Cântărește aerul</b><span>indicele de refracție</span></summary>
+      <div class="xp-body">
+        <p class="say" style="margin-bottom:14px">
+          Geometria nu se schimbă, dar franjele se mișcă. De ce? Pentru că lumina nu măsoară
+          distanța, ci timpul de parcurs: drumul optic e <span class="mono">n·L</span>.
+        </p>
+        <div class="inst">
+          <div class="inst-head"><b>Tub cu gaz într-un braț</b><span id="gasTotal">99,4 franje</span></div>
+          <canvas id="gasCv" aria-label="Tubul cu gaz și franjele care defilează la vidare"></canvas>
+          <div class="pad">
+            <div class="duo" style="gap:14px">
+              <div class="ctl">
+                <div class="ctl-top"><label for="gasLen">lungimea tubului</label><span class="v" id="gasLenV">10,0 cm</span></div>
+                <input type="range" id="gasLen" min="1" max="30" step="0.5" value="10">
+              </div>
+              <div>
+                <p class="tag" style="margin-bottom:5px">gazul din tub</p>
+                <div class="seg">
+                  <button id="gasAir" aria-pressed="true">Aer</button>
+                  <button id="gasCO2" aria-pressed="false">CO₂</button>
+                  <button id="gasHe" aria-pressed="false">Heliu</button>
+                </div>
               </div>
             </div>
-          </div>
-          <div class="row" style="margin-top:12px">
-            <button id="gasPump">Scoate aerul</button>
-            <button id="gasFill">Umple din nou</button>
+            <div class="row" style="margin-top:12px">
+              <button id="gasPump">Scoate aerul</button>
+              <button id="gasFill">Umple din nou</button>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="duo" style="margin-top:14px">
-        <p class="say" style="margin:0">
-          Răspunsul: lumina nu măsoară distanța, ci <strong>timpul de parcurs</strong>. Într-un
-          mediu cu indice n, drumul optic e <em>n·L</em>, nu L. Scoțând gazul, drumul scade cu
-          2(n−1)L — factorul 2 pentru că lumina traversează tubul de două ori.
-        </p>
-        <p class="chips" style="margin:0">
+        <p class="chips" style="margin-top:12px">
           <span class="chip"><b>OPL = n·L</b><i>drum optic</i></span>
           <span class="chip"><b>δ = 2(n−1)L</b><i>ce adaugă gazul</i></span>
         </p>
       </div>
-    </div>
-  </section>
+    </details>
 
-  <!-- ══ ETHER ════════════════════════════════════════════════════ -->
-  <section id="ch-1887">
-    <div id="s-ether">
-      <div class="shead"><span class="sym">6</span><div><h2 class="display">Prin ce se propagă lumina?</h2></div></div>
-      <div class="triad" style="margin-bottom:16px">
-        <div class="tri"><span class="w">sunetul</span><span class="m">→ aerul</span></div>
-        <div class="tri"><span class="w">valurile</span><span class="m">→ apa</span></div>
-        <div class="tri unknown"><span class="w">lumina</span><span class="m">→ ???</span></div>
-      </div>
-      <p class="say">
-        Întrebarea părea rezonabilă în secolul XIX, iar răspunsul propus a fost
-        <strong>eterul</strong>: un mediu care umple tot spațiul, inclusiv vidul dintre planete,
-        și față de care lumina are viteza c. Dacă există și e nemișcat, atunci Pământul, care
-        aleargă pe orbită cu 30 km/s, ar trebui să treacă prin el — deci în laborator ar bate
-        un „vânt de eter".
-      </p>
-      <p class="say">
-        Ipoteza era testabilă. Asta e partea importantă.
-      </p>
-    </div>
-
-    <!-- ══ RIVER ══════════════════════════════════════════════════ -->
-    <div id="s-river" style="padding-top:clamp(44px,7vw,92px)">
-      <div class="shead"><span class="sym">7</span><div><h2 class="display">De unde vine predicția</h2></div></div>
-      <p class="say" style="margin-bottom:16px">
-        Doi înotători, aceeași distanță, aceeași viteză prin apă. Unul traversează râul și se
-        întoarce, celălalt înoată contra curentului și se întoarce. Pornește cu curentul pe zero.
-      </p>
-      <div class="inst">
-        <div class="inst-head"><b>Analogia râului</b><span>timpii sunt în unități de L/c</span></div>
-        <canvas id="riverCv" aria-label="Doi înotători într-un râu cu curent"></canvas>
-        <div class="pad">
-          <div class="ctl">
-            <div class="ctl-top"><label for="riverCurrent">viteza curentului</label><span class="v" id="riverCurrentV">50% din viteza înotătorului</span></div>
-            <input type="range" id="riverCurrent" min="0" max="80" step="1" value="50">
-          </div>
-          <div class="row" style="margin-top:12px">
-            <button id="riverMorph" aria-pressed="false">Traduce în lumină și eter</button>
-          </div>
-        </div>
-      </div>
-      <div class="duo" style="margin-top:14px">
-        <p class="say" style="margin:0">
-          Fără curent se întorc simultan. Cu curent, cel care înoată în lungul lui pierde
-          mai mult la dus decât câștigă la întors — pentru că petrece mai mult timp în zona
-          lentă. Diferența crește cu pătratul vitezei curentului.
+    <details class="xp">
+      <summary><b>LIGO</b><span>același aparat, brațe de 4 km</span></summary>
+      <div class="xp-body">
+        <p class="say" style="margin-bottom:14px">
+          Desparte → parcurge → reflectă → recombină → citește diferența de fază. Exact pașii din
+          capitolul 6, la altă scară: LIGO măsoară o variație de drum de 10⁻¹⁸ metri.
         </p>
-        <figure class="fig">
-          <video controls preload="metadata" playsinline muted loop
-                 aria-label="Filmare: valuri pe apă în curgere, model pentru vântul de eter">
-            <source src="vid/vant-de-eter-apa.webm" type="video/webm">
-            <a href="vid/vant-de-eter-apa.webm">Descarcă filmarea</a>.
-          </video>
-          <figcaption>
-            <span class="ptag vtag">filmare reală</span>
-            <b>Același model, pe apă adevărată.</b> Valuri circulare făcute cu mâna pe o apă care
-            curge — <em>Strömung</em> înseamnă „curent". Se vede că mediul contează.
-            <span class="cr">Rhetos · CC BY-SA 4.0 ·
-              <a href="https://commons.wikimedia.org/wiki/File:%C3%84therwind_(Wasserwellen-Modell).webm">Wikimedia Commons</a></span>
-          </figcaption>
-        </figure>
-      </div>
-    </div>
-
-    <!-- ══ PREDICT ════════════════════════════════════════════════ -->
-    <div id="s-predict" style="padding-top:clamp(44px,7vw,92px)">
-      <div class="shead"><span class="sym">8</span><div><h2 class="display">Predicția modelului clasic</h2></div></div>
-      <p class="say" style="margin-bottom:16px">
-        Înlocuiește înotătorii cu cele două fascicule și curentul cu vântul ipotetic. Un braț e
-        paralel cu el, celălalt perpendicular — deci timpii diferă, deci faza diferă, deci
-        franjele ar trebui să stea altfel decât dacă eterul n-ar exista.
-      </p>
-      <div class="duo wide-left">
-        <div class="inst pad">
-          <div class="ctl">
-            <div class="ctl-top"><label for="armLen">L · lungimea efectivă a brațului</label><span class="v" id="armLenV">11,0 m</span></div>
-            <input type="range" id="armLen" min="1" max="20" step="0.5" value="11">
-          </div>
-          <div class="ctl" style="margin-top:12px">
-            <div class="ctl-top"><label for="etherV">v · viteza față de eter</label><span class="v" id="etherVV">30 km/s</span></div>
-            <input type="range" id="etherV" min="0" max="100" step="1" value="30">
-          </div>
-          <div class="counter" style="margin-top:16px">
-            <span class="big" id="predShift">0,37</span>
-            <span class="lbl">franje prezise<br>la rotirea cu 90°</span>
-          </div>
-          <p class="say" style="font-size:.84rem;margin:12px 0 0">
-            Aceasta este predicția <em>modelului istoric al eterului</em>, nu a fizicii de azi.
-          </p>
+        <div class="figrow">
+          <figure class="fig">
+            <video controls preload="metadata" playsinline poster="vid/interferometru-animatie.jpg"
+                   aria-label="Animație: un interferometru gigant detectând o undă gravitațională">
+              <source src="vid/interferometru-animatie.webm" type="video/webm">
+              <a href="vid/interferometru-animatie.webm">Descarcă animația</a>.
+            </video>
+            <figcaption>
+              <span class="ptag vtag">animație · 20 s</span>
+              <b>Detectorul Virgo în funcțiune.</b> Laser, lamă separatoare, două brațe de 3 km,
+              fotodiodă. Oglinzile se mișcă, faza se schimbă, semnalul apare jos.
+              <span class="cr">Thuiop · CC BY-SA 4.0 ·
+                <a href="https://commons.wikimedia.org/wiki/File:Gravitational_wave_interferometer_animation.ogg">Wikimedia Commons</a></span>
+            </figcaption>
+          </figure>
+          <figure class="fig">
+            <video controls preload="metadata" playsinline poster="vid/unde-gravitationale-pamant.jpg"
+                   aria-label="Animație: efectul undelor gravitaționale asupra Pământului">
+              <source src="vid/unde-gravitationale-pamant.webm" type="video/webm">
+              <a href="vid/unde-gravitationale-pamant.webm">Descarcă animația</a>.
+            </video>
+            <figcaption>
+              <span class="ptag vtag">animație · LIGO</span>
+              <b>Ce face o undă gravitațională.</b> Întinde și strânge spațiul; efectul e mult exagerat.
+              <span class="cr">LIGO Lab Caltech/MIT, R. Hurt · CC BY 3.0 ·
+                <a href="https://commons.wikimedia.org/wiki/File:Exaggerated_Effects_of_Gravitational_Waves_on_Earth.webm">Wikimedia Commons</a></span>
+            </figcaption>
+          </figure>
         </div>
-        <div>
-          <p class="chips" style="margin-bottom:12px">
-            <span class="chip"><b>Δn = 2Lv²/(λc²)</b><i>deplasarea prezisă</i></span>
-          </p>
-          <p class="say">
-            Cu configurația reală din 1887 — braț efectiv de 11 metri, obținut prin reflexii
-            multiple — ies aproximativ <strong>0,4 franje</strong>. Puțin, dar de patruzeci de ori
-            peste ce se putea citi la microscop.
-          </p>
-          <div class="figrow" style="margin-top:12px">
-            <figure class="fig">
-              <img src="img/aparat-1887.jpg" width="742" height="432" loading="lazy"
-                   alt="Fotografie din 1887 cu placa de gresie plutind pe mercur">
-              <figcaption>
-                <span class="ptag">fotografie reală, 1887</span>
-                <b>Aparatul.</b> Placă de gresie plutind pe un bazin cu mercur, în subsolul de
-                cărămidă de la Cleveland, ca să se rotească fără vibrații.
-                <span class="cr">Case Western Reserve University · domeniu public ·
-                  <a href="https://commons.wikimedia.org/wiki/File:Michelson_morley_experiment_1887.jpg">Wikimedia Commons</a></span>
-              </figcaption>
-            </figure>
-            <figure class="fig">
-              <img src="img/michelson-portret.jpg" width="916" height="1286" loading="lazy"
-                   alt="Portret fotografic al lui Albert A. Michelson">
-              <figcaption>
-                <span class="ptag">fotografie reală</span>
-                <b>Albert A. Michelson</b> (1852–1931), ofițer de marină devenit fizician. Primul
-                american premiat cu Nobel într-o știință exactă.
-                <span class="cr">Domeniu public ·
-                  <a href="https://commons.wikimedia.org/wiki/File:Albert_Abraham_Michelson2.jpg">Wikimedia Commons</a></span>
-              </figcaption>
-            </figure>
-          </div>
+        <div class="figrow" style="margin-top:8px">
+          <figure class="fig">
+            <img src="img/ligo-hanford.jpg" width="600" height="400" loading="lazy"
+                 alt="Vedere aeriană a observatorului LIGO Hanford">
+            <figcaption>
+              <span class="ptag">fotografie reală</span>
+              <b>LIGO Hanford.</b> Două brațe de beton de câte 4 km, în unghi drept.
+              <span class="cr">Caltech/MIT/LIGO Laboratory · domeniu public ·
+                <a href="https://commons.wikimedia.org/wiki/File:Aerial_View_Of_LIGO_Hanford.jpg">Wikimedia Commons</a></span>
+            </figcaption>
+          </figure>
+          <figure class="fig">
+            <img src="img/gw150914.png" width="1280" height="1600" loading="lazy"
+                 alt="Semnalul GW150914 înregistrat de cele două detectoare LIGO">
+            <figcaption>
+              <span class="ptag">date reale, 2015</span>
+              <b>Primul semnal detectat.</b> 14 septembrie 2015, fuziunea a două găuri negre,
+              citită ca o deplasare de fază.
+              <span class="cr">Caltech/MIT/LIGO Laboratory · CC0 ·
+                <a href="https://commons.wikimedia.org/wiki/File:GW150914_Strain-diagrams.png">Wikimedia Commons</a></span>
+            </figcaption>
+          </figure>
         </div>
-      </div>
-    </div>
-
-    <!-- ══ ROTATE ═════════════════════════════════════════════════ -->
-    <div id="s-rotate" style="padding-top:clamp(44px,7vw,92px)">
-      <div class="shead"><span class="sym">9</span><div><h2 class="display">Fă experimentul</h2></div></div>
-      <p class="say" style="margin-bottom:16px">
-        Rotește aparatul cu 90°: brațele își schimbă rolurile față de vântul ipotetic, deci
-        efectul ar trebui să se inverseze. <strong>Prezice întâi</strong> ce vei vedea, apoi
-        descoperă panoul din dreapta.
-      </p>
-      <div class="inst">
-        <div class="inst-head"><b>Aparatul în rotație</b><span>predicția modelului, în portocaliu</span></div>
-        <canvas id="mmCv" aria-label="Aparatul rotindu-se și curba deplasării prezise"></canvas>
-      </div>
-      <div class="row" style="margin:12px 0">
-        <button id="rotateBtn">Rotește aparatul cu 90°</button>
-        <button id="revealBtn" hidden>Arată ce s-a măsurat în 1887</button>
-      </div>
-      <div class="inst">
-        <div class="inst-head"><b>Predicție / observație</b><span>aceleași franje, aceeași scară</span></div>
-        <canvas id="splitCv" aria-label="Franjele prezise față de cele observate"></canvas>
-      </div>
-      <p class="say" id="resultText" hidden style="margin-top:14px">
-        <strong>Efectul așteptat nu a apărut.</strong> Formulat precis: experimentul nu a detectat
-        o mișcare relativă față de eter de forma prezisă de modelul clasic al unui eter staționar.
-        Nu „a demonstrat că eterul nu există" — a arătat că, dacă există, nu se comportă deloc
-        cum cerea teoria.
-      </p>
-    </div>
-
-    <!-- ══ RESULT: datele originale ═══════════════════════════════ -->
-    <div id="s-result" style="padding-top:clamp(44px,7vw,92px)">
-      <div class="shead"><span class="sym">10</span><div><h2 class="display">Datele originale</h2></div></div>
-      <div class="duo wide-left">
-        <figure class="fig">
-          <div style="position:relative">
-            <img src="img/figura-6-1887.png" width="770" height="396" loading="lazy" style="background:#f4f2ee"
-                 alt="Figura 6 din lucrarea din 1887, cu rezultatele măsurate și predicția teoretică">
-            <div id="figNotes" hidden style="position:absolute;inset:0;pointer-events:none">
-              <span class="fnote" style="left:4%;top:6%">curba punctată: predicția eterului, deja redusă la ⅛</span>
-              <span class="fnote" style="left:4%;top:56%">curba continuă: ce s-a măsurat efectiv</span>
-              <span class="fnote" style="right:4%;top:28%">o diviziune = 0,05 λ</span>
-            </div>
-          </div>
-          <figcaption>
-            <span class="ptag">datele originale, 1887</span>
-            <b>Figura 6 din lucrarea publicată.</b> Sus: observațiile de la amiază. Jos: cele de seara.
-            <span class="cr">Michelson &amp; Morley, American Journal of Science 34 (1887) · domeniu public ·
-              <a href="https://commons.wikimedia.org/wiki/File:Michelson_Morley_1887_Figure_6.png">Wikimedia Commons</a></span>
-          </figcaption>
-        </figure>
-        <div>
-          <div class="seg" style="max-width:260px;margin-bottom:14px">
-            <button id="figOriginal" aria-pressed="true">Original</button>
-            <button id="figExplained" aria-pressed="false">Explicat</button>
-          </div>
-          <p class="say">
-            Liniile continue sunt măsurătorile. Liniile punctate sunt predicția modelului — iar
-            autorii o desenaseră deja <strong>redusă la o optime</strong>, altfel n-ar fi încăput
-            în figură. Cu alte cuvinte: chiar și micșorată de opt ori, predicția e vizibil mai mare
-            decât tot ce s-a măsurat.
-          </p>
-          <blockquote class="qbox" style="margin-top:14px">
-            „...probably less than one sixth the earth's orbital velocity.”
-            <cite>Concluzia lucrării din 1887</cite>
-          </blockquote>
-        </div>
-      </div>
-    </div>
-
-    <!-- ══ RELATIVITY ═════════════════════════════════════════════ -->
-    <div id="s-relativity" style="padding-top:clamp(44px,7vw,92px)">
-      <div class="shead"><span class="sym">11</span><div><h2 class="display">Ce a urmat, de fapt</h2></div></div>
-      <p class="say" style="margin-bottom:14px">
-        Relativitatea nu s-a născut dintr-un singur experiment. A fost un drum de douăzeci de ani,
-        cu mai mulți autori și mai multe încercări de salvare a eterului.
-      </p>
-      <ol class="time">
-        <li><span class="yr">1881</span><div><h3>Primul interferometru, la Potsdam</h3><p>Sensibilitate insuficientă, dar principiul funcționează.</p></div></li>
-        <li><span class="yr">1887</span><div><h3>Michelson–Morley</h3><p>Rezultat nul, cu un aparat de patruzeci de ori mai sensibil decât efectul căutat.</p></div></li>
-        <li><span class="yr">1889–1892</span><div><h3>FitzGerald și Lorentz</h3><p>Propun contracția lungimilor: obiectele s-ar scurta pe direcția mișcării, ascunzând exact efectul. O soluție de salvare a eterului.</p></div></li>
-        <li><span class="yr">1904</span><div><h3>Transformările Lorentz</h3><p>Formalismul matematic e complet — dar interpretat încă în termeni de eter.</p></div></li>
-        <li><span class="yr">1905</span><div><h3>Einstein</h3><p>Renunță la eter cu totul și ia constanța vitezei luminii ca postulat. Aceleași ecuații, alt fundament.</p></div></li>
-        <li><span class="yr">1907</span><div><h3>Nobel pentru Michelson</h3><p>Pentru instrumentele optice de precizie, nu pentru relativitate.</p></div></li>
-      </ol>
-      <figure class="fig" style="margin-top:16px;max-width:420px">
-        <img src="img/placa-comemorativa.jpg" width="1280" height="853" loading="lazy"
-             alt="Placa comemorativă de la Case Western Reserve University">
-        <figcaption>
-          <span class="ptag">fotografie reală</span>
-          <b>Locul, astăzi.</b> Placa de pe campusul Case Western Reserve University marchează
-          punctul unde stătea bazinul cu mercur.
-          <span class="cr">Foto: Alan Migdall · CC BY-SA 3.0 ·
-            <a href="https://commons.wikimedia.org/wiki/File:Michelson-Morley_Experiment_Plaque.JPG">Wikimedia Commons</a></span>
-        </figcaption>
-      </figure>
-    </div>
-
-    <!-- ══ LIGO ═══════════════════════════════════════════════════ -->
-    <div id="s-ligo" style="padding-top:clamp(44px,7vw,92px)">
-      <div class="shead"><span class="sym">12</span><div><h2 class="display">Aceeași schemă, brațe de 4 km</h2></div></div>
-      <p class="say" style="margin-bottom:16px">
-        Desparte → parcurge → reflectă → recombină → citește diferența de fază. Exact pașii din
-        capitolul 1, la altă scară: LIGO măsoară o variație de drum de 10⁻¹⁸ metri.
-      </p>
-      <div class="figrow">
-        <figure class="fig">
-          <video controls preload="metadata" playsinline poster="vid/interferometru-animatie.jpg"
-                 aria-label="Animație: un interferometru gigant detectând o undă gravitațională">
-            <source src="vid/interferometru-animatie.webm" type="video/webm">
-            <a href="vid/interferometru-animatie.webm">Descarcă animația</a>.
-          </video>
-          <figcaption>
-            <span class="ptag vtag">animație · 20 s</span>
-            <b>Detectorul Virgo în funcțiune.</b> Laser, lamă separatoare, două brațe de 3 km,
-            fotodiodă. Oglinzile se mișcă, faza se schimbă, semnalul apare jos.
-            <span class="cr">Thuiop · CC BY-SA 4.0 ·
-              <a href="https://commons.wikimedia.org/wiki/File:Gravitational_wave_interferometer_animation.ogg">Wikimedia Commons</a></span>
-          </figcaption>
-        </figure>
-        <figure class="fig">
-          <video controls preload="metadata" playsinline poster="vid/unde-gravitationale-pamant.jpg"
-                 aria-label="Animație: efectul undelor gravitaționale asupra Pământului">
-            <source src="vid/unde-gravitationale-pamant.webm" type="video/webm">
-            <a href="vid/unde-gravitationale-pamant.webm">Descarcă animația</a>.
-          </video>
-          <figcaption>
-            <span class="ptag vtag">animație · LIGO</span>
-            <b>Ce face o undă gravitațională.</b> Întinde și strânge spațiul; aici efectul e mult
-            exagerat. Un braț se lungește exact când celălalt se scurtează.
-            <span class="cr">LIGO Lab Caltech/MIT, R. Hurt · CC BY 3.0 ·
-              <a href="https://commons.wikimedia.org/wiki/File:Exaggerated_Effects_of_Gravitational_Waves_on_Earth.webm">Wikimedia Commons</a></span>
-          </figcaption>
-        </figure>
-      </div>
-      <div class="figrow" style="margin-top:8px">
-        <figure class="fig">
-          <img src="img/ligo-hanford.jpg" width="600" height="400" loading="lazy"
-               alt="Vedere aeriană a observatorului LIGO Hanford">
+        <figure class="fig" style="margin-top:8px;max-width:420px">
+          <img src="img/placa-comemorativa.jpg" width="1280" height="853" loading="lazy"
+               alt="Placa comemorativă de la Case Western Reserve University">
           <figcaption>
             <span class="ptag">fotografie reală</span>
-            <b>LIGO Hanford.</b> Două brațe de beton de câte 4 km, în unghi drept.
-            <span class="cr">Caltech/MIT/LIGO Laboratory · domeniu public ·
-              <a href="https://commons.wikimedia.org/wiki/File:Aerial_View_Of_LIGO_Hanford.jpg">Wikimedia Commons</a></span>
-          </figcaption>
-        </figure>
-        <figure class="fig">
-          <img src="img/gw150914.png" width="1280" height="1600" loading="lazy"
-               alt="Semnalul GW150914 înregistrat de cele două detectoare LIGO">
-          <figcaption>
-            <span class="ptag">date reale, 2015</span>
-            <b>Primul semnal detectat.</b> 14 septembrie 2015: fuziunea a două găuri negre,
-            citită ca o deplasare de fază în două interferometre aflate la 3 000 km distanță.
-            <span class="cr">Caltech/MIT/LIGO Laboratory · CC0 ·
-              <a href="https://commons.wikimedia.org/wiki/File:GW150914_Strain-diagrams.png">Wikimedia Commons</a></span>
+            <b>Locul, astăzi.</b> Placa marchează punctul unde stătea bazinul cu mercur.
+            <span class="cr">Foto: Alan Migdall · CC BY-SA 3.0 ·
+              <a href="https://commons.wikimedia.org/wiki/File:Michelson-Morley_Experiment_Plaque.JPG">Wikimedia Commons</a></span>
           </figcaption>
         </figure>
       </div>
-    </div>
-  </section>
+    </details>
 
-  <!-- ══ CHALLENGE ════════════════════════════════════════════════ -->
-  <section id="ch-challenge">
-    <div class="shead"><span class="sym">13</span><div><h2 class="display">Prezici, apoi verifici</h2></div></div>
-    <p class="say" style="margin-bottom:16px">
-      Nu sunt calcule. Alege un răspuns, apoi cere simulatorului să-ți arate ce se întâmplă
-      de fapt — te duce direct la panoul potrivit, cu valorile puse.
-    </p>
-    <div class="duo wide-left">
-      <div id="challenges"></div>
-      <div>
-        <p class="tag" id="chScore">0 / 6 corecte</p>
-        <p class="say" style="margin-top:14px">
-          Formulele sunt în sertarul <em>ƒ Formule</em> din bara de sus, cu valorile curente
-          înlocuite numeric. Butonul <em>Prezentare</em> pornește modul de prezentare la clasă:
-          săgeți pentru scene, Space pauză, R reset.
-        </p>
+    <details class="xp">
+      <summary><b>Prezici, apoi verifici</b><span>șase provocări</span></summary>
+      <div class="xp-body">
+        <div class="duo wide-left">
+          <div id="challenges"></div>
+          <div>
+            <p class="tag" id="chScore">0 / 6 corecte</p>
+            <p class="say" style="margin-top:14px">
+              Formulele complete sunt în sertarul <em>ƒ Formule</em> din bara de sus, cu valorile
+              curente înlocuite numeric.
+            </p>
+          </div>
+        </div>
       </div>
-    </div>
+    </details>
   </section>
 
   <footer>
-    <p class="tag">Surse bibliografice</p>
+    <p class="tag">Ce ar trebui să poți explica acum</p>
+    <p class="say" style="margin-top:8px;max-width:64ch">
+      Credeau că lumina, fiind undă, trebuie să aibă un mediu — ca apa pentru valuri sau aerul
+      pentru sunet. L-au numit eter. Dacă Pământul se mișca prin el, trebuia să existe un vânt de
+      eter. Michelson a împărțit lumina pe două direcții, a recombinat-o și a folosit interferența
+      ca să observe diferențe minuscule. A rotit aparatul ca razele să-și schimbe orientarea față
+      de presupusul vânt. Deplasarea prezisă a franjelor nu a apărut.
+    </p>
+
+    <p class="tag" style="margin-top:24px">Surse bibliografice</p>
     <ul>
       <li>A. A. Michelson, E. W. Morley — <i>On the Relative Motion of the Earth and the Luminiferous Ether</i>, American Journal of Science 34, 1887.</li>
       <li>E. Hecht — <i>Optics</i>, ed. a 5-a, cap. 9.</li>
@@ -649,8 +876,8 @@
       <li>Animație: unde gravitaționale — LIGO Lab Caltech/MIT, R. Hurt, CC BY 3.0.</li>
     </ul>
     <p class="tag" style="margin-top:18px">
-      Fotografiile și filmările sunt reale. Toate simulările sunt calculate în pagină din
-      formulele fizice, de un motor separat de interfață, acoperit cu teste.
+      Fotografiile și filmările sunt reale. Simulările sunt calculate în pagină de un motor fizic
+      separat de interfață, acoperit cu teste automate.
     </p>
   </footer>
 </main>
