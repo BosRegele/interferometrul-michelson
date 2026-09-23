@@ -72,6 +72,13 @@ a:hover{border-color:var(--b)}
   color:var(--fg2);background:transparent;border:1px solid var(--line2);padding:6px 10px;cursor:pointer
 }
 .topbtn:hover{color:var(--fg);border-color:var(--fg3)}
+/* bara de sus pe un singur rand si pe ecrane inguste */
+@media (max-width:920px){.brand{display:none}.chapters{margin-right:auto}}
+@media (max-width:620px){
+  .topbar-in{gap:6px;padding-inline:10px}
+  .chapters a{padding:6px 6px;letter-spacing:.06em}
+  .topbtn{padding:6px 7px;letter-spacing:.06em}
+}
 .topbtn[aria-pressed=true],.topbtn[aria-expanded=true]{color:var(--b);border-color:var(--b)}
 
 /* structura */
@@ -585,8 +592,8 @@ footer li i{font-style:italic;color:var(--fg2)}
         <path d="M384 80V310" stroke="#96a3ad" stroke-width="1.6"/>
         <path d="M384 80l-6 12h12zM384 310l-6-12h12z" fill="#96a3ad"/>
         <text x="352" y="204" class="sm">L₁</text>
-        <path d="M456 292H786" stroke="#96a3ad" stroke-width="1.6"/>
-        <path d="M456 292l12-6v12zM786 292l-12-6v12z" fill="#96a3ad"/>
+        <path d="M474 292H786" stroke="#96a3ad" stroke-width="1.6"/>
+        <path d="M474 292l12-6v12zM786 292l-12-6v12z" fill="#96a3ad"/>
         <text x="610" y="278" class="sm">L₂</text>
         <text x="452" y="196" class="sb" fill="#7fd4ee">(1)</text>
         <text x="640" y="382" class="sb" fill="#ffb04a">(2)</text>
