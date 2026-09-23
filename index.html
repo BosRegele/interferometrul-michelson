@@ -448,7 +448,6 @@ body.presenting main,body.presenting .closing{padding-bottom:110px}
       propaga. Atunci cum traversează lumina spațiul gol dintre Soare și noi?
     </p>
   </div>
-  <a class="scroll-cue" href="#s-ether-idea" aria-label="Derulează la poveste"><span>Derulează</span><i></i></a>
 </section>
 
 <main class="wrap">
@@ -543,7 +542,7 @@ body.presenting main,body.presenting .closing{padding-bottom:110px}
     </header>
     <p class="intro">
       Aceeași distanță, aceeași viteză prin apă. Unul traversează și se întoarce, celălalt merge în
-      lungul curentului și se întoarce. Pune curentul pe zero: se întorc simultan.
+      lungul curentului și se întoarce. Fără curent, se întorc în același timp.
     </p>
     <figure class="stage">
       <canvas id="riverCv" aria-label="Doi înotători într-un râu cu curent"></canvas>
@@ -708,7 +707,7 @@ body.presenting main,body.presenting .closing{padding-bottom:110px}
           <text x="640" y="382" class="sb" fill="#ffb04a">(2)</text>
           <text x="458" y="530" class="sb"><tspan fill="#7fd4ee">(1)</tspan><tspan fill="#eef1f3"> + </tspan><tspan fill="#ffb04a">(2)</tspan></text>
         </svg>
-        <figcaption class="cap">Schemă redesenată pentru acest proiect, după o diagramă clasică de manual.</figcaption>
+        <figcaption class="cap">Traseul celor două raze prin interferometru.</figcaption>
       </figure>
     </div>
   </section>
@@ -762,7 +761,7 @@ body.presenting main,body.presenting .closing{padding-bottom:110px}
       <canvas id="heroCv" aria-label="Cele două unde, rezultanta și detectorul"></canvas>
       <figcaption class="stage-foot">
         <div class="ctl grow">
-          <div class="ctl-top"><label for="heroPhase">Mută unda B</label><span class="v" id="heroPhaseV">0°</span></div>
+          <div class="ctl-top"><label for="heroPhase">Decalajul undei B</label><span class="v" id="heroPhaseV">0°</span></div>
           <input type="range" id="heroPhase" min="0" max="360" step="1" value="0">
         </div>
         <div class="tabs" role="group" aria-label="Faze prestabilite">
@@ -784,8 +783,8 @@ body.presenting main,body.presenting .closing{padding-bottom:110px}
       <h2>Mișcă <em>oglinda</em></h2>
     </header>
     <p class="intro">
-      Cum produci decalajul? Lungești un drum. Mută oglinda și urmărește cum trece efectul prin toate
-      cele cinci reprezentări: toate citesc aceeași stare.
+      Cum produci decalajul? Lungești unul dintre drumuri. Când oglinda se mișcă, efectul trece prin
+      cinci etape, de la oglindă până la franjă.
     </p>
     <div class="chain" id="chain">
       <figure class="link">
@@ -857,8 +856,8 @@ body.presenting main,body.presenting .closing{padding-bottom:110px}
       <h2>Cum apar <em>franjele</em></h2>
     </header>
     <p class="intro">
-      Pe un ecran întreg, fiecare punct are altă diferență de drum, de aceea apar inele. Plimbă
-      mouse-ul peste ecran ca să citești valorile din punctul țintit.
+      Pe un ecran întreg, fiecare punct are altă diferență de drum, de aceea apar inele. Cu cât
+      brațele sunt mai diferite, cu atât inelele sunt mai dese.
     </p>
     <div class="lab">
       <div class="lab-screen">
@@ -1002,6 +1001,14 @@ body.presenting main,body.presenting .closing{padding-bottom:110px}
     <figure class="stage">
       <canvas id="splitCv" aria-label="Franjele prezise față de cele observate"></canvas>
     </figure>
+    <details class="wait">
+      <summary>Ce înseamnă 0 pe grafic? Că lumina dispare?</summary>
+      <p>Nu. Axa verticală arată <strong>cât s-au mutat franjele</strong> când se rotește aparatul, nu
+      câtă lumină e. Franjele se văd tot timpul, pentru că A și B interferă permanent, cu un decalaj
+      fix dat de lungimea brațelor. Curba portocalie arată cum ar fi trebuit să alunece franjele la
+      rotire. Linia verde, lipită de 0, arată că au stat pe loc: rotirea nu a schimbat decalajul
+      dintre cele două raze.</p>
+    </details>
 
     <div class="split archive">
       <figure class="col-7 plate paper">
@@ -1201,8 +1208,7 @@ body.presenting main,body.presenting .closing{padding-bottom:110px}
           <div class="col-7" id="challenges"></div>
           <div class="col-5 prose">
             <p class="score" id="chScore">0 / 6 corecte</p>
-            <p>Alege un răspuns, apoi cere simulatorului să-ți arate ce se întâmplă. Formulele, cu
-            valorile de acum, sunt în <strong>Formule</strong>, sus.</p>
+            <p>Fiecare răspuns vine cu explicația lui și cu demonstrația în simulare.</p>
           </div>
         </div>
       </div>
@@ -1244,7 +1250,7 @@ body.presenting main,body.presenting .closing{padding-bottom:110px}
         </ul>
       </div>
     </div>
-    <p class="fine">Fotografiile și filmările sunt reale. Simulările sunt calculate în pagină, de un motor fizic acoperit cu teste.</p>
+    <p class="fine">Fotografiile și filmările sunt reale. Celelalte imagini sunt simulări calculate din formulele fizice.</p>
   </div>
 </footer>
 
@@ -1481,9 +1487,9 @@ $("rolesToggle").addEventListener("click", () => { rolesRotated = !rolesRotated;
 
 /* ── 15 · prezice inainte de rezultat ───────────────────────────── */
 const ACK = [
-  "Așa gândea și fizica clasică. Hai să vedem dacă natura a fost de acord.",
-  "O intuiție prudentă. Verifică mai jos cât de mică a ieșit, de fapt.",
-  "Pariu îndrăzneț, contra teoriei vremii. Verifică mai jos."
+  "Asta spunea fizica clasică. Rezultatul real e mai jos.",
+  "O intuiție prudentă. Rezultatul real e mai jos.",
+  "Contra teoriei vremii. Rezultatul real e mai jos."
 ];
 document.querySelectorAll("#predictGuess [data-guess]").forEach(b =>
   b.addEventListener("click", () => {
@@ -1892,9 +1898,16 @@ function predictedFringeShift(L, v, lambda, c = C) {
   return 2 * L * v * v / (lambda * c * c);
 }
 
-/** Cum ar varia deplasarea pe parcursul unei rotatii complete. */
-function shiftAtAngle(maxShift, theta) {
-  return maxShift * Math.cos(2 * theta);
+/** Oscilatia prezisa in jurul pozitiei medii, cum o deseneaza si lucrarea din 1887.
+    Amplitudinea e JUMATATE din predictie: de la 0° la 90° franjele trec de la +Δn/2 la −Δn/2,
+    deci se muta in total cu Δn, cat da formula 2Lv²/(λc²). */
+function predictedSwing(totalShift, theta) {
+  return (totalShift / 2) * Math.cos(2 * theta);
+}
+
+/** Cat s-ar fi mutat franjele fata de pozitia de start, dupa o rotire cu theta. */
+function shiftSinceStart(totalShift, theta) {
+  return (totalShift / 2) * (1 - Math.cos(2 * theta));
 }
 
 /** Limita superioara masurata efectiv in 1887, in franje. */
@@ -1906,7 +1919,8 @@ const OBSERVED_1887_UPPER_BOUND = 0.01;
   __e.deltaTime = deltaTime;
   __e.parallelLegs = parallelLegs;
   __e.predictedFringeShift = predictedFringeShift;
-  __e.shiftAtAngle = shiftAtAngle;
+  __e.predictedSwing = predictedSwing;
+  __e.shiftSinceStart = shiftSinceStart;
   __e.OBSERVED_1887_UPPER_BOUND = OBSERVED_1887_UPPER_BOUND;
 };
 __mods["physics/refractiveIndex.js"] = function(__e, __req){
@@ -2853,7 +2867,7 @@ __mods["sims/ether.js"] = function(__e, __req){
 const { COL, MONO, wavelengthRGB } = __req("sims/palette.js");
 const { state } = __req("state.js");
 const { TAU } = __req("physics/phase.js");
-const { shiftAtAngle, parallelLegs, OBSERVED_1887_UPPER_BOUND } = __req("physics/etherModel.js");
+const { predictedSwing, shiftSinceStart, parallelLegs, OBSERVED_1887_UPPER_BOUND } = __req("physics/etherModel.js");
 
 function surface(cv, ratio) {
   const dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -3025,34 +3039,40 @@ function makeApparatus(cv) {
     ctx.restore();
     ctx.restore();
 
-    // dreapta: graficul predictiei si al observatiei
-    const gx = w * 0.52, gw = w * 0.43, gy = h * 0.22, gh = h * 0.56;
-    const mid = gy + gh / 2, sc = (gh / 2 - 6) / 0.5;
+    // dreapta: graficul. Axa verticala = cat s-au MUTAT franjele, nu cata lumina e.
+    const gx = w * 0.56, gw = w * 0.40, gy = h * 0.24, gh = h * 0.54;
+    const RANGE = 0.25;                               // scara: ±0,25 franje
+    const mid = gy + gh / 2, sc = (gh / 2 - 6) / RANGE;
+    const clamp = v => Math.max(-RANGE, Math.min(RANGE, v));
     ctx.strokeStyle = "#161f26"; ctx.lineWidth = 1;
     ctx.beginPath();
     ctx.moveTo(gx, mid); ctx.lineTo(gx + gw, mid);
     ctx.moveTo(gx, gy); ctx.lineTo(gx, gy + gh);
     ctx.stroke();
     ctx.fillStyle = COL.fg3; ctx.font = `10px ${MONO}`;
-    ctx.fillText("+0,5", gx - 30, gy + 8);
-    ctx.fillText("0", gx - 12, mid + 3);
-    ctx.fillText("−0,5", gx - 30, gy + gh + 2);
-    ["0°", "90°", "180°", "270°", "360°"].forEach((s, i) => {
-      const x = gx + gw * i / 4;
-      ctx.fillText(s, x - (i ? 12 : 3), gy + gh + 18);
-    });
+    ctx.textAlign = "right";
+    ctx.fillText("+0,25", gx - 6, gy + 8);
+    ctx.fillText("0", gx - 6, mid + 3);
+    ctx.fillText("−0,25", gx - 6, gy + gh + 2);
+    ctx.textAlign = "center";
+    ["0°", "90°", "180°", "270°", "360°"].forEach((s, i) => ctx.fillText(s, gx + gw * i / 4, gy + gh + 18));
+    ctx.fillText("unghiul de rotire a aparatului", gx + gw / 2, gy + gh + 36);
+    ctx.save();
+    ctx.translate(gx - 46, mid); ctx.rotate(-Math.PI / 2);
+    ctx.fillText("deplasarea franjelor", 0, 0);
+    ctx.restore();
+    ctx.textAlign = "left";
 
     ctx.strokeStyle = COL.beamB; ctx.lineWidth = 1.8; ctx.beginPath();
     for (let x = 0; x <= gw; x++) {
-      const th = x / gw * TAU;
-      const y = mid - Math.max(-0.5, Math.min(0.5, shiftAtAngle(dn0, th))) * sc;
+      const y = mid - clamp(predictedSwing(dn0, x / gw * TAU)) * sc;
       x ? ctx.lineTo(gx + x, y) : ctx.moveTo(gx, y);
     }
     ctx.stroke();
     ctx.strokeStyle = COL.ok; ctx.lineWidth = 1.5; ctx.beginPath();
     for (let x = 0; x <= gw; x++) {
       const n = noise[Math.floor(x / gw * noise.length) % noise.length];
-      const y = mid - n * OBSERVED_1887_UPPER_BOUND * 0.9 * sc;
+      const y = mid - n * OBSERVED_1887_UPPER_BOUND * 0.45 * sc;
       x ? ctx.lineTo(gx + x, y) : ctx.moveTo(gx, y);
     }
     ctx.stroke();
@@ -3062,15 +3082,16 @@ function makeApparatus(cv) {
     ctx.strokeStyle = COL.line2; ctx.lineWidth = 1;
     ctx.beginPath(); ctx.moveTo(px, gy); ctx.lineTo(px, gy + gh); ctx.stroke();
     ctx.fillStyle = COL.beamB;
-    ctx.beginPath();
-    ctx.arc(px, mid - Math.max(-0.5, Math.min(0.5, shiftAtAngle(dn0, ang))) * sc, 3.5, 0, TAU);
-    ctx.fill();
+    ctx.beginPath(); ctx.arc(px, mid - clamp(predictedSwing(dn0, ang)) * sc, 3.5, 0, TAU); ctx.fill();
 
+    // legenda, cu latimi masurate: nu se mai suprapune
     ctx.font = `10px ${MONO}`;
-    ctx.fillStyle = COL.beamB; ctx.fillRect(gx, gy - 20, 14, 2);
-    ctx.fillStyle = COL.fg2; ctx.fillText("predicția modelului eterului", gx + 20, gy - 15);
-    ctx.fillStyle = COL.ok; ctx.fillRect(gx + 190, gy - 20, 14, 2);
-    ctx.fillStyle = COL.fg2; ctx.fillText("măsurat 1887", gx + 210, gy - 15);
+    let lx = gx;
+    for (const [col, txt] of [[COL.beamB, "predicția eterului"], [COL.ok, "măsurat în 1887"]]) {
+      ctx.fillStyle = col; ctx.fillRect(lx, gy - 22, 14, 2);
+      ctx.fillStyle = COL.fg2; ctx.fillText(txt, lx + 20, gy - 17);
+      lx += 20 + ctx.measureText(txt).width + 24;
+    }
   }
   return { draw };
 }
@@ -3108,7 +3129,7 @@ function makeSplit(cv) {
     const size = Math.min(w * 0.36, h * 0.66);
     const y = h * 0.16;
     const xs = [w * 0.5 - size - 14, w * 0.5 + 14];
-    const shifts = [shiftAtAngle(state.predictedShift, state.rotationAngle),
+    const shifts = [shiftSinceStart(state.predictedShift, state.rotationAngle),
                     OBSERVED_1887_UPPER_BOUND * 0.6 * Math.sin(state.rotationAngle * 3)];
     const labels = ["PREDICȚIE · modelul eterului", "OBSERVAȚIE · 1887"];
     const cols = [COL.beamB, COL.ok];
@@ -3119,8 +3140,9 @@ function makeSplit(cv) {
         ctx.strokeStyle = COL.line2; ctx.setLineDash([4, 5]);
         ctx.strokeRect(xs[k] + 0.5, y + 0.5, size, size); ctx.setLineDash([]);
         ctx.fillStyle = COL.fg3; ctx.font = `12px ${MONO}`;
-        ctx.fillText("ascuns", xs[k] + size / 2 - 22, y + size / 2);
-        ctx.fillText("prezice întâi", xs[k] + size / 2 - 38, y + size / 2 + 18);
+        ctx.textAlign = "center";
+        ctx.fillText("se vede după rotire", xs[k] + size / 2, y + size / 2 + 4);
+        ctx.textAlign = "left";
       } else {
         ctx.imageSmoothingEnabled = true;
         ctx.drawImage(patch(shifts[k]), 0, 0, PS, PS, xs[k], y, size, size);
@@ -3136,7 +3158,7 @@ function makeSplit(cv) {
       ctx.fillText(labels[k], xs[k], y - 10);
       if (k === 0 || revealed) {
         ctx.fillStyle = COL.fg2;
-        ctx.fillText(`deplasare ${Math.abs(shifts[k]).toFixed(3)} franje`, xs[k], y + size + 20);
+        ctx.fillText(`s-au mutat cu ${Math.abs(shifts[k]).toFixed(2).replace(".", ",")} franje de la start`, xs[k], y + size + 20);
       }
     }
   }
@@ -3749,7 +3771,7 @@ function initChallenge(root, onApply) {
 
         const act = document.createElement("button");
         act.type = "button"; act.className = "ch-show";
-        act.textContent = "Arată-mi în simulator";
+        act.textContent = "Demonstrația în simulare";
         act.addEventListener("click", () => {
           ch.apply?.();
           onApply?.();
