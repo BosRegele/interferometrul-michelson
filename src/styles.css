@@ -207,6 +207,56 @@ body.presenting main{padding-bottom:120px}
 .ch-why{margin:10px 0 0;font-size:.86rem;color:var(--fg2);max-width:56ch}
 .ch-show{margin-top:10px}
 
+/* „Stai putin..." — raspunsuri exact unde apare confuzia */
+details.wait{
+  margin-top:14px;border:1px solid var(--line2);border-left:2px solid var(--a);
+  background:var(--panel);max-width:64ch
+}
+details.wait summary{
+  cursor:pointer;list-style:none;padding:11px 14px;display:flex;gap:10px;align-items:baseline;
+  font-size:.95rem;color:var(--fg)
+}
+details.wait summary::-webkit-details-marker{display:none}
+details.wait summary::before{
+  content:"STAI PUȚIN…";flex:none;font-family:var(--mono);font-size:.58rem;letter-spacing:.15em;color:var(--a)
+}
+details.wait summary::after{content:"+";margin-left:auto;font-family:var(--mono);color:var(--fg3)}
+details.wait[open] summary::after{content:"−"}
+details.wait p{margin:0;padding:0 14px 13px;font-size:.9rem;line-height:1.6;color:var(--fg2)}
+details.wait p strong{color:var(--fg);font-weight:500}
+
+/* Explore more — acordeoane */
+details.xp{border-top:1px solid var(--line)}
+details.xp:last-of-type{border-bottom:1px solid var(--line)}
+details.xp summary{
+  cursor:pointer;list-style:none;padding:16px 0;display:flex;gap:14px;align-items:baseline;flex-wrap:wrap
+}
+details.xp summary::-webkit-details-marker{display:none}
+details.xp summary b{font-family:"Bodoni Moda",serif;font-weight:400;font-size:1.35rem;color:var(--fg)}
+details.xp summary span{font-family:var(--mono);font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--fg3)}
+details.xp summary::after{content:"+";margin-left:auto;font-family:var(--mono);font-size:1.1rem;color:var(--b)}
+details.xp[open] summary::after{content:"−"}
+.xp-body{padding-bottom:22px}
+
+/* faza: trei stari */
+.phase3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+@media (max-width:700px){.phase3{grid-template-columns:1fr}}
+.p3{border:1px solid var(--line);background:var(--panel)}
+.p3 canvas{display:block;width:100%}
+.p3-cap{padding:9px 11px 11px;display:grid;gap:2px;border-top:1px solid var(--line)}
+.p3-cap b{font-family:var(--mono);font-size:1rem;color:var(--fg);font-weight:500}
+.p3-cap i{font-style:normal;font-family:var(--mono);font-size:.62rem;letter-spacing:.13em;text-transform:uppercase;color:var(--b)}
+.p3-cap span{font-size:.84rem;color:var(--fg2)}
+
+/* registrul dus / intors */
+.ledger{margin-top:14px;border:1px solid var(--line2);background:var(--panel);max-width:320px}
+.ledger .lr{display:flex;justify-content:space-between;padding:9px 14px;font-family:var(--mono);font-size:.92rem;color:var(--fg2)}
+.ledger .lr b{color:var(--a);font-weight:500}
+.ledger .lr.total{border-top:1px solid var(--line2);color:var(--fg)}
+.ledger .lr.total b{color:var(--b)}
+
+.ch-opt.picked{color:var(--fg);border-color:var(--b);box-shadow:inset 2px 0 0 var(--b)}
+
 /* puncte de pas in build mode */
 .bdot{width:20px;height:3px;background:var(--line2);display:inline-block;cursor:pointer;transition:background .25s}
 .bdot.on{background:var(--b)}
