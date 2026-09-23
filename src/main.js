@@ -28,9 +28,29 @@ function every(el, fn) {
   return job;
 }
 let playing = !reduced;
+const failed = new Set();
+function runJobs(onlyVisible) {
+  for (const j of jobs) {
+    if (onlyVisible && !j.visible) continue;
+    try { j.fn(); }
+    catch (err) {
+      // o simulare stricata nu are voie sa opreasca restul paginii
+      if (!failed.has(j)) { failed.add(j); console.error(err); }
+    }
+  }
+}
 function loop() {
-  if (playing) for (const j of jobs) if (j.visible) j.fn();
-  requestAnimationFrame(loop);
+  requestAnimationFrame(loop);          // programat primul: bucla supravietuieste oricarei erori
+  if (playing) runJobs(true);
+}
+/* O redesenare completa, independenta de animatie. Folosita la redimensionare,
+   la deschiderea unui acordeon, la tiparire si cand animatia e oprita
+   (prefers-reduced-motion sau pauza din Presenter Mode). */
+let redrawPending = false;
+function redrawSoon() {
+  if (redrawPending) return;
+  redrawPending = true;
+  setTimeout(() => { redrawPending = false; runJobs(false); }, 0);
 }
 
 /* butoanele de tip „du-ma la" */
@@ -201,8 +221,19 @@ const apparatus = makeApparatus($("mmCv"));
 const split = makeSplit($("splitCv"));
 $("armLen").addEventListener("input", e => set({ armLength: +e.target.value }));
 $("etherV").addEventListener("input", e => set({ etherSpeed: +e.target.value * 1000 }));
-let rotating = false;
+let rotating = false, rotateTarget = 0;
+function rotationDone() {
+  $("rotateBtn").disabled = false;
+  $("rotateBtn").textContent = "Mai rotește 90°";
+  if (!split.revealed) $("revealBtn").hidden = false;
+}
 $("rotateBtn").addEventListener("click", () => {
+  if (reduced) {                         // fara animatie: sare direct la pozitia finala
+    set({ rotationAngle: state.rotationAngle + Math.PI / 2 });
+    rotationDone();
+    return;
+  }
+  rotateTarget = state.rotationAngle + Math.PI / 2;
   rotating = true;
   $("rotateBtn").disabled = true;
   $("rotateBtn").textContent = "se rotește...";
@@ -213,12 +244,11 @@ $("revealBtn").addEventListener("click", () => {
 });
 every($("mmCv"), () => {
   if (rotating) {
-    set({ rotationAngle: state.rotationAngle + 0.012 });
-    if (state.rotationAngle >= Math.PI / 2) {
+    const next = Math.min(rotateTarget, state.rotationAngle + 0.012);
+    set({ rotationAngle: next });
+    if (next >= rotateTarget) {
       rotating = false;
-      $("rotateBtn").disabled = false;
-      $("rotateBtn").textContent = "Mai rotește 90°";
-      if (!split.revealed) $("revealBtn").hidden = false;
+      rotationDone();
     }
   }
   apparatus.draw();
@@ -242,6 +272,10 @@ const measureSlider = $("measureMirror");
 measureSlider.addEventListener("input", () => set({ mirrorDisplacement: +measureSlider.value }));
 $("measureZero").addEventListener("click", () => set({ fringeZero: state.mirrorDisplacement }));
 let scanning = false, scanDir = 1;
+if (reduced) {                           // scanarea e o animatie; fara miscare, ramane cursorul
+  $("measureScan").disabled = true;
+  $("measureScan").title = "Dezactivat: sistemul cere animații reduse. Folosește cursorul.";
+}
 $("measureScan").addEventListener("click", () => {
   scanning = !scanning;
   $("measureScan").setAttribute("aria-pressed", String(scanning));
@@ -273,9 +307,20 @@ function drawStatic() {
   drawCoherenceLadder($("cohCv"));
   rolesSync();
 }
-addEventListener("resize", () => { drawStatic(); markDirty(); });
+function relayout() { drawStatic(); markDirty(); redrawSoon(); }
+// ResizeObserver prinde orice schimbare de latime: fereastra, acordeoane, tiparire, fonturi incarcate
+if ("ResizeObserver" in window) {
+  let lastW = 0;
+  new ResizeObserver(entries => {
+    const w = Math.round(entries[0].contentRect.width);
+    if (w !== lastW) { lastW = w; relayout(); }
+  }).observe(document.querySelector("main"));
+} else {
+  addEventListener("resize", relayout);
+}
 document.querySelectorAll("details").forEach(d =>
-  d.addEventListener("toggle", () => { if (d.open) { drawStatic(); markDirty(); } }));
+  d.addEventListener("toggle", () => { if (d.open) relayout(); }));
+addEventListener("beforeprint", () => { drawStatic(); runJobs(false); });
 drawStatic();
 
 /* ── citirile numerice, dintr-un singur loc ─────────────────────── */
@@ -316,6 +361,7 @@ subscribe(s => {
   }
   drawer?.render();
   markDirty();
+  if (!playing) redrawSoon();            // fara animatie, starea noua tot trebuie desenata
 });
 
 /* ── interfata ──────────────────────────────────────────────────── */
@@ -333,11 +379,5 @@ $("resetBtn").addEventListener("click", () => {
   modeSync(); markDirty();
 });
 
-if (reduced) {
-  zoom.draw(); river.draw(); builder.draw(); recombine.draw(); superpose.draw();
-  for (const [id, phi] of phaseStates) drawPhaseState($(id), phi, 0);
-  hero.draw(); chainFrame(); fringes.draw(false); drawProfile(profile);
-  apparatus.draw(); split.draw(); gasCell.draw();
-} else {
-  requestAnimationFrame(loop);
-}
+redrawSoon();                            // primul cadru, cu sau fara animatie
+if (!reduced) requestAnimationFrame(loop);
