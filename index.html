@@ -21,6 +21,7 @@
   --mono:"IBM Plex Mono",ui-monospace,monospace;
 }
 *{box-sizing:border-box}
+[hidden]{display:none!important}
 html,body{background:var(--void)}
 body{
   margin:0;color:var(--fg);
@@ -140,7 +141,7 @@ button[aria-pressed=true]{color:var(--b);border-color:var(--b)}
 .chain{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;align-items:start}
 @media (max-width:880px){.chain{grid-template-columns:repeat(2,1fr)}}
 @media (max-width:520px){.chain{grid-template-columns:1fr}}
-.link{background:var(--panel);border:1px solid var(--line);position:relative;padding:9px 9px 11px}
+.link{background:var(--panel);border:1px solid var(--line);position:relative;padding:9px 9px 11px;min-width:0}
 .link canvas{display:block;width:100%}
 .link .k{font-family:var(--mono);font-size:.57rem;letter-spacing:.14em;text-transform:uppercase;color:var(--fg3)}
 .link .val{font-family:var(--mono);font-size:.84rem;color:var(--fg);margin-top:3px;font-variant-numeric:tabular-nums;word-break:break-word}
@@ -252,7 +253,7 @@ details.xp[open] summary::after{content:"−"}
 /* faza: trei stari */
 .phase3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 @media (max-width:700px){.phase3{grid-template-columns:1fr}}
-.p3{border:1px solid var(--line);background:var(--panel)}
+.p3{border:1px solid var(--line);background:var(--panel);min-width:0}
 .p3 canvas{display:block;width:100%}
 .p3-cap{padding:9px 11px 11px;display:grid;gap:2px;border-top:1px solid var(--line)}
 .p3-cap b{font-family:var(--mono);font-size:1rem;color:var(--fg);font-weight:500}
@@ -1267,9 +1268,29 @@ function every(el, fn) {
   return job;
 }
 let playing = !reduced;
+const failed = new Set();
+function runJobs(onlyVisible) {
+  for (const j of jobs) {
+    if (onlyVisible && !j.visible) continue;
+    try { j.fn(); }
+    catch (err) {
+      // o simulare stricata nu are voie sa opreasca restul paginii
+      if (!failed.has(j)) { failed.add(j); console.error(err); }
+    }
+  }
+}
 function loop() {
-  if (playing) for (const j of jobs) if (j.visible) j.fn();
-  requestAnimationFrame(loop);
+  requestAnimationFrame(loop);          // programat primul: bucla supravietuieste oricarei erori
+  if (playing) runJobs(true);
+}
+/* O redesenare completa, independenta de animatie. Folosita la redimensionare,
+   la deschiderea unui acordeon, la tiparire si cand animatia e oprita
+   (prefers-reduced-motion sau pauza din Presenter Mode). */
+let redrawPending = false;
+function redrawSoon() {
+  if (redrawPending) return;
+  redrawPending = true;
+  setTimeout(() => { redrawPending = false; runJobs(false); }, 0);
 }
 
 /* butoanele de tip „du-ma la" */
@@ -1440,8 +1461,19 @@ const apparatus = makeApparatus($("mmCv"));
 const split = makeSplit($("splitCv"));
 $("armLen").addEventListener("input", e => set({ armLength: +e.target.value }));
 $("etherV").addEventListener("input", e => set({ etherSpeed: +e.target.value * 1000 }));
-let rotating = false;
+let rotating = false, rotateTarget = 0;
+function rotationDone() {
+  $("rotateBtn").disabled = false;
+  $("rotateBtn").textContent = "Mai rotește 90°";
+  if (!split.revealed) $("revealBtn").hidden = false;
+}
 $("rotateBtn").addEventListener("click", () => {
+  if (reduced) {                         // fara animatie: sare direct la pozitia finala
+    set({ rotationAngle: state.rotationAngle + Math.PI / 2 });
+    rotationDone();
+    return;
+  }
+  rotateTarget = state.rotationAngle + Math.PI / 2;
   rotating = true;
   $("rotateBtn").disabled = true;
   $("rotateBtn").textContent = "se rotește...";
@@ -1452,12 +1484,11 @@ $("revealBtn").addEventListener("click", () => {
 });
 every($("mmCv"), () => {
   if (rotating) {
-    set({ rotationAngle: state.rotationAngle + 0.012 });
-    if (state.rotationAngle >= Math.PI / 2) {
+    const next = Math.min(rotateTarget, state.rotationAngle + 0.012);
+    set({ rotationAngle: next });
+    if (next >= rotateTarget) {
       rotating = false;
-      $("rotateBtn").disabled = false;
-      $("rotateBtn").textContent = "Mai rotește 90°";
-      if (!split.revealed) $("revealBtn").hidden = false;
+      rotationDone();
     }
   }
   apparatus.draw();
@@ -1481,6 +1512,10 @@ const measureSlider = $("measureMirror");
 measureSlider.addEventListener("input", () => set({ mirrorDisplacement: +measureSlider.value }));
 $("measureZero").addEventListener("click", () => set({ fringeZero: state.mirrorDisplacement }));
 let scanning = false, scanDir = 1;
+if (reduced) {                           // scanarea e o animatie; fara miscare, ramane cursorul
+  $("measureScan").disabled = true;
+  $("measureScan").title = "Dezactivat: sistemul cere animații reduse. Folosește cursorul.";
+}
 $("measureScan").addEventListener("click", () => {
   scanning = !scanning;
   $("measureScan").setAttribute("aria-pressed", String(scanning));
@@ -1512,9 +1547,20 @@ function drawStatic() {
   drawCoherenceLadder($("cohCv"));
   rolesSync();
 }
-addEventListener("resize", () => { drawStatic(); markDirty(); });
+function relayout() { drawStatic(); markDirty(); redrawSoon(); }
+// ResizeObserver prinde orice schimbare de latime: fereastra, acordeoane, tiparire, fonturi incarcate
+if ("ResizeObserver" in window) {
+  let lastW = 0;
+  new ResizeObserver(entries => {
+    const w = Math.round(entries[0].contentRect.width);
+    if (w !== lastW) { lastW = w; relayout(); }
+  }).observe(document.querySelector("main"));
+} else {
+  addEventListener("resize", relayout);
+}
 document.querySelectorAll("details").forEach(d =>
-  d.addEventListener("toggle", () => { if (d.open) { drawStatic(); markDirty(); } }));
+  d.addEventListener("toggle", () => { if (d.open) relayout(); }));
+addEventListener("beforeprint", () => { drawStatic(); runJobs(false); });
 drawStatic();
 
 /* ── citirile numerice, dintr-un singur loc ─────────────────────── */
@@ -1555,6 +1601,7 @@ subscribe(s => {
   }
   drawer?.render();
   markDirty();
+  if (!playing) redrawSoon();            // fara animatie, starea noua tot trebuie desenata
 });
 
 /* ── interfata ──────────────────────────────────────────────────── */
@@ -1572,14 +1619,8 @@ $("resetBtn").addEventListener("click", () => {
   modeSync(); markDirty();
 });
 
-if (reduced) {
-  zoom.draw(); river.draw(); builder.draw(); recombine.draw(); superpose.draw();
-  for (const [id, phi] of phaseStates) drawPhaseState($(id), phi, 0);
-  hero.draw(); chainFrame(); fringes.draw(false); drawProfile(profile);
-  apparatus.draw(); split.draw(); gasCell.draw();
-} else {
-  requestAnimationFrame(loop);
-}
+redrawSoon();                            // primul cadru, cu sau fara animatie
+if (!reduced) requestAnimationFrame(loop);
 
 
 };
@@ -2691,6 +2732,7 @@ const { TAU } = __req("physics/phase.js");
 const { fringesFromGas, GASES } = __req("physics/refractiveIndex.js");
 
 function makeGasCell(cv) {
+  const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
   let gas = "air", frac = 1, target = 1;
 
   function total() {
@@ -2709,8 +2751,8 @@ function makeGasCell(cv) {
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.fillStyle = COL.panel; ctx.fillRect(0, 0, w, h);
 
-    if (Math.abs(frac - target) > 0.0005) frac += (target - frac) * 0.02;
-    else frac = target;
+    if (reduced || Math.abs(frac - target) <= 0.0005) frac = target;
+    else frac += (target - frac) * 0.02;
 
     const tot = total(), passed = tot * (1 - frac);
     const Lcm = state.gasLength * 100;
@@ -3107,6 +3149,7 @@ const ZOOM_STAGES = [
 ];
 
 function makeEtherZoom(cv) {
+  const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
   let stage = 0, t = 0, shown = 0;      // shown = zoom animat catre stage
 
   function etherField(ctx, w, h, density) {
@@ -3127,7 +3170,7 @@ function makeEtherZoom(cv) {
   function draw() {
     const { ctx, w, h } = surface(cv, 0.46);
     t += 0.6;
-    shown += (stage - shown) * 0.08;
+    shown = reduced ? stage : shown + (stage - shown) * 0.08;
     ctx.fillStyle = COL.panel;
     ctx.fillRect(0, 0, w, h);
 
@@ -3147,7 +3190,7 @@ function makeEtherZoom(cv) {
     const a0 = Math.max(0, 1 - Math.abs(k - 0));
     if (a0 > 0.01) {
       ctx.globalAlpha = a0;
-      ctx.fillStyle = COL.b;
+      ctx.fillStyle = COL.beamB;
       ctx.beginPath(); ctx.arc(cx, cy, 13, 0, TAU); ctx.fill();
       ctx.strokeStyle = COL.line2; ctx.lineWidth = 1;
       for (const r of [42, 66, 92, 120]) {
@@ -3155,7 +3198,7 @@ function makeEtherZoom(cv) {
       }
       const ang = t * 0.012;
       const ex = cx + 92 * Math.cos(ang), ey = cy + 92 * 0.42 * Math.sin(ang);
-      ctx.fillStyle = COL.a;
+      ctx.fillStyle = COL.beamA;
       ctx.beginPath(); ctx.arc(ex, ey, 5, 0, TAU); ctx.fill();
       ctx.fillStyle = COL.fg2; ctx.font = "11px " + MONO;
       ctx.fillText("Pământ", ex + 9, ey - 7);
@@ -3168,15 +3211,15 @@ function makeEtherZoom(cv) {
       ctx.globalAlpha = a1;
       ctx.fillStyle = "#16394a";
       ctx.beginPath(); ctx.arc(cx, cy, 54, 0, TAU); ctx.fill();
-      ctx.strokeStyle = COL.a; ctx.lineWidth = 1.2;
+      ctx.strokeStyle = COL.beamA; ctx.lineWidth = 1.2;
       ctx.beginPath(); ctx.arc(cx, cy, 54, 0, TAU); ctx.stroke();
-      ctx.strokeStyle = COL.b; ctx.lineWidth = 2;
+      ctx.strokeStyle = COL.beamB; ctx.lineWidth = 2;
       ctx.beginPath();
       ctx.moveTo(cx + 62, cy); ctx.lineTo(cx + 132, cy);
       ctx.moveTo(cx + 132, cy); ctx.lineTo(cx + 124, cy - 5);
       ctx.moveTo(cx + 132, cy); ctx.lineTo(cx + 124, cy + 5);
       ctx.stroke();
-      ctx.fillStyle = COL.b; ctx.font = "12px " + MONO;
+      ctx.fillStyle = COL.beamB; ctx.font = "12px " + MONO;
       ctx.fillText("30 km/s", cx + 68, cy - 10);
       ctx.globalAlpha = 1;
     }
@@ -3194,7 +3237,7 @@ function makeEtherZoom(cv) {
       ctx.fillStyle = COL.fg3; ctx.font = "10px " + MONO;
       ctx.fillText("masa optică", bx + bw * 0.30, by + bh * 0.72);
       // vantul aparent, prin laborator
-      ctx.strokeStyle = COL.b; ctx.lineWidth = 1.4;
+      ctx.strokeStyle = COL.beamB; ctx.lineWidth = 1.4;
       for (let i = 0; i < 4; i++) {
         const y = by + bh * (0.18 + i * 0.22);
         const x = bx - 30 + ((t * 1.1 + i * 40) % (bw + 60));
@@ -3203,7 +3246,7 @@ function makeEtherZoom(cv) {
         ctx.moveTo(x + 20, y); ctx.lineTo(x + 15, y + 3);
         ctx.stroke();
       }
-      ctx.fillStyle = COL.b; ctx.font = "11px " + MONO;
+      ctx.fillStyle = COL.beamB; ctx.font = "11px " + MONO;
       ctx.fillText("vânt de eter aparent", bx, by - 10);
       ctx.globalAlpha = 1;
     }
@@ -3246,20 +3289,20 @@ function drawPhaseState(cv, phi, animT) {
   for (const y of [yA, yB, yS]) {
     ctx.beginPath(); ctx.moveTo(x0, y); ctx.lineTo(x1, y); ctx.stroke();
   }
-  trace(0, A, yA, COL.a, 1.7);
-  trace(phi, A, yB, COL.b, 1.7);
+  trace(0, A, yA, COL.beamA, 1.7);
+  trace(phi, A, yB, COL.beamB, 1.7);
 
   const amp = A * resultantAmplitude(phi);
   if (Math.abs(amp) < 0.6) {
-    ctx.strokeStyle = COL.res; ctx.lineWidth = 2.2;
+    ctx.strokeStyle = COL.result; ctx.lineWidth = 2.2;
     ctx.beginPath(); ctx.moveTo(x0, yS); ctx.lineTo(x1, yS); ctx.stroke();
   } else {
-    trace(phi / 2, amp, yS, COL.res, 2.2);
+    trace(phi / 2, amp, yS, COL.result, 2.2);
   }
 
   ctx.font = "9px " + MONO;
-  ctx.fillStyle = COL.a; ctx.fillText("A", 3, yA - A - 4);
-  ctx.fillStyle = COL.b; ctx.fillText("B", 3, yB - A - 4);
+  ctx.fillStyle = COL.beamA; ctx.fillText("A", 3, yA - A - 4);
+  ctx.fillStyle = COL.beamB; ctx.fillText("B", 3, yB - A - 4);
   ctx.fillStyle = COL.fg2; ctx.fillText("A + B", 3, yS - Math.abs(amp) - 4);
 }
 
@@ -3282,12 +3325,12 @@ function drawRotationRoles(cv, rotated) {
       ctx.stroke();
     }
   }
-  ctx.fillStyle = COL.b; ctx.font = "12px " + MONO;
+  ctx.fillStyle = COL.beamB; ctx.font = "12px " + MONO;
   ctx.fillText("VÂNT DE ETER  →", 14, 20);
 
   // bratele: A orizontal, B vertical; la rotire isi schimba rolurile
-  const horiz = rotated ? COL.a : COL.b;
-  const vert = rotated ? COL.b : COL.a;
+  const horiz = rotated ? COL.beamA : COL.beamB;
+  const vert = rotated ? COL.beamB : COL.beamA;
 
   ctx.lineWidth = 3;
   ctx.strokeStyle = horiz;
