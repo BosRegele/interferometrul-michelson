@@ -4,25 +4,39 @@ Proiect interactiv de fizică pentru clasa a XII-a — optică ondulatorie.
 
 **Live:** https://bosregele.github.io/interferometrul-michelson/
 
-## Ce conține
+## Povestea, în ordine
 
-O singură pagină, fără dependențe în afară de fonturi. Vizualizările sunt calculate
-în browser din formulele fizice; fotografiile sunt reale și creditate mai jos.
+Pagina urmează întrebarea, nu manualul. Fiecare formulă apare abia după ce fenomenul a fost văzut.
 
-- fundal de franje de interferență calculat pe GPU (shader WebGL), care reacționează la mouse
-- model 3D rotativ al bancului optic, cu fasciculele și pachetele de lumină animate
-- suprapunerea celor două unde, cu rezultanta și intensitatea în timp real
-- simulator de franje: lungime de undă, diferență de braț, înclinarea oglinzii, lumină albă spectrală
-- scara lungimii de coerență pentru cinci tipuri de surse
-- scara sensibilității, de la o monedă până la undele gravitaționale detectate de LIGO
-- măsurarea indicelui de refracție al unui gaz, cu tubul care se videază
-- experimentul Michelson–Morley 1887, cu aparatul în rotație și comparația prezis / observat
-- fotografii istorice, figura originală cu datele din 1887 și semnalul GW150914
-- trei filmări: modelul cu valuri pe apă pentru vântul de eter, interferometrul Virgo în funcțiune, efectul undelor gravitaționale
-- generator de probleme cu numere aleatoare și rezolvare pas cu pas
-- test de verificare cu explicații
+1. **Povestea** — valurile au apa, sunetul are aerul; prin ce se propagă lumina? Eterul, de ce ar fi și pe Pământ, vântul de eter, analogia râului, cum cronometrezi lumina.
+2. **Aparatul** — construit pas cu pas, recombinarea razelor, suprapunerea, faza în trei stări (0°, 90°, 180°), lanțul oglindă → drum → fază → intensitate → franjă, factorul 2, franjele.
+3. **1887** — de ce se rotea aparatul, predicția înaintea rezultatului, comparația cu datele originale, ce a însemnat rezultatul, contextul Einstein.
+4. **Explore more** — rigla interferometrică, coerența, indicele de refracție al gazelor, LIGO, provocări.
 
-Stilul de tipărire (Ctrl+P) transformă pagina într-un document alb-negru.
+Douăsprezece carduri „Stai puțin…” răspund la întrebările naturale exact acolo unde apar.
+
+Bara de sus are **ƒ Formule** (cu valorile curente înlocuite numeric) și **Prezentare** — mod pentru clasă: săgeți pentru scene, Space pauză, R reset.
+
+## Structura codului
+
+```
+src/physics/   motorul fizic: funcții pure, fără DOM
+  phase.js  opticalPath.js  interference.js
+  coherence.js  refractiveIndex.js  etherModel.js
+src/state.js   sursa unică de adevăr; toate vizualizările citesc de aici
+src/sims/      desenatorii (canvas), câte unul pe subiect
+src/ui.js      navigație, sertarul de formule, Presenter și Challenge Mode
+src/main.js    leagă comenzile de stare
+test/          teste automate
+build.js       împachetează modulele într-un singur index.html
+```
+
+```bash
+npm test         # 24 de teste
+npm run build    # produce site/index.html
+```
+
+Testele acoperă fizica (ΔL = 2Δx, faza la λ/2, maxime și minime, numărul de franje, drumul optic prin gaz, coerența, modelul din 1887) și verifică static că orice culoare folosită în desene există în paletă — canvasul ignoră în tăcere o culoare nedefinită.
 
 ## Fotografii, filmări și date originale
 
