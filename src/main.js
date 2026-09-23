@@ -11,6 +11,7 @@ import { makeFringes, drawProfile } from "./sims/fringes.js";
 import { makeGasCell } from "./sims/gasCell.js";
 import { makeRiver, makeApparatus, makeSplit } from "./sims/ether.js";
 import { makeEtherZoom, ZOOM_STAGES, drawPhaseState, drawRotationRoles } from "./sims/story.js";
+import { makeHeroField } from "./sims/heroField.js";
 import { initNav, initProgress, initDrawer, initPresenter, initChallenge, fmt } from "./ui.js";
 
 const $ = id => document.getElementById(id);
@@ -57,6 +58,10 @@ function redrawSoon() {
 document.querySelectorAll("[data-goto]").forEach(b =>
   b.addEventListener("click", () =>
     $(b.dataset.goto)?.scrollIntoView({ behavior: "smooth", block: "start" })));
+
+/* ── hero: campul de franje care reactioneaza la mouse ──────────── */
+const heroField = makeHeroField($("heroField"));
+every($("heroField"), heroField.draw);
 
 /* ── 02 · zoom: sistem solar -> Pamant -> laborator ─────────────── */
 const zoom = makeEtherZoom($("zoomCv"));
