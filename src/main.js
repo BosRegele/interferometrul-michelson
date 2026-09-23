@@ -202,9 +202,9 @@ $("rolesToggle").addEventListener("click", () => { rolesRotated = !rolesRotated;
 
 /* ── 15 · prezice inainte de rezultat ───────────────────────────── */
 const ACK = [
-  "Așa gândea și fizica clasică. Hai să vedem dacă natura a fost de acord.",
-  "O intuiție prudentă. Verifică mai jos cât de mică a ieșit, de fapt.",
-  "Pariu îndrăzneț, contra teoriei vremii. Verifică mai jos."
+  "Asta spunea fizica clasică. Rezultatul real e mai jos.",
+  "O intuiție prudentă. Rezultatul real e mai jos.",
+  "Contra teoriei vremii. Rezultatul real e mai jos."
 ];
 document.querySelectorAll("#predictGuess [data-guess]").forEach(b =>
   b.addEventListener("click", () => {
