@@ -145,8 +145,7 @@ export function makeEtherZoom(cv) {
    Fiecare panou arata A, B si rezultanta pentru o faza fixa. */
 export function drawPhaseState(cv, phi, animT) {
   const { ctx, w, h } = surface(cv, 0.74);
-  ctx.fillStyle = "#0a0e13";
-  ctx.fillRect(0, 0, w, h);
+  ctx.clearRect(0, 0, w, h);
 
   const x0 = 8, x1 = w - 8;
   const A = h * 0.11, per = Math.max(64, (x1 - x0) / 1.9);
