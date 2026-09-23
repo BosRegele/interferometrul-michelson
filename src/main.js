@@ -1,14 +1,16 @@
 // Firul care leaga totul: comenzile scriu in stare, starea redeseneaza tot.
-import { state, set, subscribe, reset, SODIUM } from "./state.js";
-import { TAU, toDegrees } from "./physics/phase.js";
+import { state, set, subscribe, reset } from "./state.js";
+import { toDegrees } from "./physics/phase.js";
 import { quarterWave, displacementFromFringes } from "./physics/opticalPath.js";
 import { GASES } from "./physics/refractiveIndex.js";
+import { normalizedIntensity } from "./physics/interference.js";
 import { makeHeroWaves } from "./sims/heroWaves.js";
 import { makeBuilder, BUILD_STEPS } from "./sims/builder.js";
 import { mountChain } from "./sims/chain.js";
 import { makeFringes, drawProfile, drawCoherenceLadder } from "./sims/fringes.js";
 import { makeGasCell } from "./sims/gasCell.js";
 import { makeRiver, makeApparatus, makeSplit } from "./sims/ether.js";
+import { makeEtherZoom, ZOOM_STAGES, drawPhaseState, drawRotationRoles } from "./sims/story.js";
 import { initNav, initProgress, initDrawer, initPresenter, initChallenge, fmt } from "./ui.js";
 
 const $ = id => document.getElementById(id);
@@ -31,23 +33,38 @@ function loop() {
   requestAnimationFrame(loop);
 }
 
-/* ── HERO: paradoxul ────────────────────────────────────────────── */
-const hero = makeHeroWaves($("heroCv"));
-const heroPhase = $("heroPhase");
-function heroSync() {
-  const deg = +heroPhase.value;
-  hero.setPhase(deg * Math.PI / 180);
-  $("heroPhaseV").textContent = deg + "°";
-  const I = Math.pow(Math.cos(deg * Math.PI / 360), 2);
-  $("heroVerdict").textContent =
-    I > 0.97 ? "lumină maximă" : I < 0.03 ? "întuneric total" : `${Math.round(I * 100)}% din lumină`;
-  $("heroVerdict").className = "verdict " + (I < 0.03 ? "dark" : I > 0.97 ? "bright" : "");
-}
-heroPhase.addEventListener("input", heroSync);
-heroSync();
-every($("heroCv"), hero.draw);
+/* butoanele de tip „du-ma la" */
+document.querySelectorAll("[data-goto]").forEach(b =>
+  b.addEventListener("click", () =>
+    $(b.dataset.goto)?.scrollIntoView({ behavior: "smooth", block: "start" })));
 
-/* ── BUILD: pas cu pas ──────────────────────────────────────────── */
+/* ── 02 · zoom: sistem solar -> Pamant -> laborator ─────────────── */
+const zoom = makeEtherZoom($("zoomCv"));
+function zoomSync() {
+  $("zoomName").textContent = ZOOM_STAGES[zoom.stage].name;
+  $("zoomNote").textContent = ZOOM_STAGES[zoom.stage].note;
+  [0, 1, 2].forEach(i => $("zoom" + i).setAttribute("aria-pressed", String(i === zoom.stage)));
+}
+[0, 1, 2].forEach(i => $("zoom" + i).addEventListener("click", () => { zoom.stage = i; zoomSync(); }));
+zoomSync();
+every($("zoomCv"), zoom.draw);
+
+/* ── 04 · raul ──────────────────────────────────────────────────── */
+const river = makeRiver($("riverCv"));
+$("riverCurrent").addEventListener("input", e => {
+  const v = +e.target.value / 100;
+  river.setCurrent(v);
+  $("riverCurrentV").textContent = v === 0 ? "fără curent" : Math.round(v * 100) + "% din viteza înotătorului";
+});
+$("riverMorph").addEventListener("click", () => {
+  const v = !river.getMorph();
+  river.setMorph(v);
+  $("riverMorph").setAttribute("aria-pressed", String(v));
+  $("riverMorph").textContent = v ? "← Înapoi la apă" : "Transformă apa în eter →";
+});
+every($("riverCv"), river.draw);
+
+/* ── 06–08 · construirea, recombinarea, suprapunerea ────────────── */
 const builder = makeBuilder($("buildCv"));
 function buildSync() {
   const s = BUILD_STEPS[builder.step];
@@ -56,41 +73,72 @@ function buildSync() {
   $("buildCount").textContent = (builder.step + 1) + " / " + builder.count;
   $("buildPrev").disabled = builder.step === 0;
   $("buildNext").disabled = builder.step === builder.count - 1;
-  [...document.querySelectorAll(".bdot")].forEach((d, i) =>
-    d.classList.toggle("on", i <= builder.step));
+  document.querySelectorAll(".bdot").forEach((d, i) => d.classList.toggle("on", i <= builder.step));
 }
 $("buildNext").addEventListener("click", () => { builder.step = builder.step + 1; buildSync(); });
 $("buildPrev").addEventListener("click", () => { builder.step = builder.step - 1; buildSync(); });
-document.querySelectorAll(".bdot").forEach((d, i) =>
-  d.addEventListener("click", () => { builder.step = i; buildSync(); }));
+document.querySelectorAll(".bdot").forEach((d, i) => {
+  const go = () => { builder.step = i; buildSync(); };
+  d.addEventListener("click", go);
+  d.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go(); } });
+});
 buildSync();
 every($("buildCv"), builder.draw);
 
-/* ── CHAIN: lantul cauzal ───────────────────────────────────────── */
+const recombine = makeBuilder($("recombineCv"));
+recombine.step = 4;                      // componentele, desenate alaturi
+every($("recombineCv"), recombine.draw);
+
+const superpose = makeBuilder($("superposeCv"));
+superpose.step = 5;                      // suprapuse
+every($("superposeCv"), superpose.draw);
+
+/* ── 09 · faza: trei stari obligatorii + cursorul ───────────────── */
+let phaseT = 0;
+const phaseStates = [["ph0", 0], ["ph90", Math.PI / 2], ["ph180", Math.PI]];
+every($("ph0"), () => {
+  phaseT += 0.035;
+  for (const [id, phi] of phaseStates) drawPhaseState($(id), phi, phaseT);
+});
+
+const hero = makeHeroWaves($("heroCv"));
+const heroPhase = $("heroPhase");
+function heroSync() {
+  const deg = +heroPhase.value;
+  hero.setPhase(deg * Math.PI / 180);
+  $("heroPhaseV").textContent = deg + "°";
+  const I = normalizedIntensity(deg * Math.PI / 180);
+  const word = I > 0.97 ? "lumină maximă" : I < 0.03 ? "lumină minimă" : Math.round(I * 100) + "% din lumină";
+  const kind = I > 0.97 ? "constructiv" : I < 0.03 ? "distructiv" : "parțial";
+  $("heroVerdict").textContent = word;
+  $("heroVerdict").className = "verdict " + (I < 0.03 ? "dark" : I > 0.97 ? "bright" : "");
+  $("heroVerdictTag").textContent = kind;
+}
+heroPhase.addEventListener("input", heroSync);
+document.querySelectorAll("[data-phase]").forEach(b =>
+  b.addEventListener("click", () => { heroPhase.value = b.dataset.phase; heroSync(); }));
+heroSync();
+every($("heroCv"), hero.draw);
+
+/* ── 10 · lantul cauzal ─────────────────────────────────────────── */
 const chainFrame = mountChain($("chain"));
 const chainSlider = $("chainMirror");
 chainSlider.addEventListener("input", () => set({ mirrorDisplacement: +chainSlider.value }));
-$("chainQuarter").addEventListener("click", () => {
-  set({ mirrorDisplacement: quarterWave(state.lambda) });
-  chainSlider.value = state.mirrorDisplacement;
-});
-$("chainZero").addEventListener("click", () => {
-  set({ mirrorDisplacement: 0 });
-  chainSlider.value = 0;
-});
+$("chainQuarter").addEventListener("click", () => set({ mirrorDisplacement: quarterWave(state.lambda) }));
+$("chainZero").addEventListener("click", () => set({ mirrorDisplacement: 0 }));
 every($("chain"), chainFrame);
 
-/* ── FRINGES: laboratorul ───────────────────────────────────────── */
+/* ── 12 · franjele ──────────────────────────────────────────────── */
 const fringes = makeFringes($("fringeCv"));
 const profile = $("profileCv");
 let fringeDirty = true, refineT = 0;
 const markDirty = () => { fringeDirty = true; };
 
 const ctlLambda = $("ctlLambda"), ctlArm = $("ctlArm"), ctlTilt = $("ctlTilt"), ctlBand = $("ctlBand");
-ctlLambda.addEventListener("input", () => { set({ lambda: +ctlLambda.value }); markDirty(); });
-ctlArm.addEventListener("input", () => { set({ armDifference: +ctlArm.value }); markDirty(); });
-ctlTilt.addEventListener("input", () => { set({ tilt: +ctlTilt.value }); markDirty(); });
-ctlBand.addEventListener("input", () => { set({ bandwidthSlider: +ctlBand.value }); markDirty(); });
+ctlLambda.addEventListener("input", () => set({ lambda: +ctlLambda.value }));
+ctlArm.addEventListener("input", () => set({ armDifference: +ctlArm.value }));
+ctlTilt.addEventListener("input", () => set({ tilt: +ctlTilt.value }));
+ctlBand.addEventListener("input", () => set({ bandwidthSlider: +ctlBand.value }));
 
 $("modeScreen").addEventListener("click", () => { fringes.setMode("screen"); modeSync(); });
 $("modePoint").addEventListener("click", () => { fringes.setMode("point"); modeSync(); });
@@ -103,10 +151,7 @@ function modeSync() {
   $("modeMicro").setAttribute("aria-pressed", String(fringes.getMicro()));
   $("ctlLambdaWrap").classList.toggle("off", state.whiteLight);
   $("ctlBandWrap").classList.toggle("off", state.whiteLight);
-  if (state.whiteLight && state.armDifference > 2400) {
-    set({ armDifference: 900 });
-    ctlArm.value = 900;
-  }
+  if (state.whiteLight && state.armDifference > 2400) set({ armDifference: 900 });
   markDirty();
 }
 modeSync();
@@ -119,14 +164,80 @@ every($("fringeCv"), () => {
     fringeDirty = false;
     if (quick) {
       clearTimeout(refineT);
-      refineT = setTimeout(() => { fringes.draw(false); }, 150);
+      refineT = setTimeout(() => fringes.draw(false), 150);
     }
   } else if (fringes.getMicro()) {
     fringes.draw(false);
   }
 });
 
-/* ── MEASURE: rigla ─────────────────────────────────────────────── */
+/* ── 14 · rolurile bratelor la rotire ───────────────────────────── */
+let rolesRotated = false;
+function rolesSync() {
+  drawRotationRoles($("rolesCv"), rolesRotated);
+  $("rolesTag").textContent = rolesRotated ? "după rotirea cu 90°" : "înainte de rotire";
+  $("rolesToggle").textContent = rolesRotated ? "Înapoi la poziția inițială" : "Rotește cu 90°";
+}
+$("rolesToggle").addEventListener("click", () => { rolesRotated = !rolesRotated; rolesSync(); });
+
+/* ── 15 · prezice inainte de rezultat ───────────────────────────── */
+const ACK = [
+  "Așa gândea și fizica clasică. Hai să vedem dacă natura a fost de acord.",
+  "O intuiție prudentă. Verifică mai jos cât de mică a ieșit, de fapt.",
+  "Pariu îndrăzneț, contra teoriei vremii. Verifică mai jos."
+];
+document.querySelectorAll("#predictGuess [data-guess]").forEach(b =>
+  b.addEventListener("click", () => {
+    document.querySelectorAll("#predictGuess [data-guess]").forEach(o => {
+      o.classList.toggle("picked", o === b);
+    });
+    $("predictAck").hidden = false;
+    $("predictAck").textContent = ACK[+b.dataset.guess];
+    $("revealBtn").dataset.ready = "1";
+  }));
+
+/* ── 16 · aparatul in rotatie, predictie vs 1887 ────────────────── */
+const apparatus = makeApparatus($("mmCv"));
+const split = makeSplit($("splitCv"));
+$("armLen").addEventListener("input", e => set({ armLength: +e.target.value }));
+$("etherV").addEventListener("input", e => set({ etherSpeed: +e.target.value * 1000 }));
+let rotating = false;
+$("rotateBtn").addEventListener("click", () => {
+  rotating = true;
+  $("rotateBtn").disabled = true;
+  $("rotateBtn").textContent = "se rotește...";
+});
+$("revealBtn").addEventListener("click", () => {
+  split.reveal();
+  $("revealBtn").hidden = true;
+});
+every($("mmCv"), () => {
+  if (rotating) {
+    set({ rotationAngle: state.rotationAngle + 0.012 });
+    if (state.rotationAngle >= Math.PI / 2) {
+      rotating = false;
+      $("rotateBtn").disabled = false;
+      $("rotateBtn").textContent = "Mai rotește 90°";
+      if (!split.revealed) $("revealBtn").hidden = false;
+    }
+  }
+  apparatus.draw();
+});
+every($("splitCv"), split.draw);
+
+const figNotes = $("figNotes");
+$("figOriginal").addEventListener("click", () => {
+  figNotes.hidden = true;
+  $("figOriginal").setAttribute("aria-pressed", "true");
+  $("figExplained").setAttribute("aria-pressed", "false");
+});
+$("figExplained").addEventListener("click", () => {
+  figNotes.hidden = false;
+  $("figOriginal").setAttribute("aria-pressed", "false");
+  $("figExplained").setAttribute("aria-pressed", "true");
+});
+
+/* ── 19 · explore more ──────────────────────────────────────────── */
 const measureSlider = $("measureMirror");
 measureSlider.addEventListener("input", () => set({ mirrorDisplacement: +measureSlider.value }));
 $("measureZero").addEventListener("click", () => set({ fringeZero: state.mirrorDisplacement }));
@@ -142,84 +253,29 @@ every($("measureCounter"), () => {
   if (v > 6000) { v = 6000; scanDir = -1; }
   if (v < 0) { v = 0; scanDir = 1; }
   set({ mirrorDisplacement: v });
-  measureSlider.value = v;
 });
 
-/* ── MATTER: tubul cu gaz ───────────────────────────────────────── */
 const gasCell = makeGasCell($("gasCv"));
 $("gasLen").addEventListener("input", e => set({ gasLength: +e.target.value / 100 }));
 for (const [id, key] of [["gasAir", "air"], ["gasCO2", "co2"], ["gasHe", "he"]]) {
   $(id).addEventListener("click", () => {
     gasCell.setGas(key);
     set({ refractiveIndex: 1 + GASES[key].n1 });
-    ["gasAir", "gasCO2", "gasHe"].forEach(x =>
-      $(x).setAttribute("aria-pressed", String(x === id)));
+    ["gasAir", "gasCO2", "gasHe"].forEach(x => $(x).setAttribute("aria-pressed", String(x === id)));
   });
 }
 $("gasPump").addEventListener("click", () => gasCell.pump());
 $("gasFill").addEventListener("click", () => gasCell.fill());
 every($("gasCv"), gasCell.draw);
 
-/* ── ETHER: raul, aparatul, split-screen ────────────────────────── */
-const river = makeRiver($("riverCv"));
-$("riverCurrent").addEventListener("input", e => {
-  const v = +e.target.value / 100;
-  river.setCurrent(v);
-  $("riverCurrentV").textContent = v === 0 ? "fără curent" : Math.round(v * 100) + "% din viteza înotătorului";
-});
-$("riverMorph").addEventListener("click", () => {
-  const v = !river.getMorph();
-  river.setMorph(v);
-  $("riverMorph").setAttribute("aria-pressed", String(v));
-  $("riverMorph").textContent = v ? "Înapoi la apă" : "Traduce în lumină și eter";
-});
-every($("riverCv"), river.draw);
-
-const apparatus = makeApparatus($("mmCv"));
-const split = makeSplit($("splitCv"));
-$("armLen").addEventListener("input", e => set({ armLength: +e.target.value }));
-$("etherV").addEventListener("input", e => set({ etherSpeed: +e.target.value * 1000 }));
-let rotating = false;
-$("rotateBtn").addEventListener("click", () => {
-  rotating = true;
-  $("rotateBtn").disabled = true;
-  $("rotateBtn").textContent = "se rotește...";
-});
-$("revealBtn").addEventListener("click", () => {
-  split.reveal();
-  $("revealBtn").hidden = true;
-  $("resultText").hidden = false;
-});
-every($("mmCv"), () => {
-  if (rotating) {
-    set({ rotationAngle: state.rotationAngle + 0.012 });
-    if (state.rotationAngle >= Math.PI / 2) {
-      rotating = false;
-      $("rotateBtn").disabled = false;
-      $("rotateBtn").textContent = "Mai rotește 90°";
-      $("revealBtn").hidden = split.revealed;
-    }
-  }
-  apparatus.draw();
-});
-every($("splitCv"), split.draw);
-
-/* ── figura din 1887: original / explicat ───────────────────────── */
-const figNotes = $("figNotes");
-$("figOriginal")?.addEventListener("click", () => {
-  figNotes.hidden = true;
-  $("figOriginal").setAttribute("aria-pressed", "true");
-  $("figExplained").setAttribute("aria-pressed", "false");
-});
-$("figExplained")?.addEventListener("click", () => {
-  figNotes.hidden = false;
-  $("figOriginal").setAttribute("aria-pressed", "false");
-  $("figExplained").setAttribute("aria-pressed", "true");
-});
-
-/* ── panouri statice ────────────────────────────────────────────── */
-function drawStatic() { drawCoherenceLadder($("cohCv")); }
+/* panourile statice se redeseneaza la redimensionare si la deschiderea unui accordion */
+function drawStatic() {
+  drawCoherenceLadder($("cohCv"));
+  rolesSync();
+}
 addEventListener("resize", () => { drawStatic(); markDirty(); });
+document.querySelectorAll("details").forEach(d =>
+  d.addEventListener("toggle", () => { if (d.open) { drawStatic(); markDirty(); } }));
 drawStatic();
 
 /* ── citirile numerice, dintr-un singur loc ─────────────────────── */
@@ -251,12 +307,14 @@ subscribe(s => {
   for (const k in txt) { const el = $(k); if (el) el.textContent = txt[k]; }
 
   const v = $("chainVerdict");
-  if (v) v.className = "verdict " + (s.intensity < 0.03 ? "dark" : s.intensity > 0.97 ? "bright" : "");
-  if (chainSlider && +chainSlider.value !== s.mirrorDisplacement) chainSlider.value = s.mirrorDisplacement;
-  if (measureSlider && +measureSlider.value !== s.mirrorDisplacement) measureSlider.value = s.mirrorDisplacement;
-  if (ctlLambda && +ctlLambda.value !== s.lambda) ctlLambda.value = s.lambda;
-  if (ctlArm && +ctlArm.value !== s.armDifference) ctlArm.value = s.armDifference;
-  if (drawer) drawer.render();
+  v.className = "verdict " + (s.intensity < 0.03 ? "dark" : s.intensity > 0.97 ? "bright" : "");
+  // cursoarele raman sincronizate cu starea, oricine ar fi schimbat-o
+  for (const [el, val] of [[chainSlider, s.mirrorDisplacement], [measureSlider, s.mirrorDisplacement],
+                           [ctlLambda, s.lambda], [ctlArm, s.armDifference], [ctlTilt, s.tilt],
+                           [ctlBand, s.bandwidthSlider]]) {
+    if (el && +el.value !== val) el.value = val;
+  }
+  drawer?.render();
   markDirty();
 });
 
@@ -268,11 +326,18 @@ initPresenter({
   afterReset: () => { modeSync(); buildSync(); markDirty(); }
 });
 initChallenge($("challenges"), () => { modeSync(); markDirty(); });
-$("resetBtn")?.addEventListener("click", () => { reset(); modeSync(); markDirty(); });
+$("resetBtn").addEventListener("click", () => {
+  reset();
+  heroPhase.value = 0; heroSync();
+  builder.step = 0; buildSync();
+  modeSync(); markDirty();
+});
 
 if (reduced) {
-  hero.draw(); builder.draw(); chainFrame(); fringes.draw(false);
-  drawProfile(profile); gasCell.draw(); river.draw(); apparatus.draw(); split.draw();
+  zoom.draw(); river.draw(); builder.draw(); recombine.draw(); superpose.draw();
+  for (const [id, phi] of phaseStates) drawPhaseState($(id), phi, 0);
+  hero.draw(); chainFrame(); fringes.draw(false); drawProfile(profile);
+  apparatus.draw(); split.draw(); gasCell.draw();
 } else {
   requestAnimationFrame(loop);
 }
