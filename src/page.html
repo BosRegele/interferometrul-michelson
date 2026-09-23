@@ -33,7 +33,6 @@
       propaga. Atunci cum traversează lumina spațiul gol dintre Soare și noi?
     </p>
   </div>
-  <a class="scroll-cue" href="#s-ether-idea" aria-label="Derulează la poveste"><span>Derulează</span><i></i></a>
 </section>
 
 <main class="wrap">
@@ -128,7 +127,7 @@
     </header>
     <p class="intro">
       Aceeași distanță, aceeași viteză prin apă. Unul traversează și se întoarce, celălalt merge în
-      lungul curentului și se întoarce. Pune curentul pe zero: se întorc simultan.
+      lungul curentului și se întoarce. Fără curent, se întorc în același timp.
     </p>
     <figure class="stage">
       <canvas id="riverCv" aria-label="Doi înotători într-un râu cu curent"></canvas>
@@ -293,7 +292,7 @@
           <text x="640" y="382" class="sb" fill="#ffb04a">(2)</text>
           <text x="458" y="530" class="sb"><tspan fill="#7fd4ee">(1)</tspan><tspan fill="#eef1f3"> + </tspan><tspan fill="#ffb04a">(2)</tspan></text>
         </svg>
-        <figcaption class="cap">Schemă redesenată pentru acest proiect, după o diagramă clasică de manual.</figcaption>
+        <figcaption class="cap">Traseul celor două raze prin interferometru.</figcaption>
       </figure>
     </div>
   </section>
@@ -347,7 +346,7 @@
       <canvas id="heroCv" aria-label="Cele două unde, rezultanta și detectorul"></canvas>
       <figcaption class="stage-foot">
         <div class="ctl grow">
-          <div class="ctl-top"><label for="heroPhase">Mută unda B</label><span class="v" id="heroPhaseV">0°</span></div>
+          <div class="ctl-top"><label for="heroPhase">Decalajul undei B</label><span class="v" id="heroPhaseV">0°</span></div>
           <input type="range" id="heroPhase" min="0" max="360" step="1" value="0">
         </div>
         <div class="tabs" role="group" aria-label="Faze prestabilite">
@@ -369,8 +368,8 @@
       <h2>Mișcă <em>oglinda</em></h2>
     </header>
     <p class="intro">
-      Cum produci decalajul? Lungești un drum. Mută oglinda și urmărește cum trece efectul prin toate
-      cele cinci reprezentări: toate citesc aceeași stare.
+      Cum produci decalajul? Lungești unul dintre drumuri. Când oglinda se mișcă, efectul trece prin
+      cinci etape, de la oglindă până la franjă.
     </p>
     <div class="chain" id="chain">
       <figure class="link">
@@ -442,8 +441,8 @@
       <h2>Cum apar <em>franjele</em></h2>
     </header>
     <p class="intro">
-      Pe un ecran întreg, fiecare punct are altă diferență de drum, de aceea apar inele. Plimbă
-      mouse-ul peste ecran ca să citești valorile din punctul țintit.
+      Pe un ecran întreg, fiecare punct are altă diferență de drum, de aceea apar inele. Cu cât
+      brațele sunt mai diferite, cu atât inelele sunt mai dese.
     </p>
     <div class="lab">
       <div class="lab-screen">
@@ -587,6 +586,14 @@
     <figure class="stage">
       <canvas id="splitCv" aria-label="Franjele prezise față de cele observate"></canvas>
     </figure>
+    <details class="wait">
+      <summary>Ce înseamnă 0 pe grafic? Că lumina dispare?</summary>
+      <p>Nu. Axa verticală arată <strong>cât s-au mutat franjele</strong> când se rotește aparatul, nu
+      câtă lumină e. Franjele se văd tot timpul, pentru că A și B interferă permanent, cu un decalaj
+      fix dat de lungimea brațelor. Curba portocalie arată cum ar fi trebuit să alunece franjele la
+      rotire. Linia verde, lipită de 0, arată că au stat pe loc: rotirea nu a schimbat decalajul
+      dintre cele două raze.</p>
+    </details>
 
     <div class="split archive">
       <figure class="col-7 plate paper">
@@ -786,8 +793,7 @@
           <div class="col-7" id="challenges"></div>
           <div class="col-5 prose">
             <p class="score" id="chScore">0 / 6 corecte</p>
-            <p>Alege un răspuns, apoi cere simulatorului să-ți arate ce se întâmplă. Formulele, cu
-            valorile de acum, sunt în <strong>Formule</strong>, sus.</p>
+            <p>Fiecare răspuns vine cu explicația lui și cu demonstrația în simulare.</p>
           </div>
         </div>
       </div>
@@ -829,7 +835,7 @@
         </ul>
       </div>
     </div>
-    <p class="fine">Fotografiile și filmările sunt reale. Simulările sunt calculate în pagină, de un motor fizic acoperit cu teste.</p>
+    <p class="fine">Fotografiile și filmările sunt reale. Celelalte imagini sunt simulări calculate din formulele fizice.</p>
   </div>
 </footer>
 
