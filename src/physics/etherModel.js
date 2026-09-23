@@ -26,9 +26,16 @@ export function predictedFringeShift(L, v, lambda, c = C) {
   return 2 * L * v * v / (lambda * c * c);
 }
 
-/** Cum ar varia deplasarea pe parcursul unei rotatii complete. */
-export function shiftAtAngle(maxShift, theta) {
-  return maxShift * Math.cos(2 * theta);
+/** Oscilatia prezisa in jurul pozitiei medii, cum o deseneaza si lucrarea din 1887.
+    Amplitudinea e JUMATATE din predictie: de la 0° la 90° franjele trec de la +Δn/2 la −Δn/2,
+    deci se muta in total cu Δn, cat da formula 2Lv²/(λc²). */
+export function predictedSwing(totalShift, theta) {
+  return (totalShift / 2) * Math.cos(2 * theta);
+}
+
+/** Cat s-ar fi mutat franjele fata de pozitia de start, dupa o rotire cu theta. */
+export function shiftSinceStart(totalShift, theta) {
+  return (totalShift / 2) * (1 - Math.cos(2 * theta));
 }
 
 /** Limita superioara masurata efectiv in 1887, in franje. */
