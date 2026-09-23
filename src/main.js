@@ -1,13 +1,13 @@
 // Firul care leaga totul: comenzile scriu in stare, starea redeseneaza tot.
 import { state, set, subscribe, reset } from "./state.js";
 import { toDegrees } from "./physics/phase.js";
-import { quarterWave, displacementFromFringes } from "./physics/opticalPath.js";
+import { quarterWave } from "./physics/opticalPath.js";
 import { GASES } from "./physics/refractiveIndex.js";
 import { normalizedIntensity } from "./physics/interference.js";
 import { makeHeroWaves } from "./sims/heroWaves.js";
 import { makeBuilder, BUILD_STEPS } from "./sims/builder.js";
 import { mountChain } from "./sims/chain.js";
-import { makeFringes, drawProfile, drawCoherenceLadder } from "./sims/fringes.js";
+import { makeFringes, drawProfile } from "./sims/fringes.js";
 import { makeGasCell } from "./sims/gasCell.js";
 import { makeRiver, makeApparatus, makeSplit } from "./sims/ether.js";
 import { makeEtherZoom, ZOOM_STAGES, drawPhaseState, drawRotationRoles } from "./sims/story.js";
@@ -105,9 +105,6 @@ document.querySelectorAll(".bdot").forEach((d, i) => {
 buildSync();
 every($("buildCv"), builder.draw);
 
-const recombine = makeBuilder($("recombineCv"));
-recombine.step = 4;                      // componentele, desenate alaturi
-every($("recombineCv"), recombine.draw);
 
 const superpose = makeBuilder($("superposeCv"));
 superpose.step = 5;                      // suprapuse
@@ -154,11 +151,10 @@ const profile = $("profileCv");
 let fringeDirty = true, refineT = 0;
 const markDirty = () => { fringeDirty = true; };
 
-const ctlLambda = $("ctlLambda"), ctlArm = $("ctlArm"), ctlTilt = $("ctlTilt"), ctlBand = $("ctlBand");
+const ctlLambda = $("ctlLambda"), ctlArm = $("ctlArm"), ctlTilt = $("ctlTilt");
 ctlLambda.addEventListener("input", () => set({ lambda: +ctlLambda.value }));
 ctlArm.addEventListener("input", () => set({ armDifference: +ctlArm.value }));
 ctlTilt.addEventListener("input", () => set({ tilt: +ctlTilt.value }));
-ctlBand.addEventListener("input", () => set({ bandwidthSlider: +ctlBand.value }));
 
 $("modeScreen").addEventListener("click", () => { fringes.setMode("screen"); modeSync(); });
 $("modePoint").addEventListener("click", () => { fringes.setMode("point"); modeSync(); });
@@ -170,7 +166,6 @@ function modeSync() {
   $("modeWhite").setAttribute("aria-pressed", String(state.whiteLight));
   $("modeMicro").setAttribute("aria-pressed", String(fringes.getMicro()));
   $("ctlLambdaWrap").classList.toggle("off", state.whiteLight);
-  $("ctlBandWrap").classList.toggle("off", state.whiteLight);
   if (state.whiteLight && state.armDifference > 2400) set({ armDifference: 900 });
   markDirty();
 }
@@ -268,27 +263,6 @@ $("figExplained").addEventListener("click", () => {
 });
 
 /* ── 19 · explore more ──────────────────────────────────────────── */
-const measureSlider = $("measureMirror");
-measureSlider.addEventListener("input", () => set({ mirrorDisplacement: +measureSlider.value }));
-$("measureZero").addEventListener("click", () => set({ fringeZero: state.mirrorDisplacement }));
-let scanning = false, scanDir = 1;
-if (reduced) {                           // scanarea e o animatie; fara miscare, ramane cursorul
-  $("measureScan").disabled = true;
-  $("measureScan").title = "Dezactivat: sistemul cere animații reduse. Folosește cursorul.";
-}
-$("measureScan").addEventListener("click", () => {
-  scanning = !scanning;
-  $("measureScan").setAttribute("aria-pressed", String(scanning));
-  $("measureScan").textContent = scanning ? "Oprește" : "Scanează";
-});
-every($("measureCounter"), () => {
-  if (!scanning) return;
-  let v = state.mirrorDisplacement + scanDir * 24;
-  if (v > 6000) { v = 6000; scanDir = -1; }
-  if (v < 0) { v = 0; scanDir = 1; }
-  set({ mirrorDisplacement: v });
-});
-
 const gasCell = makeGasCell($("gasCv"));
 $("gasLen").addEventListener("input", e => set({ gasLength: +e.target.value / 100 }));
 for (const [id, key] of [["gasAir", "air"], ["gasCO2", "co2"], ["gasHe", "he"]]) {
@@ -304,7 +278,6 @@ every($("gasCv"), gasCell.draw);
 
 /* panourile statice se redeseneaza la redimensionare si la deschiderea unui accordion */
 function drawStatic() {
-  drawCoherenceLadder($("cohCv"));
   rolesSync();
 }
 function relayout() { drawStatic(); markDirty(); redrawSoon(); }
@@ -335,14 +308,9 @@ subscribe(s => {
     chainLambda: fmt(s.lambda) + " nm",
     chainI: fmt(s.intensity, 2),
     chainVerdict: s.intensity > 0.97 ? "MAXIM" : s.intensity < 0.03 ? "ÎNTUNERIC" : "intermediar",
-    measureCounterV: fmt(Math.abs(s.fringesPassed), 1),
-    measureDx: fmt(Math.abs(s.mirrorDisplacement - s.fringeZero)) + " nm",
-    measureCheck: fmt(Math.abs(displacementFromFringes(s.fringesPassed, s.lambda))) + " nm",
     ctlLambdaV: fmt(s.lambda, 0) + " nm",
     ctlArmV: fmt(s.armDifference / 1000, 2) + " µm",
     ctlTiltV: fmt(s.tilt, 0) + " µrad",
-    ctlBandV: s.sourceName,
-    ctlLc: s.coherenceLength > 1e6 ? fmt(s.coherenceLength / 1e6, 1) + " mm" : fmt(s.coherenceLength / 1000, 1) + " µm",
     gasLenV: fmt(s.gasLength * 100) + " cm",
     gasTotal: fmt(gasCell.total(), 1) + " franje",
     armLenV: fmt(s.armLength) + " m",
@@ -354,9 +322,7 @@ subscribe(s => {
   const v = $("chainVerdict");
   v.className = "verdict " + (s.intensity < 0.03 ? "dark" : s.intensity > 0.97 ? "bright" : "");
   // cursoarele raman sincronizate cu starea, oricine ar fi schimbat-o
-  for (const [el, val] of [[chainSlider, s.mirrorDisplacement], [measureSlider, s.mirrorDisplacement],
-                           [ctlLambda, s.lambda], [ctlArm, s.armDifference], [ctlTilt, s.tilt],
-                           [ctlBand, s.bandwidthSlider]]) {
+  for (const [el, val] of [[chainSlider, s.mirrorDisplacement], [ctlLambda, s.lambda], [ctlArm, s.armDifference], [ctlTilt, s.tilt]]) {
     if (el && +el.value !== val) el.value = val;
   }
   drawer?.render();
