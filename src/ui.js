@@ -88,12 +88,7 @@ export function initDrawer() {
        "franje numărate"],
       ["OPL = nL",
        `OPL = ${state.refractiveIndex.toFixed(6)} · ${fmt(state.gasLength * 100)} cm = ${fmt(opticalPathLength(state.refractiveIndex, state.gasLength) * 100, 4)} cm`,
-       "drumul optic prin gaz"],
-      ["Lc = λ²/Δλ",
-       `Lc = ${fmt(state.lambda)}² / ${state.bandwidth < 1 ? state.bandwidth.toFixed(3) : fmt(state.bandwidth, 2)} = ${
-         state.coherenceLength > 1e6 ? fmt(state.coherenceLength / 1e6, 1) + " mm"
-                                     : fmt(state.coherenceLength / 1000, 1) + " µm"}`,
-       "lungimea de coerență"]
+       "drumul optic prin gaz"]
     ];
 
     body.innerHTML = rows.map(([f, sub, cap]) => `
@@ -109,7 +104,7 @@ export function initDrawer() {
 
 /* ─── Presenter Mode ──────────────────────────────────────────────── */
 const SCENES = [
-  ["ch-story", "Întrebarea", "Valurile au apa, sunetul are aerul. Lumina — prin ce?"],
+  ["ch-story", "Întrebarea", "Valurile au apa, sunetul are aerul. Lumina, prin ce?"],
   ["s-ether-idea", "Eterul", "Un mediu invizibil, presupus că umple tot spațiul."],
   ["s-why-earth", "Și pe Pământ", "Universal, nu o atmosferă: Pământul e scufundat în el."],
   ["s-ether-wind", "Vântul de eter", "Ne mișcăm prin el cu 30 km/s, deci ar trebui să-l simțim."],
@@ -122,8 +117,7 @@ const SCENES = [
   ["s-mirror", "Mișcă oglinda", "Drumul crește, faza se schimbă, franja se mișcă."],
   ["s-two-dx", "Factorul 2", "Dus plus întors: oglinda Δx, drumul 2Δx."],
   ["s-fringes", "Franjele", "Fiecare direcție are propria diferență de drum."],
-  ["ch-1887", "Înapoi la eter", "Instrumentul e gata. Acum putem testa ipoteza."],
-  ["s-rotate-why", "De ce rotim", "Brațele își schimbă rolurile față de vântul ipotetic."],
+  ["ch-1887", "De ce rotim", "Brațele își schimbă rolurile față de vântul ipotetic."],
   ["s-predict", "Predicția", "Modelul eterului cere aproximativ 0,4 franje."],
   ["s-vs", "1887", "Rotim aparatul și comparăm."],
   ["s-meaning", "Rezultatul", "Efectul așteptat nu a apărut."],
@@ -201,7 +195,7 @@ export const CHALLENGES = [
     q: "Pui în brațul mobil un tub de 10 cm cu aer și îl videzi. Franjele...",
     a: ["Nu se mișcă, geometria e neschimbată", "Se mișcă cu vreo 99 de franje", "Dispar complet", "Își schimbă culoarea"],
     c: 1,
-    why: "Drumul optic e nL, nu L. Scoțând aerul, drumul scade cu 2(n−1)L — aproape o sută de franje.",
+    why: "Drumul optic e nL, nu L. Scoțând aerul, drumul scade cu 2(n−1)L, adică aproape o sută de franje.",
     goto: "gasCv"
   },
   {
@@ -216,8 +210,8 @@ export const CHALLENGES = [
     q: "De ce era esențial ca aparatul din 1887 să fie rotit?",
     a: ["Ca să se încălzească uniform", "Ca să schimbe rolurile celor două brațe față de vântul ipotetic", "Ca să amestece mercurul", "Ca să verifice oglinzile"],
     c: 1,
-    why: "O singură poziție nu spune nimic: nu știi diferența de drum de referință. Rotind, efectul ar fi trebuit să se inverseze — asta se putea măsura.",
-    goto: "s-rotate-why"
+    why: "O singură poziție nu spune nimic: nu știi diferența de drum de referință. Rotind, efectul ar fi trebuit să se inverseze, iar asta se putea măsura.",
+    goto: "ch-1887"
   }
 ];
 
