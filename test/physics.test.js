@@ -142,3 +142,21 @@ test("franjele isi pierd contrastul cand vizibilitatea scade", () => {
   assert.ok(close(hi, 1, 1e-12));
   assert.ok(lo < 0.6 && lo > 0.5);
 });
+
+import { parallelLegs } from "../src/physics/etherModel.js";
+
+test("raul: dusul cu curentul e mai rapid decat intoarcerea contra lui", () => {
+  for (const v of [0.1, 0.3, 0.5, 0.8]) {
+    const { withCurrent, againstCurrent } = parallelLegs(v);
+    assert.ok(withCurrent < 1 && againstCurrent > 1, `v=${v}`);
+    assert.ok(withCurrent < againstCurrent, `v=${v}`);
+    // suma trebuie sa fie exact timpul total al bratului paralel, 2/(1-v^2)
+    assert.ok(close(withCurrent + againstCurrent, 2 / (1 - v * v), 1e-12));
+  }
+});
+
+test("raul: fara curent, cele doua jumatati sunt egale", () => {
+  const { withCurrent, againstCurrent } = parallelLegs(0);
+  assert.equal(withCurrent, 1);
+  assert.equal(againstCurrent, 1);
+});
