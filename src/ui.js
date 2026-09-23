@@ -7,6 +7,16 @@ import { opticalPathLength } from "./physics/refractiveIndex.js";
 
 const fmt = (n, d = 1) => n.toLocaleString("ro-RO", { minimumFractionDigits: d, maximumFractionDigits: d });
 
+/** Deschide orice <details> care ascunde tinta, apoi deruleaza la ea. */
+export function reveal(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  for (let p = el.parentElement; p; p = p.parentElement) {
+    if (p.tagName === "DETAILS" && !p.open) p.open = true;
+  }
+  el.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
 /* ─── Navigatie pe capitole ───────────────────────────────────────── */
 export function initNav() {
   const links = [...document.querySelectorAll("[data-chapter]")];
@@ -99,22 +109,25 @@ export function initDrawer() {
 
 /* ─── Presenter Mode ──────────────────────────────────────────────── */
 const SCENES = [
-  ["ch-hero", "Paradoxul", "Două raze de lumină pot produce întuneric."],
-  ["s-build", "Lama separatoare", "Un fascicul este tăiat în două jumătăți coerente."],
-  ["s-build", "Cele două brațe", "Fiecare jumătate pleacă pe drumul ei și se întoarce."],
-  ["s-build", "Recombinarea", "Ocupă aceeași regiune; câmpurile lor se adună."],
-  ["s-chain", "Lanțul", "Oglinda se mișcă → drumul crește → faza se schimbă → franja se mișcă."],
-  ["s-chain", "Factorul 2", "Oglinda merge cu Δx, lumina parcurge 2Δx."],
-  ["s-fringes", "Franjele", "Fiecare punct de pe ecran are propria diferență de drum."],
-  ["s-measure", "Rigla", "Nu măsurăm oglinda. Numărăm lumina."],
-  ["s-matter", "Materia", "Geometria nu s-a schimbat, dar franjele s-au mișcat."],
-  ["s-ether", "Ipoteza eterului", "Sunetul are aerul, valurile au apa. Lumina?"],
-  ["s-river", "Râul", "Cine înoată contra curentului pierde timp."],
-  ["s-predict", "Predicția", "Modelul clasic cerea o deplasare vizibilă la rotire."],
-  ["s-rotate", "Experimentul", "Rotim aparatul cu 90°."],
-  ["s-result", "Rezultatul", "Efectul așteptat nu a apărut."],
-  ["s-relativity", "Ce a urmat", "Nu un singur experiment, ci un drum de douăzeci de ani."],
-  ["s-ligo", "LIGO", "Aceeași schemă, brațe de patru kilometri."]
+  ["ch-story", "Întrebarea", "Valurile au apa, sunetul are aerul. Lumina — prin ce?"],
+  ["s-ether-idea", "Eterul", "Un mediu invizibil, presupus că umple tot spațiul."],
+  ["s-why-earth", "Și pe Pământ", "Universal, nu o atmosferă: Pământul e scufundat în el."],
+  ["s-ether-wind", "Vântul de eter", "Ne mișcăm prin el cu 30 km/s, deci ar trebui să-l simțim."],
+  ["s-river", "Râul", "Cine înoată în lungul curentului pierde timp."],
+  ["s-timing", "Cum cronometrezi lumina", "Nu o cronometrezi. Lași razele să se reîntâlnească."],
+  ["ch-apparatus", "Aparatul", "Sursă, lamă separatoare, două brațe, două oglinzi."],
+  ["s-recombine", "Recombinarea", "Una reflectată, cealaltă transmisă, spre același detector."],
+  ["s-superpose", "Suprapunerea", "Aceeași regiune din spațiu; câmpurile se adună."],
+  ["s-phase", "Faza", "Cât de decalate sunt cele două unde."],
+  ["s-mirror", "Mișcă oglinda", "Drumul crește, faza se schimbă, franja se mișcă."],
+  ["s-two-dx", "Factorul 2", "Dus plus întors: oglinda Δx, drumul 2Δx."],
+  ["s-fringes", "Franjele", "Fiecare direcție are propria diferență de drum."],
+  ["ch-1887", "Înapoi la eter", "Instrumentul e gata. Acum putem testa ipoteza."],
+  ["s-rotate-why", "De ce rotim", "Brațele își schimbă rolurile față de vântul ipotetic."],
+  ["s-predict", "Predicția", "Modelul eterului cere aproximativ 0,4 franje."],
+  ["s-vs", "1887", "Rotim aparatul și comparăm."],
+  ["s-meaning", "Rezultatul", "Efectul așteptat nu a apărut."],
+  ["s-einstein", "Contextul", "Un drum de douăzeci de ani, nu un singur experiment."]
 ];
 
 export function initPresenter(controls = {}) {
@@ -133,7 +146,7 @@ export function initPresenter(controls = {}) {
     title.textContent = t;
     line.textContent = l;
     count.textContent = (i + 1) + " / " + SCENES.length;
-    document.getElementById(anchor)?.scrollIntoView({ behavior: "smooth", block: "start" });
+    reveal(anchor);
   }
   function toggle(v) {
     on = v;
@@ -166,7 +179,7 @@ export const CHALLENGES = [
     c: 1,
     why: "λ/4 de oglindă înseamnă λ/2 de drum optic, deci φ = π: cele două unde se anulează punct cu punct.",
     apply: () => set({ mirrorDisplacement: quarterWave(SODIUM) }),
-    goto: "s-chain"
+    goto: "s-mirror"
   },
   {
     q: "La φ = π detectorul e negru. Unde s-a dus energia luminii?",
@@ -174,7 +187,7 @@ export const CHALLENGES = [
     c: 2,
     why: "Interferometrul are două ieșiri, mereu complementare. Ce lipsește dintr-una se regăsește în cealaltă.",
     apply: () => set({ mirrorDisplacement: quarterWave(SODIUM) }),
-    goto: "s-chain"
+    goto: "s-mirror"
   },
   {
     q: "Treci de la roșu la albastru, deci λ scade. Ce se întâmplă cu inelele?",
@@ -189,7 +202,7 @@ export const CHALLENGES = [
     a: ["Nu se mișcă, geometria e neschimbată", "Se mișcă cu vreo 99 de franje", "Dispar complet", "Își schimbă culoarea"],
     c: 1,
     why: "Drumul optic e nL, nu L. Scoțând aerul, drumul scade cu 2(n−1)L — aproape o sută de franje.",
-    goto: "s-matter"
+    goto: "gasCv"
   },
   {
     q: "De ce Michelson căuta zeroul cu lampa de sodiu, și nu direct cu lumină albă?",
@@ -204,7 +217,7 @@ export const CHALLENGES = [
     a: ["Ca să se încălzească uniform", "Ca să schimbe rolurile celor două brațe față de vântul ipotetic", "Ca să amestece mercurul", "Ca să verifice oglinzile"],
     c: 1,
     why: "O singură poziție nu spune nimic: nu știi diferența de drum de referință. Rotind, efectul ar fi trebuit să se inverseze — asta se putea măsura.",
-    goto: "s-rotate"
+    goto: "s-rotate-why"
   }
 ];
 
@@ -246,7 +259,7 @@ export function initChallenge(root, onApply) {
         act.addEventListener("click", () => {
           ch.apply?.();
           onApply?.();
-          document.getElementById(ch.goto)?.scrollIntoView({ behavior: "smooth", block: "start" });
+          reveal(ch.goto);
         });
         box.appendChild(act);
         if (scoreEl) scoreEl.textContent = `${score} / ${CHALLENGES.length} corecte`;
