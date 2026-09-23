@@ -10,6 +10,7 @@
   --mono:"IBM Plex Mono",ui-monospace,monospace;
 }
 *{box-sizing:border-box}
+[hidden]{display:none!important}
 html,body{background:var(--void)}
 body{
   margin:0;color:var(--fg);
@@ -129,7 +130,7 @@ button[aria-pressed=true]{color:var(--b);border-color:var(--b)}
 .chain{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;align-items:start}
 @media (max-width:880px){.chain{grid-template-columns:repeat(2,1fr)}}
 @media (max-width:520px){.chain{grid-template-columns:1fr}}
-.link{background:var(--panel);border:1px solid var(--line);position:relative;padding:9px 9px 11px}
+.link{background:var(--panel);border:1px solid var(--line);position:relative;padding:9px 9px 11px;min-width:0}
 .link canvas{display:block;width:100%}
 .link .k{font-family:var(--mono);font-size:.57rem;letter-spacing:.14em;text-transform:uppercase;color:var(--fg3)}
 .link .val{font-family:var(--mono);font-size:.84rem;color:var(--fg);margin-top:3px;font-variant-numeric:tabular-nums;word-break:break-word}
@@ -241,7 +242,7 @@ details.xp[open] summary::after{content:"−"}
 /* faza: trei stari */
 .phase3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 @media (max-width:700px){.phase3{grid-template-columns:1fr}}
-.p3{border:1px solid var(--line);background:var(--panel)}
+.p3{border:1px solid var(--line);background:var(--panel);min-width:0}
 .p3 canvas{display:block;width:100%}
 .p3-cap{padding:9px 11px 11px;display:grid;gap:2px;border-top:1px solid var(--line)}
 .p3-cap b{font-family:var(--mono);font-size:1rem;color:var(--fg);font-weight:500}
