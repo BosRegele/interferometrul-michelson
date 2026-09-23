@@ -26,6 +26,7 @@ export const ZOOM_STAGES = [
 ];
 
 export function makeEtherZoom(cv) {
+  const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
   let stage = 0, t = 0, shown = 0;      // shown = zoom animat catre stage
 
   function etherField(ctx, w, h, density) {
@@ -46,7 +47,7 @@ export function makeEtherZoom(cv) {
   function draw() {
     const { ctx, w, h } = surface(cv, 0.46);
     t += 0.6;
-    shown += (stage - shown) * 0.08;
+    shown = reduced ? stage : shown + (stage - shown) * 0.08;
     ctx.fillStyle = COL.panel;
     ctx.fillRect(0, 0, w, h);
 
@@ -66,7 +67,7 @@ export function makeEtherZoom(cv) {
     const a0 = Math.max(0, 1 - Math.abs(k - 0));
     if (a0 > 0.01) {
       ctx.globalAlpha = a0;
-      ctx.fillStyle = COL.b;
+      ctx.fillStyle = COL.beamB;
       ctx.beginPath(); ctx.arc(cx, cy, 13, 0, TAU); ctx.fill();
       ctx.strokeStyle = COL.line2; ctx.lineWidth = 1;
       for (const r of [42, 66, 92, 120]) {
@@ -74,7 +75,7 @@ export function makeEtherZoom(cv) {
       }
       const ang = t * 0.012;
       const ex = cx + 92 * Math.cos(ang), ey = cy + 92 * 0.42 * Math.sin(ang);
-      ctx.fillStyle = COL.a;
+      ctx.fillStyle = COL.beamA;
       ctx.beginPath(); ctx.arc(ex, ey, 5, 0, TAU); ctx.fill();
       ctx.fillStyle = COL.fg2; ctx.font = "11px " + MONO;
       ctx.fillText("Pământ", ex + 9, ey - 7);
@@ -87,15 +88,15 @@ export function makeEtherZoom(cv) {
       ctx.globalAlpha = a1;
       ctx.fillStyle = "#16394a";
       ctx.beginPath(); ctx.arc(cx, cy, 54, 0, TAU); ctx.fill();
-      ctx.strokeStyle = COL.a; ctx.lineWidth = 1.2;
+      ctx.strokeStyle = COL.beamA; ctx.lineWidth = 1.2;
       ctx.beginPath(); ctx.arc(cx, cy, 54, 0, TAU); ctx.stroke();
-      ctx.strokeStyle = COL.b; ctx.lineWidth = 2;
+      ctx.strokeStyle = COL.beamB; ctx.lineWidth = 2;
       ctx.beginPath();
       ctx.moveTo(cx + 62, cy); ctx.lineTo(cx + 132, cy);
       ctx.moveTo(cx + 132, cy); ctx.lineTo(cx + 124, cy - 5);
       ctx.moveTo(cx + 132, cy); ctx.lineTo(cx + 124, cy + 5);
       ctx.stroke();
-      ctx.fillStyle = COL.b; ctx.font = "12px " + MONO;
+      ctx.fillStyle = COL.beamB; ctx.font = "12px " + MONO;
       ctx.fillText("30 km/s", cx + 68, cy - 10);
       ctx.globalAlpha = 1;
     }
@@ -113,7 +114,7 @@ export function makeEtherZoom(cv) {
       ctx.fillStyle = COL.fg3; ctx.font = "10px " + MONO;
       ctx.fillText("masa optică", bx + bw * 0.30, by + bh * 0.72);
       // vantul aparent, prin laborator
-      ctx.strokeStyle = COL.b; ctx.lineWidth = 1.4;
+      ctx.strokeStyle = COL.beamB; ctx.lineWidth = 1.4;
       for (let i = 0; i < 4; i++) {
         const y = by + bh * (0.18 + i * 0.22);
         const x = bx - 30 + ((t * 1.1 + i * 40) % (bw + 60));
@@ -122,7 +123,7 @@ export function makeEtherZoom(cv) {
         ctx.moveTo(x + 20, y); ctx.lineTo(x + 15, y + 3);
         ctx.stroke();
       }
-      ctx.fillStyle = COL.b; ctx.font = "11px " + MONO;
+      ctx.fillStyle = COL.beamB; ctx.font = "11px " + MONO;
       ctx.fillText("vânt de eter aparent", bx, by - 10);
       ctx.globalAlpha = 1;
     }
@@ -165,20 +166,20 @@ export function drawPhaseState(cv, phi, animT) {
   for (const y of [yA, yB, yS]) {
     ctx.beginPath(); ctx.moveTo(x0, y); ctx.lineTo(x1, y); ctx.stroke();
   }
-  trace(0, A, yA, COL.a, 1.7);
-  trace(phi, A, yB, COL.b, 1.7);
+  trace(0, A, yA, COL.beamA, 1.7);
+  trace(phi, A, yB, COL.beamB, 1.7);
 
   const amp = A * resultantAmplitude(phi);
   if (Math.abs(amp) < 0.6) {
-    ctx.strokeStyle = COL.res; ctx.lineWidth = 2.2;
+    ctx.strokeStyle = COL.result; ctx.lineWidth = 2.2;
     ctx.beginPath(); ctx.moveTo(x0, yS); ctx.lineTo(x1, yS); ctx.stroke();
   } else {
-    trace(phi / 2, amp, yS, COL.res, 2.2);
+    trace(phi / 2, amp, yS, COL.result, 2.2);
   }
 
   ctx.font = "9px " + MONO;
-  ctx.fillStyle = COL.a; ctx.fillText("A", 3, yA - A - 4);
-  ctx.fillStyle = COL.b; ctx.fillText("B", 3, yB - A - 4);
+  ctx.fillStyle = COL.beamA; ctx.fillText("A", 3, yA - A - 4);
+  ctx.fillStyle = COL.beamB; ctx.fillText("B", 3, yB - A - 4);
   ctx.fillStyle = COL.fg2; ctx.fillText("A + B", 3, yS - Math.abs(amp) - 4);
 }
 
@@ -201,12 +202,12 @@ export function drawRotationRoles(cv, rotated) {
       ctx.stroke();
     }
   }
-  ctx.fillStyle = COL.b; ctx.font = "12px " + MONO;
+  ctx.fillStyle = COL.beamB; ctx.font = "12px " + MONO;
   ctx.fillText("VÂNT DE ETER  →", 14, 20);
 
   // bratele: A orizontal, B vertical; la rotire isi schimba rolurile
-  const horiz = rotated ? COL.a : COL.b;
-  const vert = rotated ? COL.b : COL.a;
+  const horiz = rotated ? COL.beamA : COL.beamB;
+  const vert = rotated ? COL.beamB : COL.beamA;
 
   ctx.lineWidth = 3;
   ctx.strokeStyle = horiz;
