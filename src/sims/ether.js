@@ -3,7 +3,7 @@
 import { COL, MONO, wavelengthRGB } from "./palette.js";
 import { state } from "../state.js";
 import { TAU } from "../physics/phase.js";
-import { shiftAtAngle, parallelLegs, OBSERVED_1887_UPPER_BOUND } from "../physics/etherModel.js";
+import { predictedSwing, shiftSinceStart, parallelLegs, OBSERVED_1887_UPPER_BOUND } from "../physics/etherModel.js";
 
 function surface(cv, ratio) {
   const dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -175,34 +175,40 @@ export function makeApparatus(cv) {
     ctx.restore();
     ctx.restore();
 
-    // dreapta: graficul predictiei si al observatiei
-    const gx = w * 0.52, gw = w * 0.43, gy = h * 0.22, gh = h * 0.56;
-    const mid = gy + gh / 2, sc = (gh / 2 - 6) / 0.5;
+    // dreapta: graficul. Axa verticala = cat s-au MUTAT franjele, nu cata lumina e.
+    const gx = w * 0.56, gw = w * 0.40, gy = h * 0.24, gh = h * 0.54;
+    const RANGE = 0.25;                               // scara: ±0,25 franje
+    const mid = gy + gh / 2, sc = (gh / 2 - 6) / RANGE;
+    const clamp = v => Math.max(-RANGE, Math.min(RANGE, v));
     ctx.strokeStyle = "#161f26"; ctx.lineWidth = 1;
     ctx.beginPath();
     ctx.moveTo(gx, mid); ctx.lineTo(gx + gw, mid);
     ctx.moveTo(gx, gy); ctx.lineTo(gx, gy + gh);
     ctx.stroke();
     ctx.fillStyle = COL.fg3; ctx.font = `10px ${MONO}`;
-    ctx.fillText("+0,5", gx - 30, gy + 8);
-    ctx.fillText("0", gx - 12, mid + 3);
-    ctx.fillText("−0,5", gx - 30, gy + gh + 2);
-    ["0°", "90°", "180°", "270°", "360°"].forEach((s, i) => {
-      const x = gx + gw * i / 4;
-      ctx.fillText(s, x - (i ? 12 : 3), gy + gh + 18);
-    });
+    ctx.textAlign = "right";
+    ctx.fillText("+0,25", gx - 6, gy + 8);
+    ctx.fillText("0", gx - 6, mid + 3);
+    ctx.fillText("−0,25", gx - 6, gy + gh + 2);
+    ctx.textAlign = "center";
+    ["0°", "90°", "180°", "270°", "360°"].forEach((s, i) => ctx.fillText(s, gx + gw * i / 4, gy + gh + 18));
+    ctx.fillText("unghiul de rotire a aparatului", gx + gw / 2, gy + gh + 36);
+    ctx.save();
+    ctx.translate(gx - 46, mid); ctx.rotate(-Math.PI / 2);
+    ctx.fillText("deplasarea franjelor", 0, 0);
+    ctx.restore();
+    ctx.textAlign = "left";
 
     ctx.strokeStyle = COL.beamB; ctx.lineWidth = 1.8; ctx.beginPath();
     for (let x = 0; x <= gw; x++) {
-      const th = x / gw * TAU;
-      const y = mid - Math.max(-0.5, Math.min(0.5, shiftAtAngle(dn0, th))) * sc;
+      const y = mid - clamp(predictedSwing(dn0, x / gw * TAU)) * sc;
       x ? ctx.lineTo(gx + x, y) : ctx.moveTo(gx, y);
     }
     ctx.stroke();
     ctx.strokeStyle = COL.ok; ctx.lineWidth = 1.5; ctx.beginPath();
     for (let x = 0; x <= gw; x++) {
       const n = noise[Math.floor(x / gw * noise.length) % noise.length];
-      const y = mid - n * OBSERVED_1887_UPPER_BOUND * 0.9 * sc;
+      const y = mid - n * OBSERVED_1887_UPPER_BOUND * 0.45 * sc;
       x ? ctx.lineTo(gx + x, y) : ctx.moveTo(gx, y);
     }
     ctx.stroke();
@@ -212,15 +218,16 @@ export function makeApparatus(cv) {
     ctx.strokeStyle = COL.line2; ctx.lineWidth = 1;
     ctx.beginPath(); ctx.moveTo(px, gy); ctx.lineTo(px, gy + gh); ctx.stroke();
     ctx.fillStyle = COL.beamB;
-    ctx.beginPath();
-    ctx.arc(px, mid - Math.max(-0.5, Math.min(0.5, shiftAtAngle(dn0, ang))) * sc, 3.5, 0, TAU);
-    ctx.fill();
+    ctx.beginPath(); ctx.arc(px, mid - clamp(predictedSwing(dn0, ang)) * sc, 3.5, 0, TAU); ctx.fill();
 
+    // legenda, cu latimi masurate: nu se mai suprapune
     ctx.font = `10px ${MONO}`;
-    ctx.fillStyle = COL.beamB; ctx.fillRect(gx, gy - 20, 14, 2);
-    ctx.fillStyle = COL.fg2; ctx.fillText("predicția modelului eterului", gx + 20, gy - 15);
-    ctx.fillStyle = COL.ok; ctx.fillRect(gx + 190, gy - 20, 14, 2);
-    ctx.fillStyle = COL.fg2; ctx.fillText("măsurat 1887", gx + 210, gy - 15);
+    let lx = gx;
+    for (const [col, txt] of [[COL.beamB, "predicția eterului"], [COL.ok, "măsurat în 1887"]]) {
+      ctx.fillStyle = col; ctx.fillRect(lx, gy - 22, 14, 2);
+      ctx.fillStyle = COL.fg2; ctx.fillText(txt, lx + 20, gy - 17);
+      lx += 20 + ctx.measureText(txt).width + 24;
+    }
   }
   return { draw };
 }
@@ -258,7 +265,7 @@ export function makeSplit(cv) {
     const size = Math.min(w * 0.36, h * 0.66);
     const y = h * 0.16;
     const xs = [w * 0.5 - size - 14, w * 0.5 + 14];
-    const shifts = [shiftAtAngle(state.predictedShift, state.rotationAngle),
+    const shifts = [shiftSinceStart(state.predictedShift, state.rotationAngle),
                     OBSERVED_1887_UPPER_BOUND * 0.6 * Math.sin(state.rotationAngle * 3)];
     const labels = ["PREDICȚIE · modelul eterului", "OBSERVAȚIE · 1887"];
     const cols = [COL.beamB, COL.ok];
@@ -269,8 +276,9 @@ export function makeSplit(cv) {
         ctx.strokeStyle = COL.line2; ctx.setLineDash([4, 5]);
         ctx.strokeRect(xs[k] + 0.5, y + 0.5, size, size); ctx.setLineDash([]);
         ctx.fillStyle = COL.fg3; ctx.font = `12px ${MONO}`;
-        ctx.fillText("ascuns", xs[k] + size / 2 - 22, y + size / 2);
-        ctx.fillText("prezice întâi", xs[k] + size / 2 - 38, y + size / 2 + 18);
+        ctx.textAlign = "center";
+        ctx.fillText("se vede după rotire", xs[k] + size / 2, y + size / 2 + 4);
+        ctx.textAlign = "left";
       } else {
         ctx.imageSmoothingEnabled = true;
         ctx.drawImage(patch(shifts[k]), 0, 0, PS, PS, xs[k], y, size, size);
@@ -286,7 +294,7 @@ export function makeSplit(cv) {
       ctx.fillText(labels[k], xs[k], y - 10);
       if (k === 0 || revealed) {
         ctx.fillStyle = COL.fg2;
-        ctx.fillText(`deplasare ${Math.abs(shifts[k]).toFixed(3)} franje`, xs[k], y + size + 20);
+        ctx.fillText(`s-au mutat cu ${Math.abs(shifts[k]).toFixed(2).replace(".", ",")} franje de la start`, xs[k], y + size + 20);
       }
     }
   }
