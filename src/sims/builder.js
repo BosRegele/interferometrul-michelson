@@ -6,12 +6,12 @@ import { state } from "../state.js";
 import { TAU } from "../physics/phase.js";
 
 export const BUILD_STEPS = [
-  { title: "Sursa", text: "Un singur fascicul pleacă spre centrul mesei. Tot ce urmează se naște din el — de aceea cele două jumătăți vor fi perfect sincronizate." },
+  { title: "Sursa", text: "Un singur fascicul pleacă spre centrul mesei. Tot ce urmează se naște din el, de aceea cele două jumătăți vor fi perfect sincronizate." },
   { title: "Lama separatoare", text: "O placă de sticlă cu un strat metalic de câțiva nanometri. Jumătate din lumină trece prin ea, jumătate e reflectată în unghi drept." },
   { title: "Cele două brațe", text: "Fasciculul A urcă spre oglinda fixă M1. Fasciculul B merge spre oglinda mobilă M2. Din acest moment, cele două jumătăți străbat drumuri diferite." },
-  { title: "Întoarcerea", text: "Oglinzile le trimit înapoi, pe exact același traseu. Fiecare braț a fost parcurs de două ori — ține minte asta." },
+  { title: "Întoarcerea", text: "Oglinzile le trimit înapoi, pe exact același traseu. Fiecare braț a fost parcurs de două ori. Ține minte asta." },
   { title: "Recombinarea", text: "Aici se întâmplă totul. Din fasciculul A, o componentă este transmisă prin lamă spre detector. Din fasciculul B, o componentă este reflectată de lamă spre același detector. Sunt desenate alături doar ca să le poți vedea separat." },
-  { title: "Suprapunerea", text: "În realitate ocupă aceeași regiune din spațiu. Câmpurile lor electrice se adună punct cu punct — iar detectorul măsoară pătratul sumei, nu suma pătratelor." }
+  { title: "Suprapunerea", text: "În realitate ocupă aceeași regiune din spațiu. Câmpurile lor electrice se adună punct cu punct, iar detectorul măsoară pătratul sumei, nu suma pătratelor." }
 ];
 
 const L = { srcX: 0.08, bsX: 0.44, m2X: 0.86, m1Y: 0.14, axisY: 0.50, detY: 0.90 };
