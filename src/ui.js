@@ -21,28 +21,29 @@ export function reveal(id) {
 export function initNav() {
   const links = [...document.querySelectorAll("[data-chapter]")];
   const chapters = links.map(a => document.getElementById(a.dataset.chapter));
-
   links.forEach(a => a.addEventListener("click", e => {
     e.preventDefault();
-    document.getElementById(a.dataset.chapter)
-      ?.scrollIntoView({ behavior: "smooth", block: "start" });
+    document.getElementById(a.dataset.chapter)?.scrollIntoView({ behavior: "smooth", block: "start" });
   }));
-
-  if (!("IntersectionObserver" in window)) return;
-  const io = new IntersectionObserver(entries => {
-    for (const e of entries) {
-      if (!e.isIntersecting) continue;
-      const i = chapters.indexOf(e.target);
-      links.forEach((a, j) => a.setAttribute("aria-current", j === i ? "true" : "false"));
-    }
-  }, { rootMargin: "-20% 0px -70% 0px" });
-  chapters.forEach(c => c && io.observe(c));
+  let last = -1;
+  function update() {
+    const line = innerHeight * 0.4;
+    let k = 0;
+    chapters.forEach((c, i) => { if (c && c.getBoundingClientRect().top <= line) k = i; });
+    if (k === last) return;
+    last = k;
+    links.forEach((a, j) => a.setAttribute("aria-current", j === k ? "true" : "false"));
+  }
+  addEventListener("scroll", update, { passive: true });
+  addEventListener("resize", update);
+  update();
 }
 
 export function initProgress() {
   const bar = document.getElementById("prog");
   if (!bar) return;
   addEventListener("scroll", () => {
+    document.querySelector(".topbar")?.classList.toggle("scrolled", scrollY > 30);
     const d = document.documentElement;
     bar.style.width = (d.scrollTop / Math.max(1, d.scrollHeight - d.clientHeight) * 100) + "%";
   }, { passive: true });
@@ -110,14 +111,14 @@ const SCENES = [
   ["s-ether-wind", "Vântul de eter", "Ne mișcăm prin el cu 30 km/s, deci ar trebui să-l simțim."],
   ["s-river", "Râul", "Cine înoată în lungul curentului pierde timp."],
   ["s-timing", "Cum cronometrezi lumina", "Nu o cronometrezi. Lași razele să se reîntâlnească."],
-  ["ch-apparatus", "Aparatul", "Sursă, lamă separatoare, două brațe, două oglinzi."],
+  ["s-build", "Aparatul", "Sursă, lamă separatoare, două brațe, două oglinzi."],
   ["s-recombine", "Recombinarea", "Una reflectată, cealaltă transmisă, spre același detector."],
   ["s-superpose", "Suprapunerea", "Aceeași regiune din spațiu; câmpurile se adună."],
   ["s-phase", "Faza", "Cât de decalate sunt cele două unde."],
   ["s-mirror", "Mișcă oglinda", "Drumul crește, faza se schimbă, franja se mișcă."],
   ["s-two-dx", "Factorul 2", "Dus plus întors: oglinda Δx, drumul 2Δx."],
   ["s-fringes", "Franjele", "Fiecare direcție are propria diferență de drum."],
-  ["ch-1887", "De ce rotim", "Brațele își schimbă rolurile față de vântul ipotetic."],
+  ["s-rotate-why", "De ce rotim", "Brațele își schimbă rolurile față de vântul ipotetic."],
   ["s-predict", "Predicția", "Modelul eterului cere aproximativ 0,4 franje."],
   ["s-vs", "1887", "Rotim aparatul și comparăm."],
   ["s-meaning", "Rezultatul", "Efectul așteptat nu a apărut."],
@@ -211,7 +212,7 @@ export const CHALLENGES = [
     a: ["Ca să se încălzească uniform", "Ca să schimbe rolurile celor două brațe față de vântul ipotetic", "Ca să amestece mercurul", "Ca să verifice oglinzile"],
     c: 1,
     why: "O singură poziție nu spune nimic: nu știi diferența de drum de referință. Rotind, efectul ar fi trebuit să se inverseze, iar asta se putea măsura.",
-    goto: "ch-1887"
+    goto: "s-rotate-why"
   }
 ];
 
