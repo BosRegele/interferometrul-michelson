@@ -5,6 +5,7 @@ import { TAU } from "../physics/phase.js";
 import { fringesFromGas, GASES } from "../physics/refractiveIndex.js";
 
 export function makeGasCell(cv) {
+  const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
   let gas = "air", frac = 1, target = 1;
 
   function total() {
@@ -23,8 +24,8 @@ export function makeGasCell(cv) {
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.fillStyle = COL.panel; ctx.fillRect(0, 0, w, h);
 
-    if (Math.abs(frac - target) > 0.0005) frac += (target - frac) * 0.02;
-    else frac = target;
+    if (reduced || Math.abs(frac - target) <= 0.0005) frac = target;
+    else frac += (target - frac) * 0.02;
 
     const tot = total(), passed = tot * (1 - frac);
     const Lcm = state.gasLength * 100;
