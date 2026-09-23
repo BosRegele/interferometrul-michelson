@@ -1,7 +1,7 @@
 // Culorile si conversia lungime de unda -> RGB, folosite de toate desenele.
 export const COL = {
   void: "#07090d",
-  panel: "#0e1218",
+  panel: "#07090d",        // identic cu fundalul paginii
   line: "#1a232c",
   line2: "#27343e",
   fg: "#f0f3f5",
