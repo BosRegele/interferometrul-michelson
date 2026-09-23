@@ -58,7 +58,7 @@ export function makeEtherZoom(cv) {
     ctx.strokeRect(8.5, 8.5, w - 17, h - 17);
     ctx.fillStyle = "rgba(127,212,238,.55)";
     ctx.font = "11px " + MONO;
-    ctx.fillText("volumul ipotetic de eter — același la toate scările", 16, 24);
+    ctx.fillText("volumul ipotetic de eter, același la toate scările", 16, 24);
 
     const cx = w * 0.5, cy = h * 0.56;
     const k = shown;                       // 0..2, interpolat
